@@ -1,0 +1,122 @@
+{
+  "reviewedAt": "2026-10-22",
+  "total": 66587,
+  "mapped": 66123,
+  "approximate": 4035,
+  "online_or_unmapped": 464,
+  "sources": [
+    {
+      "name": "NPPES public provider registry",
+      "listings": 62582
+    },
+    {
+      "name": "AA Boston public meeting listings",
+      "listings": 2627
+    },
+    {
+      "name": "Massachusetts BSAS public program directory",
+      "listings": 687
+    },
+    {
+      "name": "NERNA public BMLT meeting service",
+      "listings": 334
+    },
+    {
+      "name": "Worcester Area Intergroup public meeting list",
+      "listings": 187
+    },
+    {
+      "name": "MassGIS / Massachusetts DPH hospital dataset",
+      "listings": 41
+    },
+    {
+      "name": "SMART Recovery official public meeting pages",
+      "listings": 39
+    },
+    {
+      "name": "Mass.gov CBHC directory",
+      "listings": 31
+    },
+    {
+      "name": "Recovery Dharma official public meeting feed",
+      "listings": 28
+    },
+    {
+      "name": "Refuge Recovery official public meeting feed",
+      "listings": 13
+    },
+    {
+      "name": "AA Boston Central Service",
+      "listings": 6
+    },
+    {
+      "name": "Recovery Dharma",
+      "listings": 2
+    },
+    {
+      "name": "Mass.gov Department of Mental Health",
+      "listings": 2
+    },
+    {
+      "name": "AdCare Hospital",
+      "listings": 1
+    },
+    {
+      "name": "Boston Medical Center provider profile",
+      "listings": 1
+    },
+    {
+      "name": "SMART Recovery",
+      "listings": 1
+    },
+    {
+      "name": "BMC provider profile and Addiction Psychiatry team",
+      "listings": 1
+    },
+    {
+      "name": "Mass General Brigham / McLean Hospital",
+      "listings": 1
+    },
+    {
+      "name": "BMC provider profile and Addiction Psychiatry program",
+      "listings": 1
+    },
+    {
+      "name": "Spectrum Health Systems",
+      "listings": 1
+    },
+    {
+      "name": "Boston Medical Center",
+      "listings": 1
+    }
+  ],
+  "approaches": [
+    {
+      "name": "AA",
+      "listings": 2820
+    },
+    {
+      "name": "NA",
+      "listings": 334
+    },
+    {
+      "name": "SMART Recovery",
+      "listings": 40
+    },
+    {
+      "name": "Recovery Dharma",
+      "listings": 30
+    },
+    {
+      "name": "Refuge Recovery",
+      "listings": 13
+    }
+  ],
+  "limitations": [
+    "Provider registry status does not verify professional licensure, insurance or appointment availability.",
+    "Western Massachusetts AA directory currently returns HTTP 508; published official links remain available.",
+    "Additional fellowships and services outside these public source directories are not exhaustively covered.",
+    "Approximate pins use ZIP/city areas. Source review is not direct verification.",
+    "This directory does not establish live beds, admissions or personalized insurance eligibility."
+  ]
+}

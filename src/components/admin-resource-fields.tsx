@@ -90,7 +90,7 @@ export default function AdminResourceFields({
                 name="meetingDuration"
                 min={1}
                 max={720}
-                defaultValue={r.meeting.duration}
+                defaultValue={r.meeting.duration ?? ""}
               />
             </label>
             <div className="full">

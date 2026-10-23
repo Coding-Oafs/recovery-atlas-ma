@@ -19,7 +19,7 @@ export const getResources = unstable_cache(
       };
     try {
       const rows =
-        await db()`SELECT data FROM resources WHERE published = true ORDER BY data->>'name'`;
+        await db()`SELECT data FROM resources WHERE published = true ORDER BY data->>'name' LIMIT 50`;
       return {
         resources: rows.map((r) => resourceSchema.parse(r.data)),
         mode: "database",
@@ -32,6 +32,6 @@ export const getResources = unstable_cache(
       };
     }
   },
-  ["public-directory-v1"],
+  ["public-directory-v2"],
   { revalidate: 300, tags: ["resources"] },
 );

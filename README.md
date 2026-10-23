@@ -4,8 +4,8 @@ A mobile-friendly map and directory for people exploring recovery, substance use
 
 ## What is included
 
-- 49 sourced pilot listings: the 31 published Massachusetts CBHC locations, 9 selected AA/SMART Recovery/Recovery Dharma meetings, treatment programs, state hospitals and selected BMC clinicians.
-- Synchronized map/list, map clustering and popups; city/ZIP/address search, browser location and mileage radius.
+- Statewide public listings from BSAS, NPPES, MassGIS, AA, NA, SMART Recovery, Recovery Dharma and Refuge Recovery, alongside the original 49 curated listings. See `public/coverage.json` for source counts and limitations.
+- Individual map pins for every mapped search match, independent of list pagination. Overlapping pins have paginated resource choices. City/ZIP/address search, browser location and mileage radius.
 - Keyword, service, recovery approach, format, payment, language, participation, meeting day and wheelchair-access filters.
 - Recurring meeting calculation in Eastern time with next occurrences displayed in the visitor's time zone. Online-only meetings have no pins or physical radius restrictions.
 - Evidence-labeled payment and insurer records, including McLean's published product restrictions.
@@ -36,13 +36,13 @@ Without a database the public directory serves the dated bundled snapshot. Mutat
 
 ## Configuration
 
-| Variable | Purpose |
-| --- | --- |
-| `DATABASE_URL` | Neon Postgres connection, server only |
-| `ADMIN_PASSWORD` | Random administrator password, server only |
-| `SESSION_SECRET` | Long random cookie signing and rate-limit hashing secret |
-| `CRON_SECRET` | Authenticates Vercel scheduled maintenance |
-| `APP_ORIGIN` | Optional expected application origin |
+| Variable                | Purpose                                                              |
+| ----------------------- | -------------------------------------------------------------------- |
+| `DATABASE_URL`          | Neon Postgres connection, server only                                |
+| `ADMIN_PASSWORD`        | Random administrator password, server only                           |
+| `SESSION_SECRET`        | Long random cookie signing and rate-limit hashing secret             |
+| `CRON_SECRET`           | Authenticates Vercel scheduled maintenance                           |
+| `APP_ORIGIN`            | Optional expected application origin                                 |
 | `NEXT_PUBLIC_MAP_STYLE` | Optional MapLibre-compatible style URL; default OpenFreeMap Positron |
 
 Production and preview use separate Neon branches. Preview code must never receive the production connection. Keep secret environment variables in Vercel project settings. The map uses OpenFreeMap, OpenMapTiles and OpenStreetMap with built-in attribution; it does not require a paid map API key. Fonts are bundled locally with SIL Open Font License files in `public/fonts`.

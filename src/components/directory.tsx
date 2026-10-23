@@ -28,16 +28,23 @@ import {
   Phone,
   RotateCcw,
 } from "lucide-react";
-import type { Resource, Filters } from "@/lib/types";
+import type { Resource, Filters, MapResource } from "@/lib/types";
 import { categories } from "@/lib/types";
 import { defaultFilters, filterResources, miles } from "@/lib/search";
 import Modal from "./modal";
 import ResourceDetail, { CorrectionForm, NextTime } from "./resource-detail";
+import coverage from "../../public/coverage.json";
 const RecoveryMap = dynamic(() => import("./recovery-map"), {
   ssr: false,
   loading: () => <div className="map-loading">Loading map…</div>,
 });
 const directoryLinks = [
+  {
+    name: "AA · Western Massachusetts",
+    detail: "Western Mass Intergroup",
+    url: "https://westernmassaa.org/",
+    type: "meetings",
+  },
   {
     name: "AA · Eastern Massachusetts",
     detail: "Local meetings & online options",
@@ -71,7 +78,7 @@ const directoryLinks = [
   {
     name: "Refuge Recovery",
     detail: "Meditation-based peer support",
-    url: "https://www.refugerecovery.org/meetings",
+    url: "https://refugerecoverymeetings.org/meetings",
     type: "meetings",
   },
   {
@@ -142,7 +149,9 @@ function ResourceCard({
               : r.kind === "hospital"
                 ? "Psychiatric hospital"
                 : r.kind === "provider"
-                  ? "Care provider"
+                  ? r.sourceName === "NPPES public provider registry"
+                    ? "Provider registry"
+                    : "Care provider"
                   : "Treatment center")}
         </span>
         <button
@@ -197,7 +206,9 @@ function ResourceCard({
       <div className="card-bottom">
         <span>
           <ShieldCheck size={13} />
-          Sourced listing
+          {r.sourceName === "NPPES public provider registry"
+            ? "Registry · license not checked"
+            : "Sourced listing"}
         </span>
         <button onClick={onOpen}>
           View details <ArrowUpRight size={15} />
@@ -227,16 +238,77 @@ export default function Directory({
     [limit, setLimit] = useState(20),
     [now, setNow] = useState<Date | null>(null);
   const query = useDeferredValue(filters.query);
+  const [remote, setRemote] = useState<{
+    resources: Resource[];
+    pins: MapResource[];
+    total: number;
+    online_or_unmapped: number;
+  } | null>(null);
+  const [searching, setSearching] = useState(false);
+  const [facets, setFacets] = useState<Record<string, string[]>>({});
+  useEffect(() => {
+    fetch("/api/facets")
+      .then((r) => (r.ok ? r.json() : {}))
+      .then(setFacets)
+      .catch(() => {});
+  }, []);
+  useEffect(() => {
+    const abort = new AbortController();
+    const timer = setTimeout(async () => {
+      setSearching(true);
+      try {
+        const response = await fetch("/api/search", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            filters: { ...filters, query },
+            saved,
+            limit: Math.min(limit, 500),
+          }),
+          signal: abort.signal,
+        });
+        const data = await response.json();
+        if (!response.ok) throw Error(data.error);
+        setRemote(data);
+      } catch (e) {
+        if (!abort.signal.aborted)
+          setMessage(e instanceof Error ? e.message : "Search unavailable");
+      } finally {
+        if (!abort.signal.aborted) setSearching(false);
+      }
+    }, 220);
+    return () => {
+      clearTimeout(timer);
+      abort.abort();
+    };
+  }, [filters, query, saved, limit]);
+  async function openMapResource(pin: MapResource) {
+    const local =
+      remote?.resources.find((r) => r.id === pin.id) ??
+      resources.find((r) => r.id === pin.id);
+    if (local) {
+      setSelected(local);
+      return;
+    }
+    try {
+      const res = await fetch("/api/resources/" + encodeURIComponent(pin.id));
+      if (!res.ok) throw Error("Resource details are temporarily unavailable.");
+      setSelected(await res.json());
+    } catch (e) {
+      setMessage(e instanceof Error ? e.message : "Resource unavailable");
+    }
+  }
   useEffect(() => {
     try {
       const s = JSON.parse(localStorage.getItem("atlas:saved:v1") ?? "[]");
-      if (Array.isArray(s)) setSaved(s.filter((x) => typeof x === "string"));
+      if (Array.isArray(s))
+        setSaved(s.filter((x) => typeof x === "string").slice(0, 1000));
     } catch {}
     setNow(new Date());
     const timer = setInterval(() => setNow(new Date()), 60000);
     return () => clearInterval(timer);
   }, []);
-  const results = useMemo(
+  const localResults = useMemo(
     () =>
       filterResources(
         resources,
@@ -246,6 +318,8 @@ export default function Directory({
       ),
     [resources, filters, query, saved, now],
   );
+  const results = remote?.resources ?? localResults;
+  const resultCount = remote?.total ?? results.length;
   const activeCount = [
     filters.format,
     filters.fellowship,
@@ -265,7 +339,7 @@ export default function Directory({
     setSaved((current) => {
       const next = current.includes(id)
         ? current.filter((x) => x !== id)
-        : [...current, id];
+        : [...current, id].slice(-1000);
       try {
         localStorage.setItem("atlas:saved:v1", JSON.stringify(next));
       } catch {
@@ -343,7 +417,7 @@ export default function Directory({
     setLimit(20);
   }
   const options = (key: "services" | "languages" | "populations") =>
-    [...new Set(resources.flatMap((r) => r[key]))].sort();
+    facets[key] ?? [...new Set(resources.flatMap((r) => r[key]))].sort();
   return (
     <>
       <a className="skip-link" href="#results">
@@ -553,14 +627,16 @@ export default function Directory({
                 onChange={(e) => update("payment", e.target.value)}
               >
                 <option value="">Insurance & payment</option>
-                {[
-                  ...new Set(
-                    resources.flatMap((r) => [
-                      ...r.payment,
-                      ...r.insurance.map((i) => i.name),
-                    ]),
-                  ),
-                ]
+                {(
+                  facets.payment ?? [
+                    ...new Set(
+                      resources.flatMap((r) => [
+                        ...r.payment,
+                        ...r.insurance.map((i) => i.name),
+                      ]),
+                    ),
+                  ]
+                )
                   .sort()
                   .map((p) => (
                     <option key={p}>{p}</option>
@@ -702,7 +778,7 @@ export default function Directory({
                     : filters.category === "meetings"
                       ? "Find your people"
                       : "Explore your options"}
-                  <span>{results.length}</span>
+                  <span>{resultCount.toLocaleString()}</span>
                 </h2>
               </div>
               <span className="sort-label">
@@ -718,7 +794,16 @@ export default function Directory({
             <div className="coverage-note">
               <Info size={15} />
               <p>
-                Curated pilot · selected meetings and care locations.
+                {searching
+                  ? "Searching statewide sources…"
+                  : "Statewide source coverage · published listings and provider registry records."}
+                {remote && remote.online_or_unmapped > 0 ? (
+                  <span>
+                    {" "}
+                    {remote.online_or_unmapped.toLocaleString()} online or
+                    without map coordinates; available in search results.
+                  </span>
+                ) : null}
                 <button onClick={() => setPanel("coverage")}>
                   About our coverage <ArrowUpRight size={12} />
                 </button>
@@ -749,14 +834,20 @@ export default function Directory({
                 <p>
                   {filters.savedOnly
                     ? "Save a resource using its bookmark button. Your list stays on this device."
-                    : "No curated listings match these filters. Try a wider radius, fewer filters, or an official directory below."}
+                    : "No published listings match these filters. Try a wider radius, fewer filters, or an official directory below."}
                 </p>
                 <button className="secondary" onClick={reset}>
                   Clear filters
                 </button>
               </div>
             )}
-            {results.length > limit ? (
+            {limit >= 500 && resultCount > 500 ? (
+              <p className="notice">
+                Showing the first 500 matching cards. All mapped matches remain
+                on the map. Narrow the search to find a specific resource.
+              </p>
+            ) : null}
+            {resultCount > Math.min(limit, 500) && limit < 500 ? (
               <button
                 className="load-more secondary"
                 onClick={() => setLimit((n) => n + 20)}
@@ -811,9 +902,9 @@ export default function Directory({
             className={`map-panel ${mobileView === "list" ? "mobile-hidden" : ""}`}
           >
             <RecoveryMap
-              resources={results}
+              resources={remote?.pins ?? results}
               center={filters.center}
-              onSelect={setSelected}
+              onSelect={openMapResource}
               onBounds={(b) => {
                 setFilters((f) => ({ ...f, bounds: b, center: null }));
                 setLocationLabel("");
@@ -1040,10 +1131,11 @@ export default function Directory({
               browser. We do not install advertising trackers or session replay.
             </p>
             <p>
-              Your keyword filters run in your browser. Location lookup sends
-              the location you enter to this app; street addresses are passed to
-              the U.S. Census geocoder. Browser location is used locally to
-              calculate distances.
+              Search terms, selected filters and location coordinates are sent
+              to this app to find matching resources. Street-address lookup
+              passes the address to the U.S. Census geocoder. Saved resource IDs
+              are sent when searching your favorites. We do not store a search
+              history in the directory database.
             </p>
             <p>
               The map provider receives your IP address and requests for the map
@@ -1075,10 +1167,24 @@ export default function Directory({
         {panel === "coverage" ? (
           <div className="stack">
             <p>
-              The Massachusetts pilot includes all 31 locations published in the
-              state’s CBHC directory at the time of review, selected recovery
-              meetings, treatment services and state hospitals. It is not an
-              exhaustive directory.
+              <strong>
+                {coverage.total.toLocaleString()} published listings ·{" "}
+                {coverage.mapped.toLocaleString()} physical map pins
+              </strong>
+              <br />
+              {coverage.approaches
+                .map((a) => `${a.listings.toLocaleString()} ${a.name}`)
+                .join(" · ")}{" "}
+              meetings. Source snapshot reviewed October 22, 2026.
+            </p>
+            <p>
+              Statewide coverage includes the state’s CBHC directory, licensed
+              BSAS treatment programs, hospitals with psychiatric beds, regional
+              NA meetings, Boston and central Massachusetts AA listings, SMART
+              Recovery, Recovery Dharma, Refuge Recovery and public
+              mental-health and addiction provider registry records. Other
+              fellowships currently have selected listings and official
+              directory links below.
             </p>
             <p>
               Initial public sources were reviewed October 22, 2026. Every
@@ -1092,15 +1198,33 @@ export default function Directory({
               meeting is a calculation, not confirmation that it will occur.
             </p>
             <p>
-              Individual clinician coverage, named commercial insurance networks
-              and additional treatment programs are being developed. Use the
-              official directories for options outside our current coverage.
+              NPPES records report a public practice address and specialty. An
+              active NPI does not verify a professional license, accepting new
+              patients or insurance participation. Missing payment details
+              remain unknown. Confirm with the provider and your insurer.
             </p>
             <p>
-              Bulk meeting feeds and the SAMHSA API will be enabled only after
-              access and reuse requirements are resolved. Automated link checks
-              do not update a listing’s verification date.
+              Every matching resource with coordinates receives an individual
+              pin, independent of the number of list results displayed.
+              Overlapping pins offer a choice of resources. Some pins use an
+              approximate ZIP-area location; check the address in the details.
+              Published directories can omit services or contain stale records;
+              coverage is not a guarantee that every Massachusetts resource is
+              listed.
             </p>
+            <p>
+              Western Mass Intergroup’s meeting server is currently unavailable
+              (HTTP 508); use its official website for updates. Additional
+              fellowships still need imports.
+            </p>
+            <a
+              className="text-link"
+              href="/coverage.json"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View source counts and coverage report <ArrowUpRight size={14} />
+            </a>
             <p className="notice">
               Insurance acceptance, availability, admission and clinical
               suitability must be confirmed. Online-only meetings never receive

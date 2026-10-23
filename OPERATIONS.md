@@ -26,9 +26,19 @@ Review Neon compute, storage, history and branch usage and configure spending no
 
 Vercel currently uses the owner's existing plan. This task does not upgrade plans or buy a domain. Any future commercial use must fit the hosting plan's current terms. Keep daily cron within account limits.
 
+## Statewide imports and search
+
+The initial HTML load contains at most 50 full listings. `/api/search` applies all filters in Postgres and returns at most 500 full cards plus lightweight coordinates for **every** matching map location. Responses are compressed. `/api/resources/[id]` fetches full details on pin selection; `/api/map-selection` retrieves up to 100 overlapping names at a time. `/api/facets` supplies statewide filter options. Search terms, saved IDs and coordinates travel to the app server; they are not written to a search-history table.
+
+The administrator table searches at most 200 rows. `/admin/export` exports 1,000 records per page; follow the `X-Next-Cursor` header with `?after=...` until it is empty. Export includes unpublished staged records and must remain authenticated. Keep full imports in the database and ignored `.local/`, not in Git. The bundled 49-record JSON remains a dated outage fallback.
+
+Import scripts download source facts, normalize and validate with `resourceSchema`, then stage new records unpublished through `scripts/load-statewide.mts`. They never overwrite published edits. Review source counts, duplicates, coordinates, taxonomy choices and unknown insurer fields before publishing the staged IDs. Census batch caches are keyed by input content. Generate `public/coverage.json` after a reviewed release with `scripts/coverage-report.mjs`. The daily maintenance task is a link check, not an automatic refresh of clinical or meeting data.
+
+Source adapters are a reproducible starting point; review each source's current structure and access policy before a refresh. NPPES queries recursively split capped postal prefixes and retain an incomplete-partition report. Active NPI status is not professional license verification. Do not label registry entries as licensed clinicians or assume they accept patients or insurance. Practice addresses can be outdated.
+
 ## Expansion dependencies
 
-SAMHSA API approval, a suitable requesting-server IP arrangement if required, and fellowship bulk-feed permissions remain external dependencies. Do not enable an undocumented scraper as a substitute. The pilot remains usable using curated data and links to authoritative directories.
+SAMHSA API approval and any requesting-server IP requirements remain external dependencies. The state BSAS directory supplies public licensed-program facts independently. Western Mass Intergroup's public meeting server returned HTTP 508 during this release; preserve the source gap and official links. Other fellowships and unpublished services require additional source adapters. No directory can guarantee that it includes every current Massachusetts service.
 
 The initial UI is English. Resource language filtering uses reported fields; it is not a translation feature. Appointment booking, live beds, patient portals and personal insurance eligibility checks are outside this pilot.
 

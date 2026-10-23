@@ -69,7 +69,7 @@ export const resourceSchema = z
       .object({
         days: z.array(z.number().int().min(0).max(6)).min(1),
         time: z.string().regex(/^(?:[01]\d|2[0-3]):[0-5]\d$/),
-        duration: z.number().min(1).max(720),
+        duration: z.number().min(1).max(720).nullable(),
         timezone: z.literal("America/New_York"),
         joinUrl: webUrl.nullable(),
         notes: z.string().max(1000),
@@ -94,6 +94,7 @@ export const resourceSchema = z
       c.addIssue({ code: "custom", message: "Meetings require a schedule" });
   });
 export type Resource = z.infer<typeof resourceSchema>;
+export type MapResource = Pick<Resource, "id" | "kind" | "lat" | "lng">;
 export const categories = [
   { id: "all", label: "All resources" },
   { id: "meetings", label: "Meetings" },

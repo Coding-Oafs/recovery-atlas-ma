@@ -116,7 +116,9 @@ export async function saveResource(form: FormData) {
       ...before.meeting,
       days: form.getAll("meetingDay").map(Number),
       time: String(form.get("meetingTime")),
-      duration: Number(form.get("meetingDuration")),
+      duration: form.get("meetingDuration")
+        ? Number(form.get("meetingDuration"))
+        : null,
       joinUrl: String(form.get("meetingJoinUrl") ?? "").trim() || null,
       notes: String(form.get("meetingNotes") ?? ""),
     };

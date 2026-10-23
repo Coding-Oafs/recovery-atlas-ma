@@ -30,6 +30,7 @@
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "@types/zipcodes": "latest",
+    "cheerio": "1.2.0",
     "prettier": "3.9.10",
     "tsx": "latest",
     "typescript": "latest"

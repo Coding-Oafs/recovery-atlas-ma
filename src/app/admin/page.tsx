@@ -51,19 +51,16 @@ export default async function Admin({
       </main>
     );
   const sql = db();
-  const [resources, submissions, sources, checks, runs, audit] =
+  const [resources, submissions, sources, checks, runs, audit, counts] =
     await Promise.all([
-      sql`SELECT id,data,published,updated_at FROM resources ORDER BY data->>'name'`,
+      sql`SELECT id,data,published,updated_at FROM resources WHERE (${params.q ?? ""}='' OR data->>'name' ILIKE ${"%" + (params.q ?? "").slice(0, 150) + "%"} OR id=${params.q ?? ""}) ORDER BY data->>'name' LIMIT 200`,
       sql`SELECT * FROM submissions WHERE status='pending' ORDER BY created_at ASC LIMIT 50`,
       sql`SELECT * FROM sources ORDER BY name`,
       sql`SELECT DISTINCT ON (resource_id) resource_id,status,error,checked_at FROM source_checks ORDER BY resource_id,checked_at DESC`,
       sql`SELECT * FROM sync_runs ORDER BY created_at DESC LIMIT 5`,
       sql`SELECT action,resource_id,created_at FROM audit_events ORDER BY created_at DESC LIMIT 10`,
+      sql`SELECT count(*) FILTER(WHERE published) AS published,count(*) FILTER(WHERE (data->>'sourceCheckedAt')::date<current_date-90) AS stale FROM resources`,
     ]);
-  const stale = resources.filter(
-    (r) =>
-      new Date(r.data.sourceCheckedAt).getTime() < Date.now() - 90 * 86400000,
-  ).length;
   return (
     <main className="admin-shell">
       <header className="admin-header">
@@ -97,7 +94,7 @@ export default async function Admin({
       ) : null}
       <div className="admin-stat">
         <div>
-          <strong>{resources.filter((r) => r.published).length}</strong>
+          <strong>{Number(counts[0].published).toLocaleString()}</strong>
           <small>Published listings</small>
         </div>
         <div>
@@ -105,7 +102,7 @@ export default async function Admin({
           <small>Pending submissions</small>
         </div>
         <div>
-          <strong>{stale}</strong>
+          <strong>{Number(counts[0].stale).toLocaleString()}</strong>
           <small>Source reviews over 90 days old</small>
         </div>
         <div>
@@ -117,6 +114,22 @@ export default async function Admin({
         <div>
           <section className="admin-box">
             <h2>Listings</h2>
+            <form method="get" className="admin-nav">
+              <label className="sr-only" htmlFor="admin-resource-search">
+                Find a listing by name or ID
+              </label>
+              <input
+                id="admin-resource-search"
+                name="q"
+                defaultValue={params.q ?? ""}
+                placeholder="Find a listing by name or ID"
+              />
+              <button className="secondary">Search</button>
+            </form>
+            <p className="muted">
+              Showing up to 200 matching listings. Use the search to find any
+              record.
+            </p>
             <p className="muted" style={{ fontSize: 11 }}>
               Use “Edit” to update facts, verification dates or publication.
               Check named insurance plans against the exact service and

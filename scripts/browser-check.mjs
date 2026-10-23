@@ -40,10 +40,21 @@ try {
   });
   const count = await page.locator(".resource-card").count();
   check("Database resources visible", count > 0);
+  await Promise.all([
+    page.waitForResponse(
+      (r) =>
+        r.url().endsWith("/api/search") &&
+        r.request().postDataJSON()?.filters.query === "Worcester detox",
+    ),
+    page
+      .getByRole("textbox", { name: "Search keywords" })
+      .fill("Worcester detox"),
+  ]);
   await page
-    .getByRole("textbox", { name: "Search keywords" })
-    .fill("Worcester detox");
-  await page.waitForTimeout(400);
+    .locator(".resource-card")
+    .filter({ hasText: "AdCare Hospital" })
+    .first()
+    .waitFor();
   check(
     "Keyword filtering",
     (await page.locator(".resource-card").count()) === 1,
@@ -72,8 +83,15 @@ try {
   );
   await page.getByRole("button", { name: "Reset", exact: true }).click();
   await page.getByRole("button", { name: "Meetings", exact: true }).click();
-  await page.getByLabel("Attendance format").selectOption("online");
-  await page.waitForTimeout(300);
+  await Promise.all([
+    page.waitForResponse(
+      (r) =>
+        r.url().endsWith("/api/search") &&
+        r.request().postDataJSON()?.filters.format === "online",
+    ),
+    page.getByLabel("Attendance format").selectOption("online"),
+  ]);
+  await page.locator(".resource-card").nth(3).waitFor();
   check(
     "Online and hybrid meeting results",
     (await page.locator(".resource-card").count()) >= 4,

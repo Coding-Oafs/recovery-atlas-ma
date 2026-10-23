@@ -265,7 +265,10 @@ export default function ResourceDetail({
                   ][d],
               )
               .join(", ")}{" "}
-            · {r.meeting.time} · America/New_York · {r.meeting.duration} minutes
+            · {r.meeting.time} · America/New_York ·{" "}
+            {r.meeting.duration === null
+              ? "Duration not reported"
+              : `${r.meeting.duration} minutes`}
           </p>
           <p className="muted">
             The next occurrence above is shown in your device’s time zone.

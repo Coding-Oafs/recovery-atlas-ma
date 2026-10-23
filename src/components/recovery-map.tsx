@@ -4,7 +4,7 @@ import * as maplibregl from "maplibre-gl";
 import { type GeoJSONSource } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { MapPin, Maximize, Search } from "lucide-react";
-import type { Resource } from "@/lib/types";
+import type { MapResource } from "@/lib/types";
 maplibregl.setWorkerUrl(
   new URL(
     "maplibre-gl/dist/maplibre-gl-worker.mjs",
@@ -12,9 +12,9 @@ maplibregl.setWorkerUrl(
   ).toString(),
 );
 type Props = {
-  resources: Resource[];
+  resources: MapResource[];
   center: { lat: number; lng: number } | null;
-  onSelect: (r: Resource) => void;
+  onSelect: (r: MapResource) => void;
   onBounds: (b: number[]) => void;
   highlight: string | null;
 };
@@ -56,40 +56,7 @@ export default function RecoveryMap({
         m.addSource("resources", {
           type: "geojson",
           data: { type: "FeatureCollection", features: [] },
-          cluster: true,
-          clusterMaxZoom: 12,
-          clusterRadius: 38,
-        });
-        m.addLayer({
-          id: "clusters",
-          type: "circle",
-          source: "resources",
-          filter: ["has", "point_count"],
-          paint: {
-            "circle-color": "#174c42",
-            "circle-radius": [
-              "step",
-              ["get", "point_count"],
-              20,
-              10,
-              25,
-              30,
-              30,
-            ],
-            "circle-stroke-color": "#fff",
-            "circle-stroke-width": 3,
-          },
-        });
-        m.addLayer({
-          id: "cluster-count",
-          type: "symbol",
-          source: "resources",
-          filter: ["has", "point_count"],
-          layout: {
-            "text-field": ["get", "point_count_abbreviated"],
-            "text-size": 13,
-          },
-          paint: { "text-color": "#ffffff" },
+          cluster: false,
         });
         m.addLayer({
           id: "points",
@@ -108,7 +75,19 @@ export default function RecoveryMap({
               "#397b9a",
               "#23715d",
             ],
-            "circle-radius": 10,
+            "circle-radius": [
+              "interpolate",
+              ["linear"],
+              ["zoom"],
+              5,
+              3,
+              8,
+              5,
+              12,
+              8,
+              18,
+              11,
+            ],
             "circle-stroke-color": "#fff",
             "circle-stroke-width": 3,
           },
@@ -125,36 +104,80 @@ export default function RecoveryMap({
             "circle-stroke-width": 3,
           },
         });
-        m.on("click", "clusters", async (e) => {
-          const f = e.features?.[0];
-          if (!f) return;
-          const z = await (
-            m.getSource("resources") as GeoJSONSource
-          ).getClusterExpansionZoom(Number(f.properties?.cluster_id));
-          const g = f.geometry;
-          if (g.type === "Point")
-            m.easeTo({ center: g.coordinates as [number, number], zoom: z });
-        });
         m.on("click", "points", (e) => {
-          const id = e.features?.[0]?.properties?.id;
-          const r = props.current.resources.find((x) => x.id === id);
+          const ids = [
+            ...new Set((e.features ?? []).map((f) => String(f.properties?.id))),
+          ];
+          const r = props.current.resources.find((x) => x.id === ids[0]);
           if (!r) return;
+          if (ids.length === 1) {
+            props.current.onSelect(r);
+            return;
+          }
           const el = document.createElement("div");
           el.className = "pin-popup";
           const name = document.createElement("strong");
-          name.textContent = r.name;
+          name.textContent = `${ids.length} overlapping resources`;
           const city = document.createElement("p");
-          city.textContent = r.address || r.city;
-          const button = document.createElement("button");
-          button.textContent = "View details →";
-          button.addEventListener("click", () => props.current.onSelect(r));
-          el.append(name, city, button);
+          city.textContent =
+            "Select a resource below, or zoom closer. Approximate ZIP-area pins can share a location.";
+          const choices = document.createElement("div");
+          choices.className = "pin-choices";
+          el.append(name, city, choices);
+          const loadChoices = (offset: number) => {
+            choices.replaceChildren();
+            choices.textContent = "Loading resources…";
+            fetch("/api/map-selection", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ ids: ids.slice(offset, offset + 100) }),
+            })
+              .then((x) => {
+                if (!x.ok) throw Error("Selection unavailable");
+                return x.json();
+              })
+              .then((rows: { id: string; name: string }[]) => {
+                choices.replaceChildren();
+                for (const row of rows) {
+                  const button = document.createElement("button");
+                  button.textContent = row.name;
+                  button.addEventListener("click", () => {
+                    const resource = props.current.resources.find(
+                      (x) => x.id === row.id,
+                    );
+                    if (resource) props.current.onSelect(resource);
+                  });
+                  choices.append(button);
+                }
+                const pager = document.createElement("p");
+                pager.textContent = `${offset + 1}–${Math.min(offset + 100, ids.length)} of ${ids.length}`;
+                choices.append(pager);
+                if (offset > 0) {
+                  const previous = document.createElement("button");
+                  previous.textContent = "Previous resources";
+                  previous.onclick = () =>
+                    loadChoices(Math.max(0, offset - 100));
+                  choices.append(previous);
+                }
+                if (offset + 100 < ids.length) {
+                  const next = document.createElement("button");
+                  next.textContent = "More resources at this spot";
+                  next.onclick = () => loadChoices(offset + 100);
+                  choices.append(next);
+                }
+              })
+              .catch(() => {
+                choices.textContent =
+                  "Please select this resource from the list or search by name.";
+              });
+          };
+          loadChoices(0);
           new maplibregl.Popup({ offset: 15, maxWidth: "280px" })
             .setLngLat([r.lng!, r.lat!])
             .setDOMContent(el)
             .addTo(m);
         });
-        for (const layer of ["clusters", "points"]) {
+        for (const layer of ["points"]) {
           m.on("mouseenter", layer, () => {
             m.getCanvas().style.cursor = "pointer";
           });
@@ -247,7 +270,8 @@ export default function RecoveryMap({
       <div className="map-top">
         <span className="map-label">
           <span className="live-dot" />
-          MASSACHUSETTS
+          {resources.filter((r) => r.lat !== null).length.toLocaleString()}{" "}
+          INDIVIDUAL MAP PINS
         </span>
         <button
           className="map-button"

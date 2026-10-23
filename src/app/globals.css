@@ -1862,3 +1862,26 @@ body {
     gap: 12px;
   }
 }
+.pin-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-height: 240px;
+  overflow-y: auto;
+  margin-top: 10px;
+}
+.pin-choices button {
+  text-align: left;
+  display: block;
+  padding: 9px 0;
+  border-bottom: 1px solid #e2e5dc;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.pin-choices button:hover {
+  color: #174c42;
+  text-decoration: underline;
+}
+.map-label {
+  font-size: 9px;
+}
