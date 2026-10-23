@@ -1,0 +1,2907 @@
+[
+  {
+    "id": "advocates-cbhc-framingham",
+    "name": "Advocates CBHC - Framingham",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "1094 Worcester Road, Framingham, MA 01702",
+    "city": "Framingham",
+    "state": "MA",
+    "zip": "01702",
+    "lat": 42.299385256535,
+    "lng": -71.441565934809,
+    "coordinateAccuracy": "address",
+    "phone": "(800) 640-5432",
+    "website": "https://www.mass.gov/locations/advocates-cbhc-framingham",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/advocates-cbhc-framingham",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "advocates-cbhc-waltham",
+    "name": "Advocates CBHC - Waltham",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "675 Main Street, Waltham, MA 02452",
+    "city": "Waltham",
+    "state": "MA",
+    "zip": "02452",
+    "lat": 42.376248196645,
+    "lng": -71.237004351709,
+    "coordinateAccuracy": "address",
+    "phone": "(800) 640-5432",
+    "website": "https://www.mass.gov/locations/advocates-cbhc-waltham",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/advocates-cbhc-waltham",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "aspire-cbhc",
+    "name": "Aspire CBHC",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "54 Miller St, Quincy, MA 02169",
+    "city": "Quincy",
+    "state": "MA",
+    "zip": "02169",
+    "lat": 42.243559995302,
+    "lng": -71.025919476631,
+    "coordinateAccuracy": "address",
+    "phone": "800-528-4890",
+    "website": "https://www.mass.gov/locations/aspire-cbhc",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/aspire-cbhc",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "bay-cove-behavioral-health-and-wellness-center-cbhc",
+    "name": "Bay Cove Behavioral Health and Wellness Center (CBHC)",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "110 Main St, Hyannis, MA 02601",
+    "city": "Hyannis",
+    "state": "MA",
+    "zip": "02601",
+    "lat": 41.655916831086,
+    "lng": -70.274972477387,
+    "coordinateAccuracy": "address",
+    "phone": "(833) 229-2683",
+    "website": "https://www.mass.gov/locations/bay-cove-behavioral-health-and-wellness-center-cbhc",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/bay-cove-behavioral-health-and-wellness-center-cbhc",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "behavioral-health-network-cbhc-worcester",
+    "name": "Behavioral Health Network CBHC – Worcester",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "72 Jaques Ave, Worcester, MA 01610",
+    "city": "Worcester",
+    "state": "MA",
+    "zip": "01610",
+    "lat": 42.259666073619,
+    "lng": -71.814010983501,
+    "coordinateAccuracy": "address",
+    "phone": "413-301-9355",
+    "website": "https://www.mass.gov/locations/behavioral-health-network-cbhc-worcester",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/behavioral-health-network-cbhc-worcester",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "behavioral-health-network-wellbeing-center-cbhc-springfield",
+    "name": "Behavioral Health Network WellBeing Center (CBHC) - Springfield",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "417 Liberty St, Springfield, MA 01104",
+    "city": "Springfield",
+    "state": "MA",
+    "zip": "01104",
+    "lat": 42.114480847917,
+    "lng": -72.585580939236,
+    "coordinateAccuracy": "address",
+    "phone": "(800) 437-5922",
+    "website": "https://www.mass.gov/locations/behavioral-health-network-wellbeing-center-cbhc-springfield",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/behavioral-health-network-wellbeing-center-cbhc-springfield",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "behavioral-health-network-wellbeing-center-cbhc-westfield",
+    "name": "Behavioral Health Network WellBeing Center (CBHC) - Westfield",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "77 Mill Street, Westfield, MA 01085",
+    "city": "Westfield",
+    "state": "MA",
+    "zip": "01085",
+    "lat": 42.112177944112,
+    "lng": -72.765118195271,
+    "coordinateAccuracy": "address",
+    "phone": "(800) 437-5922",
+    "website": "https://www.mass.gov/locations/behavioral-health-network-wellbeing-center-cbhc-westfield",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/behavioral-health-network-wellbeing-center-cbhc-westfield",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "beth-israel-lahey-health-behavioral-services-cbhc",
+    "name": "Beth Israel Lahey Health Behavioral Services (CBHC)",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "12 Methuen St, Lawrence, MA 01840",
+    "city": "Lawrence",
+    "state": "MA",
+    "zip": "01840",
+    "lat": 42.707028361783,
+    "lng": -71.153697721204,
+    "coordinateAccuracy": "address",
+    "phone": "(877) 255-1261",
+    "website": "https://www.mass.gov/locations/beth-israel-lahey-health-behavioral-services-cbhc",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/beth-israel-lahey-health-behavioral-services-cbhc",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "boston-medical-center-cbhc",
+    "name": "Boston Medical Center CBHC",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "85 East Newton St, 1st floor, Boston, MA 02118",
+    "city": "Boston",
+    "state": "MA",
+    "zip": "02118",
+    "lat": 42.336604704092,
+    "lng": -71.071056861783,
+    "coordinateAccuracy": "address",
+    "phone": "(800) 981-4357",
+    "website": "https://www.mass.gov/locations/boston-medical-center-cbhc",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/boston-medical-center-cbhc",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "cambridge-health-alliance-cbhc",
+    "name": "Cambridge Health Alliance CBHC",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "1493 Cambridge St, Cambridge, MA 02139",
+    "city": "Cambridge",
+    "state": "MA",
+    "zip": "02139",
+    "lat": 42.374132616139,
+    "lng": -71.103486492492,
+    "coordinateAccuracy": "address",
+    "phone": "(833) 222-2030",
+    "website": "https://www.mass.gov/locations/cambridge-health-alliance-cbhc",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/cambridge-health-alliance-cbhc",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "cambridge-health-alliance-cbhc-malden",
+    "name": "Cambridge Health Alliance CBHC – Malden",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "195 Canal St, Malden, MA 02148",
+    "city": "Malden",
+    "state": "MA",
+    "zip": "02148",
+    "lat": 42.420891992988,
+    "lng": -71.072389830314,
+    "coordinateAccuracy": "address",
+    "phone": "(833) 222-2030",
+    "website": "https://www.mass.gov/locations/cambridge-health-alliance-cbhc-malden",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/cambridge-health-alliance-cbhc-malden",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "center-for-human-developments-gateway-behavioral-health-center-cbhc",
+    "name": "Center for Human Development’s Gateway Behavioral Health Center (CBHC)",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "1109 Granby Rd, Chicopee, MA 01020",
+    "city": "Chicopee",
+    "state": "MA",
+    "zip": "01020",
+    "lat": 42.172918405123,
+    "lng": -72.588527518779,
+    "coordinateAccuracy": "address",
+    "phone": "(833) 243-8255",
+    "website": "https://www.mass.gov/locations/center-for-human-developments-gateway-behavioral-health-center-cbhc",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/center-for-human-developments-gateway-behavioral-health-center-cbhc",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "child-family-services-cbhc-fall-river",
+    "name": "Child & Family Services CBHC - Fall River",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "1052 Pleasant St, Fall River, MA 02723",
+    "city": "Fall River",
+    "state": "MA",
+    "zip": "02723",
+    "lat": 41.694296854613,
+    "lng": -71.138388664135,
+    "coordinateAccuracy": "address",
+    "phone": "(877) 996-3154",
+    "website": "https://www.mass.gov/locations/child-family-services-cbhc-fall-river",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/child-family-services-cbhc-fall-river",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "child-family-services-cbhc-new-bedford",
+    "name": "Child & Family Services CBHC - New Bedford",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "965 Church St, New Bedford, MA 02745",
+    "city": "New Bedford",
+    "state": "MA",
+    "zip": "02745",
+    "lat": 41.693396234636,
+    "lng": -70.941503531325,
+    "coordinateAccuracy": "address",
+    "phone": "(877) 996-3154",
+    "website": "https://www.mass.gov/locations/child-family-services-cbhc-new-bedford",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/child-family-services-cbhc-new-bedford",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "child-family-services-cbhc-plymouth",
+    "name": "Child & Family Services CBHC - Plymouth",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "61 Industrial Park Rd, Plymouth, MA 02360",
+    "city": "Plymouth",
+    "state": "MA",
+    "zip": "02360",
+    "lat": 41.957735179507,
+    "lng": -70.704363297777,
+    "coordinateAccuracy": "address",
+    "phone": "(877) 996-3154",
+    "website": "https://www.mass.gov/locations/child-family-services-cbhc-plymouth",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/child-family-services-cbhc-plymouth",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "clinical-support-options-cbhc-athol",
+    "name": "Clinical Support Options CBHC - Athol",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "2033 Main St, Level 2, Athol, MA 01331",
+    "city": "Athol",
+    "state": "MA",
+    "zip": "01331",
+    "lat": 42.586347583603,
+    "lng": -72.209133407594,
+    "coordinateAccuracy": "address",
+    "phone": "(800) 562-0112",
+    "website": "https://www.mass.gov/locations/clinical-support-options-cbhc-athol",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/clinical-support-options-cbhc-athol",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "clinical-support-options-cbhc-gardner",
+    "name": "Clinical Support Options CBHC - Gardner",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "205 School St, Gardner, MA 01440",
+    "city": "Gardner",
+    "state": "MA",
+    "zip": "01440",
+    "lat": 42.574358241195,
+    "lng": -71.986337785396,
+    "coordinateAccuracy": "address",
+    "phone": "(800) 562-0112",
+    "website": "https://www.mass.gov/locations/clinical-support-options-cbhc-gardner",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/clinical-support-options-cbhc-gardner",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "clinical-support-options-cbhc-greenfield",
+    "name": "Clinical Support Options CBHC - Greenfield",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "1 Arch Place, Greenfield, MA 01301",
+    "city": "Greenfield",
+    "state": "MA",
+    "zip": "01301",
+    "lat": 42.6013,
+    "lng": -72.6236,
+    "coordinateAccuracy": "approximate",
+    "phone": "(800) 562-0112",
+    "website": "https://www.mass.gov/locations/clinical-support-options-cbhc-greenfield",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/clinical-support-options-cbhc-greenfield",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported"
+  },
+  {
+    "id": "clinical-support-options-cbhc-northampton",
+    "name": "Clinical Support Options CBHC - Northampton",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "8 Atwood Dr, Northampton, MA 01060",
+    "city": "Northampton",
+    "state": "MA",
+    "zip": "01060",
+    "lat": 42.303286087721,
+    "lng": -72.622661831443,
+    "coordinateAccuracy": "address",
+    "phone": "(800) 562-0112",
+    "website": "https://www.mass.gov/locations/clinical-support-options-cbhc-northampton",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/clinical-support-options-cbhc-northampton",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "clinical-support-options-cbhc-leominster",
+    "name": "Clinical Support Options CBHC – Leominster",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "100 Erdman Way, Leominster, MA 01453",
+    "city": "Leominster",
+    "state": "MA",
+    "zip": "01453",
+    "lat": 42.547467637597,
+    "lng": -71.757799227963,
+    "coordinateAccuracy": "address",
+    "phone": "(800) 977-5555",
+    "website": "https://www.mass.gov/locations/clinical-support-options-cbhc-leominster",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/clinical-support-options-cbhc-leominster",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "community-counseling-of-bristol-county-cbhc",
+    "name": "Community Counseling of Bristol County (CBHC)",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "1 Washington St, Taunton, MA 02780",
+    "city": "Taunton",
+    "state": "MA",
+    "zip": "02780",
+    "lat": 41.902485387831,
+    "lng": -71.099794410509,
+    "coordinateAccuracy": "address",
+    "phone": "(800) 660-4300",
+    "website": "https://www.mass.gov/locations/community-counseling-of-bristol-county-cbhc",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/community-counseling-of-bristol-county-cbhc",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "eliot-community-human-services-cbhc-danvers",
+    "name": "Eliot Community Human Services (CBHC) - Danvers",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "75 Sylvan St, Danvers, MA 01923",
+    "city": "Danvers",
+    "state": "MA",
+    "zip": "01923",
+    "lat": 42.557536880821,
+    "lng": -70.943130128223,
+    "coordinateAccuracy": "address",
+    "phone": "(888) 769-5201",
+    "website": "https://www.mass.gov/locations/eliot-community-human-services-cbhc-danvers",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/eliot-community-human-services-cbhc-danvers",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "eliot-community-human-services-cbhc-lynn",
+    "name": "Eliot Community Human Services (CBHC) - Lynn",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "95 Pleasant St, Lynn, MA 01901",
+    "city": "Lynn",
+    "state": "MA",
+    "zip": "01901",
+    "lat": 42.461920131683,
+    "lng": -70.951478065493,
+    "coordinateAccuracy": "address",
+    "phone": "(800) 988-1111",
+    "website": "https://www.mass.gov/locations/eliot-community-human-services-cbhc-lynn",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/eliot-community-human-services-cbhc-lynn",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "fairwinds-center-cbhc",
+    "name": "Fairwinds Center (CBHC)",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "20 Vesper Ln, Nantucket, MA 02554",
+    "city": "Nantucket",
+    "state": "MA",
+    "zip": "02554",
+    "lat": 41.274611709525,
+    "lng": -70.103092918803,
+    "coordinateAccuracy": "address",
+    "phone": "(888) 323-3447",
+    "website": "https://www.mass.gov/locations/fairwinds-center-cbhc",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/fairwinds-center-cbhc",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "high-point-treatment-center-cbhc",
+    "name": "High Point Treatment Center CBHC",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "30 Meadowbrook Dr, Brockton, MA 02301",
+    "city": "Brockton",
+    "state": "MA",
+    "zip": "02301",
+    "lat": 42.057531017857,
+    "lng": -71.009916147992,
+    "coordinateAccuracy": "address",
+    "phone": "(888) 725-9066",
+    "website": "https://www.mass.gov/locations/high-point-treatment-center-cbhc",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/high-point-treatment-center-cbhc",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "marthas-vineyard-community-services",
+    "name": "Martha's Vineyard Community Services",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "111 Edgartown Road, Oak Bluffs , MA 02557",
+    "city": "Oak Bluffs",
+    "state": "MA",
+    "zip": "02557",
+    "lat": 41.4543,
+    "lng": -70.562,
+    "coordinateAccuracy": "approximate",
+    "phone": "508-693-0032",
+    "website": "https://www.mass.gov/locations/marthas-vineyard-community-services",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Mon–Thu 8am–6pm; Fri 8am–5pm. Call to confirm crisis access.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/marthas-vineyard-community-services",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported"
+  },
+  {
+    "id": "north-suffolk-community-services-cbhc",
+    "name": "North Suffolk Community Services (CBHC)",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "14 Porter St, East Boston, MA 02128",
+    "city": "East Boston",
+    "state": "MA",
+    "zip": "02128",
+    "lat": 42.37465646524,
+    "lng": -71.038348352978,
+    "coordinateAccuracy": "address",
+    "phone": "866-781-6727",
+    "website": "https://www.mass.gov/locations/north-suffolk-community-services-cbhc",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/north-suffolk-community-services-cbhc",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "riverside-community-care-cbhc-milford",
+    "name": "Riverside Community Care (CBHC) - Milford",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "176 West St, Milford, MA 01757",
+    "city": "Milford",
+    "state": "MA",
+    "zip": "01757",
+    "lat": 42.14106426389,
+    "lng": -71.540402876168,
+    "coordinateAccuracy": "address",
+    "phone": "(800) 294-4665",
+    "website": "https://www.mass.gov/locations/riverside-community-care-cbhc-milford",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/riverside-community-care-cbhc-milford",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "riverside-community-care-cbhc-norwood",
+    "name": "Riverside Community Care (CBHC) - Norwood",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "190 Lenox St, Norwood, MA 02062",
+    "city": "Norwood",
+    "state": "MA",
+    "zip": "02062",
+    "lat": 42.18879978827,
+    "lng": -71.198751387804,
+    "coordinateAccuracy": "address",
+    "phone": "(888) 249-9711",
+    "website": "https://www.mass.gov/locations/riverside-community-care-cbhc-norwood",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/riverside-community-care-cbhc-norwood",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "the-brien-center-cbhc",
+    "name": "The Brien Center (CBHC)",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "334 Fenn St, Pittsfield, MA 01201",
+    "city": "Pittsfield",
+    "state": "MA",
+    "zip": "01201",
+    "lat": 42.449050784941,
+    "lng": -73.246076102512,
+    "coordinateAccuracy": "address",
+    "phone": "(800) 252-0227",
+    "website": "https://www.mass.gov/locations/the-brien-center-cbhc",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/the-brien-center-cbhc",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "vinfen-community-behavioral-health-center-cbhc",
+    "name": "Vinfen Community Behavioral Health Center (CBHC)",
+    "kind": "clinic",
+    "categories": [
+      "treatment",
+      "mental-health",
+      "counseling",
+      "support"
+    ],
+    "address": "391 Varnum Ave, Lowell, MA 01854",
+    "city": "Lowell",
+    "state": "MA",
+    "zip": "01854",
+    "lat": 42.64562346742,
+    "lng": -71.344913451011,
+    "coordinateAccuracy": "address",
+    "phone": "(866) 388-2242",
+    "website": "https://www.mass.gov/locations/vinfen-community-behavioral-health-center-cbhc",
+    "description": "Community-based mental health and substance use care, including therapy, psychiatric consultation, peer support and treatment referrals.",
+    "services": [
+      "Outpatient care",
+      "Individual and group therapy",
+      "Psychiatric consultation",
+      "Medication treatment",
+      "Crisis care",
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "telehealth"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Outpatient: Mon–Fri 8am–8pm; weekends 9am–5pm. Crisis services: 24/7.",
+    "intake": "Walk-in or call. Confirm service area and routine-care eligibility with the center.",
+    "payment": [
+      "MassHealth",
+      "Commercial insurance"
+    ],
+    "insurance": [
+      {
+        "name": "MassHealth",
+        "plan": "All MassHealth plans (CBHC services)",
+        "status": "published",
+        "note": "State CBHC program policy; confirm the specific service and eligibility.",
+        "sourceUrl": "https://www.mass.gov/community-behavioral-health-centers",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "State guidance says CBHC crisis services are available regardless of insurance. Routine care is covered by all MassHealth plans and some commercial plans; call to confirm your specific benefits.",
+    "sourceUrl": "https://www.mass.gov/locations/vinfen-community-behavioral-health-center-cbhc",
+    "sourceName": "Mass.gov CBHC directory",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "kind": "meeting",
+    "categories": [
+      "meetings"
+    ],
+    "address": "60 Kilmarnock St, Suite 1000, Boston, MA 02215",
+    "city": "Boston",
+    "state": "MA",
+    "zip": "02215",
+    "lat": 42.342809858584,
+    "lng": -71.099344525469,
+    "coordinateAccuracy": "address",
+    "phone": "",
+    "description": "A peer-led recovery meeting. Check the original listing before attending.",
+    "services": [
+      "Peer support",
+      "Big Book"
+    ],
+    "formats": [
+      "in-person",
+      "online",
+      "hybrid"
+    ],
+    "fellowship": "AA",
+    "languages": [],
+    "accessibility": [
+      "Wheelchair access",
+      "Accessible bathroom"
+    ],
+    "populations": [
+      "Open meeting",
+      "LGBTQ+"
+    ],
+    "hours": "",
+    "intake": "See the original listing for current participation and joining details.",
+    "payment": [
+      "Free / donations"
+    ],
+    "insurance": [],
+    "paymentNote": "Peer support meeting; insurance is not required.",
+    "sourceName": "AA Boston Central Service",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": "2022-12-12",
+    "availability": "Not reported",
+    "id": "aa-fireside",
+    "name": "Fireside (Hybrid)",
+    "website": "https://aaboston.org/meetings/fireside",
+    "sourceUrl": "https://aaboston.org/meetings/fireside",
+    "meeting": {
+      "days": [
+        6
+      ],
+      "time": "19:30",
+      "duration": 60,
+      "timezone": "America/New_York",
+      "joinUrl": null,
+      "notes": "Suite 1000. Public joining details are on the original listing."
+    },
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "kind": "meeting",
+    "categories": [
+      "meetings"
+    ],
+    "address": "51 Walnut St, Dorchester, MA 02122",
+    "city": "Dorchester",
+    "state": "MA",
+    "zip": "02122",
+    "lat": 42.28659825174,
+    "lng": -71.040966710177,
+    "coordinateAccuracy": "address",
+    "phone": "",
+    "description": "A peer-led recovery meeting. Check the original listing before attending.",
+    "services": [
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "online",
+      "hybrid"
+    ],
+    "fellowship": "AA",
+    "languages": [],
+    "accessibility": [],
+    "populations": [
+      "Open meeting"
+    ],
+    "hours": "",
+    "intake": "See the original listing for current participation and joining details.",
+    "payment": [
+      "Free / donations"
+    ],
+    "insurance": [],
+    "paymentNote": "Peer support meeting; insurance is not required.",
+    "sourceName": "AA Boston Central Service",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": "2026-07-06",
+    "availability": "Not reported",
+    "id": "aa-port-norfolk",
+    "name": "Port Norfolk (Hybrid)",
+    "website": "https://aaboston.org/meetings/port-norfolk",
+    "sourceUrl": "https://aaboston.org/meetings/port-norfolk",
+    "meeting": {
+      "days": [
+        6
+      ],
+      "time": "19:00",
+      "duration": 60,
+      "timezone": "America/New_York",
+      "joinUrl": null,
+      "notes": "Christ Community Church. Public joining details are on the original listing."
+    },
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "kind": "meeting",
+    "categories": [
+      "meetings"
+    ],
+    "address": "",
+    "city": "Newton",
+    "state": "MA",
+    "zip": "",
+    "lat": null,
+    "lng": null,
+    "coordinateAccuracy": "unavailable",
+    "phone": "",
+    "description": "A peer-led recovery meeting. Check the original listing before attending.",
+    "services": [
+      "Peer support"
+    ],
+    "formats": [
+      "online"
+    ],
+    "fellowship": "AA",
+    "languages": [],
+    "accessibility": [],
+    "populations": [
+      "Open meeting"
+    ],
+    "hours": "",
+    "intake": "See the original listing for current participation and joining details.",
+    "payment": [
+      "Free / donations"
+    ],
+    "insurance": [],
+    "paymentNote": "Peer support meeting; insurance is not required.",
+    "sourceName": "AA Boston Central Service",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": "2021-07-15",
+    "availability": "Not reported",
+    "id": "aa-newton-zoom",
+    "name": "Newton Zoom Group",
+    "website": "https://aaboston.org/meetings/new-norumbega-14",
+    "sourceUrl": "https://aaboston.org/meetings/new-norumbega-14",
+    "meeting": {
+      "days": [
+        6
+      ],
+      "time": "19:00",
+      "duration": 60,
+      "timezone": "America/New_York",
+      "joinUrl": null,
+      "notes": "Online only. Confirm the schedule and join from the original listing."
+    }
+  },
+  {
+    "kind": "meeting",
+    "categories": [
+      "meetings"
+    ],
+    "address": "1189 Main St, Worcester, MA 01603",
+    "city": "Worcester",
+    "state": "MA",
+    "zip": "01603",
+    "lat": 42.24361396422,
+    "lng": -71.839309488736,
+    "coordinateAccuracy": "address",
+    "phone": "",
+    "description": "A peer-led recovery meeting. Check the original listing before attending.",
+    "services": [
+      "Peer support"
+    ],
+    "formats": [
+      "in-person"
+    ],
+    "fellowship": "AA",
+    "languages": [],
+    "accessibility": [],
+    "populations": [
+      "Open meeting"
+    ],
+    "hours": "",
+    "intake": "See the original listing for current participation and joining details.",
+    "payment": [
+      "Free / donations"
+    ],
+    "insurance": [],
+    "paymentNote": "Peer support meeting; insurance is not required.",
+    "sourceName": "AA Boston Central Service",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": "2025-01-24",
+    "availability": "Not reported",
+    "id": "aa-there-is-hope",
+    "name": "There Is Hope",
+    "website": "https://aaboston.org/meetings/there-is-hope",
+    "sourceUrl": "https://aaboston.org/meetings/there-is-hope",
+    "meeting": {
+      "days": [
+        6
+      ],
+      "time": "19:00",
+      "duration": 60,
+      "timezone": "America/New_York",
+      "joinUrl": null,
+      "notes": "Christ Tabernacle Apostolic Church."
+    },
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "kind": "meeting",
+    "categories": [
+      "meetings"
+    ],
+    "address": "77 Rockland St, Hanover, MA 02339",
+    "city": "Hanover",
+    "state": "MA",
+    "zip": "02339",
+    "lat": 42.114466404192,
+    "lng": -70.826145864277,
+    "coordinateAccuracy": "address",
+    "phone": "",
+    "description": "A peer-led recovery meeting. Check the original listing before attending.",
+    "services": [
+      "Peer support"
+    ],
+    "formats": [
+      "in-person"
+    ],
+    "fellowship": "AA",
+    "languages": [],
+    "accessibility": [
+      "Wheelchair access"
+    ],
+    "populations": [
+      "Open meeting",
+      "Newcomers"
+    ],
+    "hours": "",
+    "intake": "See the original listing for current participation and joining details.",
+    "payment": [
+      "Free / donations"
+    ],
+    "insurance": [],
+    "paymentNote": "Peer support meeting; insurance is not required.",
+    "sourceName": "AA Boston Central Service",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": "2022-10-27",
+    "availability": "Not reported",
+    "id": "aa-acceptance-beginners",
+    "name": "Acceptance Beginners",
+    "website": "https://aaboston.org/meetings/acceptance-beginners-2",
+    "sourceUrl": "https://aaboston.org/meetings/acceptance-beginners-2",
+    "meeting": {
+      "days": [
+        6
+      ],
+      "time": "18:00",
+      "duration": 60,
+      "timezone": "America/New_York",
+      "joinUrl": null,
+      "notes": "Lutheran Church. Discussion meeting welcoming newcomers."
+    },
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "kind": "meeting",
+    "categories": [
+      "meetings"
+    ],
+    "address": "33 E Merrimack St, Lowell, MA 01852",
+    "city": "Lowell",
+    "state": "MA",
+    "zip": "01852",
+    "lat": 42.644596820701,
+    "lng": -71.304265095588,
+    "coordinateAccuracy": "address",
+    "phone": "",
+    "description": "A peer-led recovery meeting. Check the original listing before attending.",
+    "services": [
+      "Peer support"
+    ],
+    "formats": [
+      "in-person"
+    ],
+    "fellowship": "AA",
+    "languages": [],
+    "accessibility": [
+      "Wheelchair access",
+      "Accessible bathroom"
+    ],
+    "populations": [
+      "Open meeting"
+    ],
+    "hours": "",
+    "intake": "See the original listing for current participation and joining details.",
+    "payment": [
+      "Free / donations"
+    ],
+    "insurance": [],
+    "paymentNote": "Peer support meeting; insurance is not required.",
+    "sourceName": "AA Boston Central Service",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": "2026-03-03",
+    "availability": "Not reported",
+    "id": "aa-sobah-at-7",
+    "name": "Sobah at 7",
+    "website": "https://aaboston.org/meetings/sobah-at-7-6",
+    "sourceUrl": "https://aaboston.org/meetings/sobah-at-7-6",
+    "meeting": {
+      "days": [
+        6
+      ],
+      "time": "19:00",
+      "duration": 60,
+      "timezone": "America/New_York",
+      "joinUrl": null,
+      "notes": "The Bridge Club."
+    },
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "kind": "meeting",
+    "categories": [
+      "meetings"
+    ],
+    "address": "120 South St, Jamaica Plain, MA 02130",
+    "city": "Jamaica Plain",
+    "state": "MA",
+    "zip": "02130",
+    "lat": 42.306072633259,
+    "lng": -71.114902455756,
+    "coordinateAccuracy": "address",
+    "phone": "",
+    "description": "A peer-led recovery meeting. Check the original listing before attending.",
+    "services": [
+      "Peer support"
+    ],
+    "formats": [
+      "in-person"
+    ],
+    "fellowship": "Recovery Dharma",
+    "languages": [
+      "English"
+    ],
+    "accessibility": [],
+    "populations": [
+      "Open meeting"
+    ],
+    "hours": "",
+    "intake": "See the original listing for current participation and joining details.",
+    "payment": [
+      "Free / donations"
+    ],
+    "insurance": [],
+    "paymentNote": "Peer support meeting; insurance is not required.",
+    "sourceName": "Recovery Dharma",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": "2025-01-26",
+    "availability": "Not reported",
+    "id": "rd-boston-area",
+    "name": "Boston Area Recovery Dharma",
+    "website": "https://recoverydharma.org/meetings/boston-area-recovery-dharma/",
+    "sourceUrl": "https://recoverydharma.org/meetings/boston-area-recovery-dharma/",
+    "meeting": {
+      "days": [
+        6
+      ],
+      "time": "10:00",
+      "duration": 60,
+      "timezone": "America/New_York",
+      "joinUrl": null,
+      "notes": "Open to members and non-members. Buddhist-inspired peer support."
+    },
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "kind": "meeting",
+    "categories": [
+      "meetings"
+    ],
+    "address": "76 Merrimack St, STE 11, Haverhill, MA 01830",
+    "city": "Haverhill",
+    "state": "MA",
+    "zip": "01830",
+    "lat": 42.774669716523,
+    "lng": -71.078031131191,
+    "coordinateAccuracy": "address",
+    "phone": "",
+    "description": "A peer-led recovery meeting. Check the original listing before attending.",
+    "services": [
+      "Peer support"
+    ],
+    "formats": [
+      "in-person",
+      "online",
+      "hybrid"
+    ],
+    "fellowship": "Recovery Dharma",
+    "languages": [
+      "English"
+    ],
+    "accessibility": [],
+    "populations": [
+      "Open meeting"
+    ],
+    "hours": "",
+    "intake": "See the original listing for current participation and joining details.",
+    "payment": [
+      "Free / donations"
+    ],
+    "insurance": [],
+    "paymentNote": "Peer support meeting; insurance is not required.",
+    "sourceName": "Recovery Dharma",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": "2026-07-18",
+    "availability": "Not reported",
+    "id": "rd-haverhill",
+    "name": "Recovery Dharma — Haverhill",
+    "website": "https://recoverydharma.org/meetings/rd-haverhill/",
+    "sourceUrl": "https://recoverydharma.org/meetings/rd-haverhill/",
+    "meeting": {
+      "days": [
+        5
+      ],
+      "time": "19:00",
+      "duration": 60,
+      "timezone": "America/New_York",
+      "joinUrl": null,
+      "notes": "Nichiren Buddhist Sangha of Greater New England. Join online through the official listing."
+    },
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "kind": "meeting",
+    "categories": [
+      "meetings"
+    ],
+    "address": "",
+    "city": "Boston",
+    "state": "MA",
+    "zip": "",
+    "lat": null,
+    "lng": null,
+    "coordinateAccuracy": "unavailable",
+    "phone": "",
+    "description": "A peer-led recovery meeting. Check the original listing before attending.",
+    "services": [
+      "Peer support"
+    ],
+    "formats": [
+      "online"
+    ],
+    "fellowship": "SMART Recovery",
+    "languages": [
+      "English"
+    ],
+    "accessibility": [],
+    "populations": [
+      "Adults 18+"
+    ],
+    "hours": "",
+    "intake": "See the original listing for current participation and joining details.",
+    "payment": [
+      "Free / donations"
+    ],
+    "insurance": [],
+    "paymentNote": "Peer support meeting; insurance is not required.",
+    "sourceName": "SMART Recovery",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "availability": "Not reported",
+    "id": "smart-boston-4223",
+    "name": "SMART Recovery — Boston #4223",
+    "website": "https://meetings.smartrecovery.org/meetings/4223/",
+    "sourceUrl": "https://meetings.smartrecovery.org/meetings/4223/",
+    "meeting": {
+      "days": [
+        5
+      ],
+      "time": "18:00",
+      "duration": 90,
+      "timezone": "America/New_York",
+      "joinUrl": null,
+      "notes": "4-Point Recovery. The source renders this meeting in Eastern time. Use the official page to join."
+    }
+  },
+  {
+    "kind": "hospital",
+    "categories": [
+      "mental-health"
+    ],
+    "address": "309 Belmont St, Worcester, MA 01604",
+    "city": "Worcester",
+    "state": "MA",
+    "zip": "01604",
+    "lat": 42.273933134832,
+    "lng": -71.764019171533,
+    "coordinateAccuracy": "address",
+    "phone": "508-368-4000",
+    "description": "Massachusetts state psychiatric hospital. Contact the hospital or your care team about referral and admission pathways.",
+    "services": [
+      "Inpatient psychiatric care"
+    ],
+    "formats": [
+      "in-person"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "",
+    "intake": "Specialized state hospital. Admission requires clinical assessment and the applicable referral or legal process. This listing does not indicate walk-in admission or an available bed.",
+    "payment": [],
+    "insurance": [],
+    "paymentNote": "Payment and program eligibility are not reported here. Contact the hospital for admission requirements.",
+    "sourceName": "Mass.gov Department of Mental Health",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "availability": "Not reported",
+    "meeting": null,
+    "id": "worcester-recovery-center-hospital",
+    "name": "Worcester Recovery Center and Hospital",
+    "sourceUrl": "https://www.mass.gov/locations/worcester-recovery-center-and-hospital-wrch",
+    "website": "https://www.mass.gov/locations/worcester-recovery-center-and-hospital-wrch",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "kind": "hospital",
+    "categories": [
+      "mental-health"
+    ],
+    "address": "60 Hodges Avenue, Taunton, MA 02780",
+    "city": "Taunton",
+    "state": "MA",
+    "zip": "02780",
+    "lat": 41.905308645018,
+    "lng": -71.101266392692,
+    "coordinateAccuracy": "address",
+    "phone": "",
+    "description": "Massachusetts state psychiatric hospital. Contact the hospital or your care team about referral and admission pathways.",
+    "services": [
+      "Inpatient psychiatric care"
+    ],
+    "formats": [
+      "in-person"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "",
+    "intake": "Specialized state hospital. Admission requires clinical assessment and the applicable referral or legal process. This listing does not indicate walk-in admission or an available bed.",
+    "payment": [],
+    "insurance": [],
+    "paymentNote": "Payment and program eligibility are not reported here. Contact the hospital for admission requirements.",
+    "sourceName": "Mass.gov Department of Mental Health",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "availability": "Not reported",
+    "meeting": null,
+    "id": "taunton-state-hospital",
+    "name": "Taunton State Hospital",
+    "sourceUrl": "https://www.mass.gov/locations/taunton-state-hospital",
+    "website": "https://www.mass.gov/locations/taunton-state-hospital",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "kind": "treatment",
+    "categories": [
+      "treatment"
+    ],
+    "address": "107 Lincoln St, Worcester, MA 01605",
+    "city": "Worcester",
+    "state": "MA",
+    "zip": "01605",
+    "lat": 42.276891072937,
+    "lng": -71.795012559695,
+    "coordinateAccuracy": "address",
+    "phone": "",
+    "description": "Hospital-based alcohol and drug withdrawal management in Worcester, with planning for continued care.",
+    "services": [
+      "Medical detox",
+      "Alcohol treatment",
+      "Drug treatment",
+      "Co-occurring care",
+      "Residential treatment"
+    ],
+    "formats": [
+      "in-person"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [],
+    "hours": "Medical detox services operate 24/7; contact admissions.",
+    "intake": "Contact the official admissions team for assessment, current availability and benefits verification. Published same-day admissions are not a guarantee of an available bed.",
+    "payment": [
+      "Medicare",
+      "MassHealth",
+      "Commercial insurance",
+      "Self-pay"
+    ],
+    "insurance": [
+      {
+        "name": "Medicare",
+        "plan": "Not specified",
+        "status": "reported",
+        "note": "Facility website reports acceptance; confirm your benefits and admission.",
+        "sourceUrl": "https://adcare.com/locations/adcare-hospital/",
+        "checkedAt": "2026-10-22"
+      },
+      {
+        "name": "MassHealth",
+        "plan": "Not specified",
+        "status": "reported",
+        "note": "Facility website reports acceptance; confirm program and plan eligibility.",
+        "sourceUrl": "https://adcare.com/locations/adcare-hospital/",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "Facility website reports Medicare, MassHealth and commercial insurance acceptance. No specific commercial plan or network is verified here.",
+    "sourceName": "AdCare Hospital",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "availability": "Not reported",
+    "meeting": null,
+    "id": "adcare-hospital",
+    "name": "AdCare Hospital — Medical Detox",
+    "sourceUrl": "https://adcare.com/locations/adcare-hospital/",
+    "website": "https://adcare.com/locations/adcare-hospital/",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "bmc-addiction-psychiatry",
+    "name": "BMC Addiction Psychiatry Treatment Program",
+    "kind": "clinic",
+    "categories": [
+      "mental-health",
+      "counseling",
+      "treatment"
+    ],
+    "address": "801 Massachusetts Ave, 1st Floor, Boston, MA 02119",
+    "city": "Boston",
+    "state": "MA",
+    "zip": "02119",
+    "lat": 42.333438962693,
+    "lng": -71.073505864872,
+    "coordinateAccuracy": "address",
+    "phone": "617-414-4238",
+    "website": "https://www.bmc.org/departments/psychiatry/addiction-psychiatry-treatment-program",
+    "description": "Outpatient care for adults with both substance use and mental health conditions, including assessment, medication management and psychotherapy.",
+    "services": [
+      "Addiction psychiatry",
+      "Medication management",
+      "Individual and group therapy",
+      "Co-occurring care"
+    ],
+    "formats": [
+      "in-person"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [
+      "Adults"
+    ],
+    "hours": "Call to confirm",
+    "intake": "Call the psychiatry department to discuss assessment, referrals, current availability and the appointment location.",
+    "payment": [],
+    "insurance": [],
+    "paymentNote": "Specific insurance and program coverage have not been documented here. Confirm benefits with the department and your health plan.",
+    "sourceUrl": "https://www.bmc.org/departments/psychiatry/addiction-psychiatry-treatment-program",
+    "sourceName": "Boston Medical Center",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "spectrum-westborough",
+    "name": "Spectrum Health Systems — Westborough Campus",
+    "kind": "treatment",
+    "categories": [
+      "treatment"
+    ],
+    "address": "155 Oak St, Westborough, MA 01581",
+    "city": "Westborough",
+    "state": "MA",
+    "zip": "01581",
+    "lat": 42.285952717844,
+    "lng": -71.62806198207,
+    "coordinateAccuracy": "address",
+    "phone": "877-697-3422",
+    "website": "https://www.spectrumhealthsystems.org/154-155-oak-street-westborough/",
+    "description": "A treatment campus offering inpatient detoxification, clinical stabilization and residential care.",
+    "services": [
+      "Medical detox",
+      "Clinical stabilization",
+      "Residential treatment"
+    ],
+    "formats": [
+      "in-person"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [
+      "Adults"
+    ],
+    "hours": "Call to confirm",
+    "intake": "Call intake for clinical assessment, program location, payment options and current availability. The official campus address is 154–155 Oak Street.",
+    "payment": [
+      "Sliding scale"
+    ],
+    "insurance": [],
+    "paymentNote": "The organization publishes a sliding fee schedule. Confirm eligibility, program charges and your specific insurance plan with intake.",
+    "sourceUrl": "https://www.spectrumhealthsystems.org/154-155-oak-street-westborough/",
+    "sourceName": "Spectrum Health Systems",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "mclean-hospital-belmont",
+    "name": "McLean Hospital — Belmont",
+    "kind": "hospital",
+    "categories": [
+      "mental-health",
+      "treatment"
+    ],
+    "address": "115 Mill St, Belmont, MA 02478",
+    "city": "Belmont",
+    "state": "MA",
+    "zip": "02478",
+    "lat": 42.394668343012,
+    "lng": -71.195585908782,
+    "coordinateAccuracy": "address",
+    "phone": "",
+    "website": "https://www.massgeneralbrigham.org/en/locations/belmont-ma/mclean-hospital-loc0000280582",
+    "description": "Behavioral health hospital in Belmont. Contact the hospital about the appropriate psychiatric or substance use program and referral pathway.",
+    "services": [
+      "Psychiatric care",
+      "Substance use treatment"
+    ],
+    "formats": [
+      "in-person"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [
+      "Adults"
+    ],
+    "hours": "Call to confirm",
+    "intake": "Use the official hospital website to contact the relevant program. Admission, insurance and payment vary by program; a listing does not indicate an available bed.",
+    "payment": [
+      "Commercial insurance",
+      "MassHealth",
+      "Medicare"
+    ],
+    "insurance": [
+      {
+        "name": "Aetna",
+        "plan": "HMO, POS, PPO and selected other products",
+        "status": "published",
+        "note": "Excludes Premier Care Network and Medicaid replacement products.",
+        "sourceUrl": "https://www.massgeneralbrigham.org/content/dam/unified-xwalk/documents/en/patients-visitors/mcl-insurance-accepted.pdf",
+        "checkedAt": "2026-10-22"
+      },
+      {
+        "name": "Blue Cross Blue Shield",
+        "plan": "HMO, POS, PPO and selected other products",
+        "status": "published",
+        "note": "Select Blue, High Performance and Anthem Pathway networks excluded; Medicare Advantage has referral restrictions.",
+        "sourceUrl": "https://www.massgeneralbrigham.org/content/dam/unified-xwalk/documents/en/patients-visitors/mcl-insurance-accepted.pdf",
+        "checkedAt": "2026-10-22"
+      },
+      {
+        "name": "Cigna",
+        "plan": "HMO, POS, PPO and selected other products",
+        "status": "published",
+        "note": "Local Plus IN excluded; verify behavioral health administrator.",
+        "sourceUrl": "https://www.massgeneralbrigham.org/content/dam/unified-xwalk/documents/en/patients-visitors/mcl-insurance-accepted.pdf",
+        "checkedAt": "2026-10-22"
+      },
+      {
+        "name": "Harvard Pilgrim Health Care",
+        "plan": "HMO, POS, PPO, HPI, ConnectorCare",
+        "status": "published",
+        "note": "HPI Select, Elevate HMO and NH Local excluded.",
+        "sourceUrl": "https://www.massgeneralbrigham.org/content/dam/unified-xwalk/documents/en/patients-visitors/mcl-insurance-accepted.pdf",
+        "checkedAt": "2026-10-22"
+      },
+      {
+        "name": "MassHealth",
+        "plan": "MassHealth, PCC, MBHP and listed ACO products",
+        "status": "published",
+        "note": "Limited coverage restricted to emergency services.",
+        "sourceUrl": "https://www.massgeneralbrigham.org/content/dam/unified-xwalk/documents/en/patients-visitors/mcl-insurance-accepted.pdf",
+        "checkedAt": "2026-10-22"
+      },
+      {
+        "name": "Medicare",
+        "plan": "Parts A and B",
+        "status": "published",
+        "note": "Confirm the specific service and any authorization requirements.",
+        "sourceUrl": "https://www.massgeneralbrigham.org/content/dam/unified-xwalk/documents/en/patients-visitors/mcl-insurance-accepted.pdf",
+        "checkedAt": "2026-10-22"
+      }
+    ],
+    "paymentNote": "The hospital publishes an August 2026 insurer/product list. Some programs, services and affiliated clinicians may have different arrangements. Confirm the exact program, benefits and authorization.",
+    "sourceUrl": "https://www.massgeneralbrigham.org/en/locations/belmont-ma/mclean-hospital-loc0000280582",
+    "sourceName": "Mass General Brigham / McLean Hospital",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "darline-justal-np",
+    "name": "Darline Justal, NP — BMC",
+    "kind": "provider",
+    "categories": [
+      "mental-health",
+      "treatment"
+    ],
+    "address": "850 Harrison Avenue, Boston, MA 02118",
+    "city": "Boston",
+    "state": "MA",
+    "zip": "02118",
+    "lat": 42.334556978716,
+    "lng": -71.075584138097,
+    "coordinateAccuracy": "address",
+    "phone": "617-414-4238",
+    "website": "https://www.bmc.org/about-us/directory/doctor/darline-justal-np",
+    "description": "BMC lists Darline Justal as a psychiatric and mental health nurse practitioner in its Addiction Psychiatry Treatment Program. Credentials are reported from the provider profile; license status has not been independently verified here.",
+    "services": [
+      "Psychiatric nurse practitioner",
+      "Addiction psychiatry"
+    ],
+    "formats": [
+      "in-person"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [
+      "Adults"
+    ],
+    "hours": "Call to confirm",
+    "intake": "Call BMC psychiatry for appointment availability, eligibility and the correct appointment location.",
+    "payment": [],
+    "insurance": [],
+    "paymentNote": "Individual provider insurance participation is not reported here. Do not assume coverage from the hospital’s general insurance list.",
+    "sourceUrl": "https://www.bmc.org/about-us/directory/doctor/darline-justal-np",
+    "sourceName": "Boston Medical Center provider profile",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "brooke-rogers-psychologist",
+    "name": "Brooke Rogers, PhD, MPH — BMC",
+    "kind": "provider",
+    "categories": [
+      "mental-health",
+      "counseling"
+    ],
+    "address": "801 Massachusetts Ave, Boston, MA 02119",
+    "city": "Boston",
+    "state": "MA",
+    "zip": "02119",
+    "lat": 42.333438962693,
+    "lng": -71.073505864872,
+    "coordinateAccuracy": "address",
+    "phone": "617-414-4238",
+    "website": "https://www.bmc.org/node/173187",
+    "description": "BMC lists Brooke Rogers as a clinical psychologist providing psychological services for addiction. The address is the Addiction Psychiatry Treatment Program contact location; confirm the actual appointment site. License status is not independently verified here.",
+    "services": [
+      "Clinical psychology",
+      "Individual and group therapy",
+      "Substance use counseling"
+    ],
+    "formats": [
+      "in-person"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [
+      "Adults"
+    ],
+    "hours": "Call to confirm",
+    "intake": "Contact the Addiction Psychiatry Treatment Program to ask about this clinician’s current availability and appointment location.",
+    "payment": [],
+    "insurance": [],
+    "paymentNote": "Individual clinician insurance participation has not been documented. Confirm the clinician, location and plan with BMC and your insurer.",
+    "sourceUrl": "https://www.bmc.org/node/173187",
+    "sourceName": "BMC provider profile and Addiction Psychiatry program",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  },
+  {
+    "id": "william-reid-varley-md",
+    "name": "William Bernard Reid-Varley, MD, MPH — BMC",
+    "kind": "provider",
+    "categories": [
+      "mental-health",
+      "treatment"
+    ],
+    "address": "801 Massachusetts Ave, Boston, MA 02119",
+    "city": "Boston",
+    "state": "MA",
+    "zip": "02119",
+    "lat": 42.333438962693,
+    "lng": -71.073505864872,
+    "coordinateAccuracy": "address",
+    "phone": "617-414-4238",
+    "website": "https://www.bmc.org/about-us/directory/doctor/william-bernard-reid-varley-md-mph",
+    "description": "Physician listed on BMC’s Addiction Psychiatry Treatment Program team. The map shows the program contact location, not a confirmed appointment site. Professional license status has not been independently verified here.",
+    "services": [
+      "Psychiatry",
+      "Addiction psychiatry"
+    ],
+    "formats": [
+      "in-person"
+    ],
+    "fellowship": null,
+    "languages": [],
+    "accessibility": [],
+    "populations": [
+      "Adults"
+    ],
+    "hours": "Call to confirm",
+    "intake": "Contact BMC psychiatry to confirm this provider’s availability, eligibility and actual appointment location.",
+    "payment": [],
+    "insurance": [],
+    "paymentNote": "Individual clinician insurance participation is not reported here. Confirm the specific provider, service and plan.",
+    "sourceUrl": "https://www.bmc.org/about-us/directory/doctor/william-bernard-reid-varley-md-mph",
+    "sourceName": "BMC provider profile and Addiction Psychiatry team",
+    "sourceCheckedAt": "2026-10-22",
+    "verifiedAt": null,
+    "sourceUpdatedAt": null,
+    "meeting": null,
+    "availability": "Not reported",
+    "geocodeSource": "US Census Geocoder"
+  }
+]

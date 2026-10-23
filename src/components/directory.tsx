@@ -1,0 +1,1130 @@
+"use client";
+import dynamic from "next/dynamic";
+import { useEffect, useMemo, useState, useDeferredValue } from "react";
+import {
+  Compass,
+  Search,
+  MapPin,
+  Navigation,
+  SlidersHorizontal,
+  ArrowUpRight,
+  ArrowRight,
+  Bookmark,
+  Heart,
+  Users,
+  Building2,
+  Brain,
+  HandHeart,
+  Check,
+  X,
+  ShieldCheck,
+  Info,
+  Plus,
+  Map as MapIcon,
+  List,
+  ChevronDown,
+  Video,
+  Clock,
+  Phone,
+  RotateCcw,
+} from "lucide-react";
+import type { Resource, Filters } from "@/lib/types";
+import { categories } from "@/lib/types";
+import { defaultFilters, filterResources, miles } from "@/lib/search";
+import Modal from "./modal";
+import ResourceDetail, { CorrectionForm, NextTime } from "./resource-detail";
+const RecoveryMap = dynamic(() => import("./recovery-map"), {
+  ssr: false,
+  loading: () => <div className="map-loading">Loading map…</div>,
+});
+const directoryLinks = [
+  {
+    name: "AA · Eastern Massachusetts",
+    detail: "Local meetings & online options",
+    url: "https://aaboston.org/meetings",
+    type: "meetings",
+  },
+  {
+    name: "AA · Central Massachusetts",
+    detail: "Worcester & MetroWest",
+    url: "https://aaworcester.org/meetinglist.aspx?grp=wai",
+    type: "meetings",
+  },
+  {
+    name: "SMART Recovery",
+    detail: "Secular, skills-based peer support",
+    url: "https://meetings.smartrecovery.org/meetings/",
+    type: "meetings",
+  },
+  {
+    name: "Recovery Dharma",
+    detail: "Buddhist-inspired recovery",
+    url: "https://recoverydharma.org/meetings/",
+    type: "meetings",
+  },
+  {
+    name: "Narcotics Anonymous",
+    detail: "Official meeting search",
+    url: "https://www.na.org/meetingsearch/",
+    type: "meetings",
+  },
+  {
+    name: "Refuge Recovery",
+    detail: "Meditation-based peer support",
+    url: "https://www.refugerecovery.org/meetings",
+    type: "meetings",
+  },
+  {
+    name: "Massachusetts Substance Use Helpline",
+    detail: "Treatment, recovery & harm reduction",
+    url: "https://hub.helplinema.org/spa_result",
+    type: "treatment",
+  },
+  {
+    name: "FindTreatment.gov",
+    detail: "National treatment facility directory",
+    url: "https://findtreatment.gov/",
+    type: "treatment",
+  },
+  {
+    name: "MassHealth provider directory",
+    detail: "Search providers for your MassHealth plan",
+    url: "https://www.mass.gov/info-details/find-a-provider",
+    type: "provider",
+  },
+];
+function TypeIcon({ r }: { r: Resource }) {
+  return r.kind === "meeting" ? (
+    <Users size={20} />
+  ) : r.kind === "hospital" ? (
+    <Building2 size={20} />
+  ) : r.kind === "treatment" ? (
+    <Heart size={20} />
+  ) : (
+    <Brain size={20} />
+  );
+}
+function ResourceCard({
+  r,
+  saved,
+  onSave,
+  onOpen,
+  onHover,
+  center,
+  now,
+}: {
+  r: Resource;
+  saved: boolean;
+  onSave: () => void;
+  onOpen: () => void;
+  onHover: (id: string | null) => void;
+  center: Filters["center"];
+  now: Date | null;
+}) {
+  const distance =
+    center && r.lat !== null && r.lng !== null
+      ? miles(center, { lat: r.lat, lng: r.lng })
+      : null;
+  return (
+    <article
+      className="resource-card"
+      onMouseEnter={() => onHover(r.id)}
+      onMouseLeave={() => onHover(null)}
+    >
+      <div className="card-top">
+        <span className={`resource-icon ${r.kind}`}>
+          <TypeIcon r={r} />
+        </span>
+        <span className="card-type">
+          {r.fellowship ??
+            (r.kind === "clinic"
+              ? "Community care"
+              : r.kind === "hospital"
+                ? "Psychiatric hospital"
+                : r.kind === "provider"
+                  ? "Care provider"
+                  : "Treatment center")}
+        </span>
+        <button
+          className={`save-button ${saved ? "saved" : ""}`}
+          aria-label={`${saved ? "Unsave" : "Save"} ${r.name}`}
+          aria-pressed={saved}
+          onClick={onSave}
+        >
+          <Bookmark size={18} fill={saved ? "currentColor" : "none"} />
+        </button>
+      </div>
+      <button className="card-open" onClick={onOpen}>
+        <h3>{r.name}</h3>
+        <p className="card-location">
+          <MapPin size={13} />
+          {r.address ? r.city + ", MA" : "Online · based in " + r.city}
+          {distance !== null ? (
+            <span>
+              · {distance.toFixed(1)} mi
+              {r.coordinateAccuracy === "approximate" ? " (approx.)" : ""}
+            </span>
+          ) : null}
+        </p>
+        <p className="card-description">{r.description}</p>
+      </button>
+      <div className="card-tags">
+        {r.meeting ? (
+          <>
+            <span className="tag meeting-tag">
+              <Clock size={12} />
+              <NextTime resource={r} now={now} />
+            </span>
+            <span className="tag neutral">
+              {r.formats.includes("hybrid")
+                ? "Hybrid"
+                : r.formats.includes("online")
+                  ? "Online"
+                  : "In person"}
+            </span>
+          </>
+        ) : (
+          <>
+            <span className="tag">{r.services[0]}</span>
+            {r.payment.includes("MassHealth") ? (
+              <span className="tag neutral">MassHealth · confirm benefits</span>
+            ) : (
+              <span className="tag neutral">Payment: ask provider</span>
+            )}
+          </>
+        )}
+      </div>
+      <div className="card-bottom">
+        <span>
+          <ShieldCheck size={13} />
+          Sourced listing
+        </span>
+        <button onClick={onOpen}>
+          View details <ArrowUpRight size={15} />
+        </button>
+      </div>
+    </article>
+  );
+}
+export default function Directory({
+  resources,
+  mode,
+}: {
+  resources: Resource[];
+  mode: "database" | "snapshot";
+}) {
+  const [filters, setFilters] = useState<Filters>(defaultFilters),
+    [saved, setSaved] = useState<string[]>([]),
+    [selected, setSelected] = useState<Resource | null>(null),
+    [panel, setPanel] = useState(""),
+    [more, setMore] = useState(false),
+    [location, setLocation] = useState(""),
+    [locationLabel, setLocationLabel] = useState(""),
+    [locating, setLocating] = useState(false),
+    [message, setMessage] = useState(""),
+    [mobileView, setMobileView] = useState("list"),
+    [highlight, setHighlight] = useState<string | null>(null),
+    [limit, setLimit] = useState(20),
+    [now, setNow] = useState<Date | null>(null);
+  const query = useDeferredValue(filters.query);
+  useEffect(() => {
+    try {
+      const s = JSON.parse(localStorage.getItem("atlas:saved:v1") ?? "[]");
+      if (Array.isArray(s)) setSaved(s.filter((x) => typeof x === "string"));
+    } catch {}
+    setNow(new Date());
+    const timer = setInterval(() => setNow(new Date()), 60000);
+    return () => clearInterval(timer);
+  }, []);
+  const results = useMemo(
+    () =>
+      filterResources(
+        resources,
+        { ...filters, query },
+        saved,
+        now ?? new Date("2026-10-22T12:00:00Z"),
+      ),
+    [resources, filters, query, saved, now],
+  );
+  const activeCount = [
+    filters.format,
+    filters.fellowship,
+    filters.payment,
+    filters.service,
+    filters.language,
+    filters.population,
+    filters.day,
+    filters.accessibility,
+    filters.soon,
+  ].filter((v) => v !== "" && v !== false).length;
+  function update<K extends keyof Filters>(k: K, v: Filters[K]) {
+    setFilters((f) => ({ ...f, [k]: v }));
+    setLimit(20);
+  }
+  function toggleSave(id: string) {
+    setSaved((current) => {
+      const next = current.includes(id)
+        ? current.filter((x) => x !== id)
+        : [...current, id];
+      try {
+        localStorage.setItem("atlas:saved:v1", JSON.stringify(next));
+      } catch {
+        setMessage("Your browser could not save this resource.");
+      }
+      return next;
+    });
+  }
+  async function searchLocation(e?: React.FormEvent) {
+    e?.preventDefault();
+    if (!location.trim()) {
+      update("center", null);
+      setLocationLabel("");
+      return;
+    }
+    setLocating(true);
+    setMessage("");
+    try {
+      const res = await fetch("/api/location", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: location }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw Error(data.error);
+      setFilters((f) => ({
+        ...f,
+        center: { lat: data.lat, lng: data.lng },
+        bounds: null,
+      }));
+      setLocationLabel(
+        data.label + (data.approximate ? " · approximate center" : ""),
+      );
+      setLimit(20);
+    } catch (e) {
+      setMessage(e instanceof Error ? e.message : "Location unavailable.");
+    } finally {
+      setLocating(false);
+    }
+  }
+  function locate() {
+    if (!navigator.geolocation) {
+      setMessage(
+        "This browser does not support location access. Enter a city or ZIP instead.",
+      );
+      return;
+    }
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (p) => {
+        setFilters((f) => ({
+          ...f,
+          center: { lat: p.coords.latitude, lng: p.coords.longitude },
+          bounds: null,
+        }));
+        setLocationLabel("Your current location");
+        setLocation("");
+        setLocating(false);
+        setMessage("");
+      },
+      () => {
+        setMessage(
+          "Location access wasn’t available. Enter a city or ZIP instead.",
+        );
+        setLocating(false);
+      },
+      { timeout: 10000, maximumAge: 120000 },
+    );
+  }
+  function reset() {
+    setFilters(defaultFilters);
+    setLocation("");
+    setLocationLabel("");
+    setMessage("");
+    setLimit(20);
+  }
+  const options = (key: "services" | "languages" | "populations") =>
+    [...new Set(resources.flatMap((r) => r[key]))].sort();
+  return (
+    <>
+      <a className="skip-link" href="#results">
+        Skip to results
+      </a>
+      <div className="help-strip">
+        <span>
+          <Heart size={13} />
+          You don’t have to figure it out alone.
+        </span>
+        <button onClick={() => setPanel("help")}>
+          Talk to someone who can help <ArrowUpRight size={13} />
+        </button>
+      </div>
+      <header className="site-header">
+        <a href="/" className="brand">
+          <span className="brand-mark">
+            <Compass size={26} strokeWidth={1.5} />
+          </span>
+          <span>
+            recovery<span className="brand-light">atlas</span>
+            <small>A LITTLE DIRECTION. A WAY FORWARD.</small>
+          </span>
+        </a>
+        <nav aria-label="Main navigation">
+          <button
+            className="nav-active"
+            onClick={() => {
+              reset();
+              setPanel("");
+            }}
+          >
+            Explore resources
+          </button>
+          <button onClick={() => setPanel("guide")}>
+            Finding your next step
+          </button>
+          <button onClick={() => setPanel("about")}>About the project</button>
+        </nav>
+        <button
+          className={`saved-nav ${filters.savedOnly ? "active" : ""}`}
+          onClick={() => {
+            update("savedOnly", !filters.savedOnly);
+          }}
+        >
+          <Bookmark size={16} />
+          Saved<span>{saved.length}</span>
+        </button>
+      </header>
+      <main>
+        <section className="intro">
+          <div className="intro-text">
+            <span className="eyebrow">
+              <span className="live-dot" />
+              THE MASSACHUSETTS PILOT
+            </span>
+            <h1>
+              Your next step starts <em>here.</em>
+            </h1>
+            <p>
+              Find meetings, treatment, and people who understand.
+              <br className="desktop-break" />
+              Support for wherever you are in your recovery.
+            </p>
+          </div>
+          <div className="intro-note">
+            <span className="note-drawing">
+              <HandHeart size={38} strokeWidth={1} />
+            </span>
+            <p>
+              Different paths.
+              <br />
+              One way forward: <strong>yours.</strong>
+            </p>
+          </div>
+        </section>
+        <section className="search-section" aria-label="Search resources">
+          <div className="search-bar">
+            <label className="keyword-field">
+              <Search size={19} />
+              <span className="sr-only">Search keywords</span>
+              <input
+                value={filters.query}
+                onChange={(e) => update("query", e.target.value)}
+                placeholder="Meeting, service, or keyword…"
+              />
+            </label>
+            <form className="location-form" onSubmit={searchLocation}>
+              <label className="location-field">
+                <MapPin size={19} />
+                <span className="sr-only">
+                  Massachusetts city, ZIP or address
+                </span>
+                <input
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  placeholder="City, ZIP, or street address"
+                />
+              </label>
+              <button
+                type="button"
+                className="icon-button locate-button"
+                aria-label="Use my current location"
+                disabled={locating}
+                onClick={locate}
+              >
+                <Navigation size={17} />
+              </button>
+              <label className="radius-field">
+                <span className="sr-only">Search radius</span>
+                <select
+                  value={filters.radius}
+                  onChange={(e) => update("radius", Number(e.target.value))}
+                >
+                  {[5, 10, 25, 50, 100, 200].map((n) => (
+                    <option key={n} value={n}>
+                      {n} miles
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <button className="primary search-submit" disabled={locating}>
+                {locating ? (
+                  "Locating…"
+                ) : (
+                  <>
+                    Find support <ArrowRight size={17} />
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
+          {message ? (
+            <p className="form-error" role="status">
+              {message}
+            </p>
+          ) : null}
+          {locationLabel || filters.bounds ? (
+            <div className="location-status">
+              <MapPin size={13} />
+              {filters.bounds
+                ? "Searching the visible map area"
+                : locationLabel}
+              <button
+                aria-label="Clear location restriction"
+                onClick={() => {
+                  setFilters((f) => ({ ...f, center: null, bounds: null }));
+                  setLocationLabel("");
+                  setLocation("");
+                }}
+              >
+                <X size={13} />
+              </button>
+            </div>
+          ) : null}
+        </section>
+        <section className="filter-section" aria-label="Filter resources">
+          <div className="category-tabs">
+            {categories.map((c, i) => {
+              const Icon = [Compass, Users, Heart, Brain, HandHeart, Building2][
+                i
+              ];
+              return (
+                <button
+                  key={c.id}
+                  className={filters.category === c.id ? "active" : ""}
+                  onClick={() => {
+                    setFilters((f) => ({
+                      ...defaultFilters,
+                      query: f.query,
+                      center: f.center,
+                      radius: f.radius,
+                      bounds: f.bounds,
+                      savedOnly: f.savedOnly,
+                      category: c.id,
+                    }));
+                    setLimit(20);
+                  }}
+                >
+                  <Icon size={16} />
+                  {c.label}
+                </button>
+              );
+            })}
+          </div>
+          <div className="quick-filters">
+            <label className="filter-select">
+              <Video size={14} />
+              <select
+                aria-label="Attendance format"
+                value={filters.format}
+                onChange={(e) => update("format", e.target.value)}
+              >
+                <option value="">Any format</option>
+                <option value="in-person">In person</option>
+                <option value="online">Online meetings</option>
+                <option value="hybrid">Hybrid meetings</option>
+                <option value="telehealth">Telehealth care</option>
+              </select>
+              <ChevronDown size={12} />
+            </label>
+            <label className="filter-select">
+              <ShieldCheck size={14} />
+              <select
+                aria-label="Insurance or payment"
+                value={filters.payment}
+                onChange={(e) => update("payment", e.target.value)}
+              >
+                <option value="">Insurance & payment</option>
+                {[
+                  ...new Set(
+                    resources.flatMap((r) => [
+                      ...r.payment,
+                      ...r.insurance.map((i) => i.name),
+                    ]),
+                  ),
+                ]
+                  .sort()
+                  .map((p) => (
+                    <option key={p}>{p}</option>
+                  ))}
+              </select>
+              <ChevronDown size={12} />
+            </label>
+            <button
+              className={`more-filter ${activeCount ? "has-filters" : ""}`}
+              onClick={() => setMore(!more)}
+              aria-expanded={more}
+            >
+              <SlidersHorizontal size={15} />
+              More filters{activeCount ? <span>{activeCount}</span> : null}
+            </button>
+            {activeCount ||
+            filters.query ||
+            filters.center ||
+            filters.bounds ? (
+              <button className="reset-button" onClick={reset}>
+                <RotateCcw size={13} />
+                Reset
+              </button>
+            ) : null}
+          </div>
+          {more ? (
+            <div className="expanded-filters">
+              <label>
+                Recovery approach
+                <select
+                  value={filters.fellowship}
+                  onChange={(e) => update("fellowship", e.target.value)}
+                >
+                  <option value="">Any approach</option>
+                  {[
+                    "AA",
+                    "NA",
+                    "SMART Recovery",
+                    "Recovery Dharma",
+                    "Refuge Recovery",
+                  ].map((s) => (
+                    <option key={s}>{s}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Service
+                <select
+                  value={filters.service}
+                  onChange={(e) => update("service", e.target.value)}
+                >
+                  <option value="">Any service</option>
+                  {options("services").map((s) => (
+                    <option key={s}>{s}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Language
+                <select
+                  value={filters.language}
+                  onChange={(e) => update("language", e.target.value)}
+                >
+                  <option value="">Any / not reported</option>
+                  {options("languages").map((s) => (
+                    <option key={s}>{s}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Meeting day
+                <select
+                  value={filters.day}
+                  onChange={(e) => update("day", e.target.value)}
+                >
+                  <option value="">Any day</option>
+                  {[
+                    "Sunday",
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday",
+                  ].map((d, i) => (
+                    <option key={d} value={i}>
+                      {d}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Participants
+                <select
+                  value={filters.population}
+                  onChange={(e) => update("population", e.target.value)}
+                >
+                  <option value="">Any / not reported</option>
+                  {options("populations").map((s) => (
+                    <option key={s}>{s}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={filters.accessibility}
+                  onChange={(e) => update("accessibility", e.target.checked)}
+                />
+                Reported wheelchair access
+              </label>
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={filters.soon}
+                  onChange={(e) => update("soon", e.target.checked)}
+                />
+                Meetings starting in 3 hours
+              </label>
+              <p className="filter-footnote">
+                Filters match reported information. Missing information means
+                “not reported.” Some approaches currently have
+                official-directory links only.
+              </p>
+            </div>
+          ) : null}
+        </section>
+        <section className="directory-workspace">
+          <div
+            className={`results-panel ${mobileView === "map" ? "mobile-hidden" : ""}`}
+            id="results"
+          >
+            <div className="results-heading">
+              <div>
+                <span className="eyebrow small">A PLACE TO BEGIN</span>
+                <h2>
+                  {filters.savedOnly
+                    ? "Your saved resources"
+                    : filters.category === "meetings"
+                      ? "Find your people"
+                      : "Explore your options"}
+                  <span>{results.length}</span>
+                </h2>
+              </div>
+              <span className="sort-label">
+                {filters.category === "meetings" ||
+                filters.format === "online" ||
+                filters.soon
+                  ? "Next meeting first"
+                  : filters.center
+                    ? "Nearest first"
+                    : "A–Z"}
+              </span>
+            </div>
+            <div className="coverage-note">
+              <Info size={15} />
+              <p>
+                Curated pilot · selected meetings and care locations.
+                <button onClick={() => setPanel("coverage")}>
+                  About our coverage <ArrowUpRight size={12} />
+                </button>
+                {mode === "snapshot" ? (
+                  <strong> Serving a dated backup snapshot.</strong>
+                ) : null}
+              </p>
+            </div>
+            {results.length ? (
+              <div className="resource-list">
+                {results.slice(0, limit).map((r) => (
+                  <ResourceCard
+                    key={r.id}
+                    r={r}
+                    saved={saved.includes(r.id)}
+                    onSave={() => toggleSave(r.id)}
+                    onOpen={() => setSelected(r)}
+                    onHover={setHighlight}
+                    center={filters.center}
+                    now={now}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="empty-state">
+                <Compass size={35} strokeWidth={1} />
+                <h3>There are more paths to explore.</h3>
+                <p>
+                  {filters.savedOnly
+                    ? "Save a resource using its bookmark button. Your list stays on this device."
+                    : "No curated listings match these filters. Try a wider radius, fewer filters, or an official directory below."}
+                </p>
+                <button className="secondary" onClick={reset}>
+                  Clear filters
+                </button>
+              </div>
+            )}
+            {results.length > limit ? (
+              <button
+                className="load-more secondary"
+                onClick={() => setLimit((n) => n + 20)}
+              >
+                Show more resources <Plus size={16} />
+              </button>
+            ) : null}
+            <div className="directory-fallback">
+              <div className="section-inline">
+                <h3>Keep exploring</h3>
+                <ArrowUpRight size={18} />
+              </div>
+              <p>More options from the organizations that maintain them.</p>
+              <div className="directory-link-grid">
+                {directoryLinks
+                  .filter((x) =>
+                    filters.category === "meetings"
+                      ? x.type === "meetings"
+                      : true,
+                  )
+                  .map((d) => (
+                    <a
+                      key={d.name}
+                      href={d.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <span>
+                        <strong>{d.name}</strong>
+                        <small>{d.detail}</small>
+                      </span>
+                      <ArrowUpRight size={15} />
+                    </a>
+                  ))}
+              </div>
+            </div>
+            <div className="suggest-box">
+              <HandHeart size={26} strokeWidth={1.3} />
+              <div>
+                <strong>Good information helps people find help.</strong>
+                <p>Know a resource we should include?</p>
+              </div>
+              <button
+                aria-label="Suggest a resource"
+                onClick={() => setPanel("suggest")}
+              >
+                <Plus size={20} />
+              </button>
+            </div>
+          </div>
+          <div
+            className={`map-panel ${mobileView === "list" ? "mobile-hidden" : ""}`}
+          >
+            <RecoveryMap
+              resources={results}
+              center={filters.center}
+              onSelect={setSelected}
+              onBounds={(b) => {
+                setFilters((f) => ({ ...f, bounds: b, center: null }));
+                setLocationLabel("");
+              }}
+              highlight={highlight}
+            />
+          </div>
+        </section>
+      </main>
+      <footer className="site-footer">
+        <span className="footer-brand">
+          <Compass size={18} /> recovery atlas
+        </span>
+        <p>Independent. Free to explore. Built with care.</p>
+        <div>
+          <button onClick={() => setPanel("privacy")}>Privacy</button>
+          <button onClick={() => setPanel("coverage")}>
+            Sources & coverage
+          </button>
+          <button onClick={() => setPanel("suggest")}>
+            Suggest a resource
+          </button>
+        </div>
+      </footer>
+      <div className="mobile-view-switch">
+        <button
+          className={mobileView === "list" ? "active" : ""}
+          onClick={() => setMobileView("list")}
+        >
+          <List size={16} />
+          List
+        </button>
+        <button
+          className={mobileView === "map" ? "active" : ""}
+          onClick={() => setMobileView("map")}
+        >
+          <MapIcon size={16} />
+          Map
+        </button>
+      </div>
+      {selected ? (
+        <ResourceDetail
+          key={selected.id}
+          resource={selected}
+          onClose={() => setSelected(null)}
+          saved={saved.includes(selected.id)}
+          onSave={() => toggleSave(selected.id)}
+          now={now}
+        />
+      ) : null}
+      <Modal
+        open={!!panel}
+        onClose={() => setPanel("")}
+        title={
+          panel === "help"
+            ? "A real person. A next step."
+            : panel === "guide"
+              ? "There’s more than one path."
+              : panel === "privacy"
+                ? "Your search is personal."
+                : panel === "suggest"
+                  ? "Help someone find their next step."
+                  : panel === "coverage"
+                    ? "Useful information, honestly labeled."
+                    : "Recovery looks different for everyone."
+        }
+      >
+        {panel === "help" ? (
+          <div className="stack">
+            <p>
+              If there is an immediate medical emergency or suspected overdose,
+              call <a href="tel:911">911</a>.
+            </p>
+            <a className="help-card" href="tel:8003275050">
+              <Heart />
+              <span>
+                <strong>Massachusetts Substance Use Helpline</strong>
+                <small>800-327-5050 · Free and confidential · 24/7</small>
+              </span>
+              <Phone size={17} />
+            </a>
+            <a className="help-card" href="tel:8337732445">
+              <Brain />
+              <span>
+                <strong>Massachusetts Behavioral Health Help Line</strong>
+                <small>833-773-2445 · Call or text · 24/7</small>
+              </span>
+              <Phone size={17} />
+            </a>
+            <a
+              className="help-card"
+              href="tel:988?oai_link_source=model_response_hotline"
+            >
+              <HandHeart />
+              <span>
+                <strong>988 Suicide & Crisis Lifeline</strong>
+                <small>Call 988 for crisis counseling and referrals</small>
+              </span>
+              <Phone size={17} />
+            </a>
+            <a
+              className="text-link"
+              href="https://988lifeline.org/chat/?oai_link_source=model_response_hotline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Chat with 988 <ArrowUpRight size={14} />
+            </a>
+            <p className="muted">
+              Official sources:{" "}
+              <a
+                href="https://helplinema.org/contact-us/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                MA Substance Use Helpline
+              </a>{" "}
+              ·{" "}
+              <a
+                href="https://www.mass.gov/community-behavioral-health-centers"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Mass.gov
+              </a>
+            </p>
+          </div>
+        ) : null}
+        {panel === "guide" ? (
+          <div className="stack">
+            <div className="guide-step">
+              <Users />
+              <div>
+                <h3>Find connection</h3>
+                <p>
+                  AA, SMART Recovery, Recovery Dharma and other peer groups
+                  offer different approaches. Read participation details and try
+                  the official directories for more meeting choices.
+                </p>
+                <button
+                  className="text-link"
+                  onClick={() => {
+                    update("category", "meetings");
+                    setPanel("");
+                  }}
+                >
+                  Explore meetings <ArrowRight size={14} />
+                </button>
+              </div>
+            </div>
+            <div className="guide-step">
+              <Heart />
+              <div>
+                <h3>Explore treatment</h3>
+                <p>
+                  Detox, residential and outpatient services offer different
+                  levels of support. A provider or the Massachusetts Substance
+                  Use Helpline can help you understand the options and arrange
+                  an assessment.
+                </p>
+                <button
+                  className="text-link"
+                  onClick={() => {
+                    update("category", "treatment");
+                    setPanel("");
+                  }}
+                >
+                  Explore treatment <ArrowRight size={14} />
+                </button>
+              </div>
+            </div>
+            <div className="guide-step">
+              <Brain />
+              <div>
+                <h3>Support your mental health</h3>
+                <p>
+                  Community Behavioral Health Centers offer mental health and
+                  substance use care. Check service areas, intake requirements
+                  and payment details with the center.
+                </p>
+                <button
+                  className="text-link"
+                  onClick={() => {
+                    update("category", "mental-health");
+                    setPanel("");
+                  }}
+                >
+                  Explore mental health care <ArrowRight size={14} />
+                </button>
+              </div>
+            </div>
+            <p className="notice">
+              This directory helps you find resources. A qualified professional
+              can assess your needs and recommend care.
+            </p>
+          </div>
+        ) : null}
+        {panel === "about" ? (
+          <div className="stack">
+            <p>
+              Recovery Atlas brings recovery meetings, treatment and mental
+              health resources into one approachable place, starting in
+              Massachusetts.
+            </p>
+            <p>
+              We believe people deserve clear information, room to choose their
+              own approach, and a way to connect with real support.
+            </p>
+            <p>
+              Search results are ordered by relevance to your filters, distance
+              or meeting time. There are no paid placements or referral fees.
+            </p>
+            <p className="notice">
+              This is an independent directory. Listings do not imply
+              affiliation, endorsement, verified clinical quality or guaranteed
+              availability.
+            </p>
+          </div>
+        ) : null}
+        {panel === "privacy" ? (
+          <div className="stack">
+            <p>
+              No account is needed to browse. Favorites are stored only in this
+              browser. We do not install advertising trackers or session replay.
+            </p>
+            <p>
+              Your keyword filters run in your browser. Location lookup sends
+              the location you enter to this app; street addresses are passed to
+              the U.S. Census geocoder. Browser location is used locally to
+              calculate distances.
+            </p>
+            <p>
+              The map provider receives your IP address and requests for the map
+              areas you view. Hosting providers process technical access
+              information under their own policies. We do not promise that
+              infrastructure logs contain no metadata.
+            </p>
+            <p>
+              Correction submissions are stored in our review inbox. Don’t
+              include medical or insurance identification information. Rate
+              limits use a keyed hash of your IP address with an expiration, not
+              your raw IP address.
+            </p>
+            <button
+              className="secondary"
+              onClick={() => {
+                setSaved([]);
+                try {
+                  localStorage.removeItem("atlas:saved:v1");
+                } catch {}
+                setMessage("Saved resources cleared from this browser.");
+                setPanel("");
+              }}
+            >
+              Clear saved resources
+            </button>
+          </div>
+        ) : null}
+        {panel === "coverage" ? (
+          <div className="stack">
+            <p>
+              The Massachusetts pilot includes all 31 locations published in the
+              state’s CBHC directory at the time of review, selected recovery
+              meetings, treatment services and state hospitals. It is not an
+              exhaustive directory.
+            </p>
+            <p>
+              Initial public sources were reviewed October 22, 2026. Every
+              listing links to its source. “Source reviewed” does not mean we
+              contacted the provider or group; direct verification is shown
+              separately.
+            </p>
+            <p>
+              Some source meeting schedules have older update dates. Confirm
+              details with the group before traveling. The scheduled next
+              meeting is a calculation, not confirmation that it will occur.
+            </p>
+            <p>
+              Individual clinician coverage, named commercial insurance networks
+              and additional treatment programs are being developed. Use the
+              official directories for options outside our current coverage.
+            </p>
+            <p>
+              Bulk meeting feeds and the SAMHSA API will be enabled only after
+              access and reuse requirements are resolved. Automated link checks
+              do not update a listing’s verification date.
+            </p>
+            <p className="notice">
+              Insurance acceptance, availability, admission and clinical
+              suitability must be confirmed. Online-only meetings never receive
+              a physical map pin.
+            </p>
+            <div className="directory-link-grid">
+              {directoryLinks.map((d) => (
+                <a
+                  key={d.name}
+                  href={d.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {d.name}
+                  <ArrowUpRight size={15} />
+                </a>
+              ))}
+            </div>
+          </div>
+        ) : null}
+        {panel === "suggest" ? (
+          <CorrectionForm onDone={() => setPanel("")} />
+        ) : null}
+      </Modal>
+    </>
+  );
+}

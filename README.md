@@ -75,4 +75,3 @@ Source review, source-reported update, direct verification and import/update dat
 This is an independent directory, not a clinical assessment, referral intermediary, emergency response service or exhaustive statewide registry. There are no paid placements, referral fees, advertising scripts or session replay. Browsing requires no account. Do not collect insurance IDs, clinical histories or appointment records through directory forms. Infrastructure vendors still process technical request metadata.
 
 Individual clinician license status has not been independently verified. A provider profile or NPI is not license verification. Use official licensing and insurer sources when expanding verification.
-
