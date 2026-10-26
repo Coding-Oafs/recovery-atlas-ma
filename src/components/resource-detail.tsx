@@ -163,7 +163,7 @@ export default function ResourceDetail({
       open
       onClose={onClose}
       title={r.name}
-      description={`${r.fellowship ?? (r.kind === "clinic" ? "Community behavioral health center" : r.kind === "hospital" ? "Psychiatric hospital" : r.kind === "provider" ? "Care provider" : "Treatment & support")} · ${r.city}, Massachusetts`}
+      description={`${r.fellowship ?? (r.kind === "clinic" ? "Behavioral health services" : r.kind === "hospital" ? "Psychiatric hospital" : r.kind === "provider" ? "Care provider" : "Treatment & support")} · ${r.city}, ${r.state}`}
       wide
     >
       <div className="detail-tags">

@@ -66,6 +66,7 @@ export function filterResources(
   const words = f.query.toLowerCase().trim().split(/\s+/).filter(Boolean);
   return resources
     .filter((r) => {
+      if (f.state && r.state !== f.state) return false;
       if (
         f.category !== "all" &&
         !r.categories.includes(f.category as Resource["categories"][number])
@@ -160,6 +161,7 @@ export function filterResources(
     });
 }
 export const defaultFilters: Filters = {
+  state: "",
   query: "",
   category: "all",
   format: "",

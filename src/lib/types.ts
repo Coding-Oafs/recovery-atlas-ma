@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { regionStates } from "./region";
 const webUrl = z
   .string()
   .url()
@@ -32,10 +33,10 @@ export const resourceSchema = z
       .min(1),
     address: z.string().max(300),
     city: z.string().max(100),
-    state: z.literal("MA"),
+    state: z.enum(regionStates),
     zip: z.string().regex(/^\d{5}$|^$/),
-    lat: z.number().min(41).max(43).nullable(),
-    lng: z.number().min(-74).max(-69).nullable(),
+    lat: z.number().min(38.8).max(47.6).nullable(),
+    lng: z.number().min(-80.6).max(-66.8).nullable(),
     coordinateAccuracy: z.enum(["address", "approximate", "unavailable"]),
     phone: z.string().max(70),
     website: webUrl,
@@ -95,6 +96,14 @@ export const resourceSchema = z
   });
 export type Resource = z.infer<typeof resourceSchema>;
 export type MapResource = Pick<Resource, "id" | "kind" | "lat" | "lng">;
+export type MapPoint = {
+  id: string;
+  kind: Resource["kind"] | "cluster";
+  lat: number;
+  lng: number;
+  count: number;
+  bounds: number[];
+};
 export const categories = [
   { id: "all", label: "All resources" },
   { id: "meetings", label: "Meetings" },
@@ -104,6 +113,7 @@ export const categories = [
   { id: "support", label: "Recovery support" },
 ] as const;
 export type Filters = {
+  state?: string;
   query: string;
   category: string;
   format: string;

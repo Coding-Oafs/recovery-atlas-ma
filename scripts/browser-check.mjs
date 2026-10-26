@@ -44,11 +44,12 @@ try {
     page.waitForResponse(
       (r) =>
         r.url().endsWith("/api/search") &&
-        r.request().postDataJSON()?.filters.query === "Worcester detox",
+        r.request().postDataJSON()?.filters.query ===
+          "AdCare Hospital Medical Detox",
     ),
     page
       .getByRole("textbox", { name: "Search keywords" })
-      .fill("Worcester detox"),
+      .fill("AdCare Hospital Medical Detox"),
   ]);
   await page
     .locator(".resource-card")
@@ -70,7 +71,7 @@ try {
   await page.getByRole("button", { name: "Close dialog" }).click();
   await page.getByRole("button", { name: "Reset", exact: true }).click();
   await page
-    .getByRole("textbox", { name: "Massachusetts city, ZIP or address" })
+    .getByRole("textbox", { name: "Northeast city, state, ZIP or address" })
     .fill("02118");
   await page.getByRole("button", { name: "Find support" }).click();
   await page.locator(".location-status").waitFor();

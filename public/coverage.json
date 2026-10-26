@@ -1,49 +1,170 @@
 {
-  "reviewedAt": "2026-10-22",
-  "total": 66587,
-  "mapped": 66123,
-  "approximate": 4035,
-  "online_or_unmapped": 464,
+  "reviewedAt": "2026-10-26",
+  "total": 318382,
+  "mapped": 314950,
+  "approximate": 20954,
+  "online_or_unmapped": 3432,
+  "unmapped_physical": 1,
+  "states": [
+    {
+      "state": "CT",
+      "listings": 25893,
+      "mapped": 25573,
+      "meetings": 2176
+    },
+    {
+      "state": "MA",
+      "listings": 67181,
+      "mapped": 66706,
+      "meetings": 3341
+    },
+    {
+      "state": "ME",
+      "listings": 10801,
+      "mapped": 10638,
+      "meetings": 1107
+    },
+    {
+      "state": "NH",
+      "listings": 8366,
+      "mapped": 8247,
+      "meetings": 890
+    },
+    {
+      "state": "NJ",
+      "listings": 36755,
+      "mapped": 36590,
+      "meetings": 1040
+    },
+    {
+      "state": "NY",
+      "listings": 100795,
+      "mapped": 99378,
+      "meetings": 4964
+    },
+    {
+      "state": "PA",
+      "listings": 55047,
+      "mapped": 54498,
+      "meetings": 4734
+    },
+    {
+      "state": "RI",
+      "listings": 8013,
+      "mapped": 7909,
+      "meetings": 603
+    },
+    {
+      "state": "VT",
+      "listings": 5531,
+      "mapped": 5411,
+      "meetings": 572
+    }
+  ],
   "sources": [
     {
       "name": "NPPES public provider registry",
-      "listings": 62582
+      "listings": 281000
+    },
+    {
+      "name": "NPPES public facility registry",
+      "listings": 12261
+    },
+    {
+      "name": "SAMHSA 2025 national facility directories",
+      "listings": 3949
+    },
+    {
+      "name": "NA USA / public BMLT regional meeting aggregate",
+      "listings": 3560
+    },
+    {
+      "name": "AA official directory · area59aa.org",
+      "listings": 3043
+    },
+    {
+      "name": "AA official directory · www.nyintergroup.org",
+      "listings": 2840
     },
     {
       "name": "AA Boston public meeting listings",
       "listings": 2627
     },
     {
+      "name": "AA official directory · ct-aa.org",
+      "listings": 1900
+    },
+    {
+      "name": "New York OASAS public program directory",
+      "listings": 977
+    },
+    {
+      "name": "AA official directory · nhaa.net",
+      "listings": 813
+    },
+    {
+      "name": "AA official directory · csoaamaine.org",
+      "listings": 802
+    },
+    {
       "name": "Massachusetts BSAS public program directory",
       "listings": 687
+    },
+    {
+      "name": "AA official directory · rhodeisland-aa.org",
+      "listings": 620
+    },
+    {
+      "name": "AA official directory · aavt.org",
+      "listings": 528
+    },
+    {
+      "name": "AA official directory · buffaloaany.org",
+      "listings": 455
+    },
+    {
+      "name": "AA official directory · aasj.org",
+      "listings": 399
+    },
+    {
+      "name": "AA official directory · www.aasyracuse.org",
+      "listings": 397
     },
     {
       "name": "NERNA public BMLT meeting service",
       "listings": 334
     },
     {
+      "name": "Recovery Dharma official public meeting feed",
+      "listings": 254
+    },
+    {
+      "name": "SMART Recovery official public meeting pages",
+      "listings": 218
+    },
+    {
+      "name": "AA official directory · www.aalv.org",
+      "listings": 212
+    },
+    {
       "name": "Worcester Area Intergroup public meeting list",
       "listings": 187
+    },
+    {
+      "name": "AA official directory · downeastintergroup.org",
+      "listings": 187
+    },
+    {
+      "name": "Refuge Recovery official public meeting feed",
+      "listings": 42
     },
     {
       "name": "MassGIS / Massachusetts DPH hospital dataset",
       "listings": 41
     },
     {
-      "name": "SMART Recovery official public meeting pages",
-      "listings": 39
-    },
-    {
       "name": "Mass.gov CBHC directory",
       "listings": 31
-    },
-    {
-      "name": "Recovery Dharma official public meeting feed",
-      "listings": 28
-    },
-    {
-      "name": "Refuge Recovery official public meeting feed",
-      "listings": 13
     },
     {
       "name": "AA Boston Central Service",
@@ -58,15 +179,11 @@
       "listings": 2
     },
     {
-      "name": "AdCare Hospital",
-      "listings": 1
-    },
-    {
       "name": "Boston Medical Center provider profile",
       "listings": 1
     },
     {
-      "name": "SMART Recovery",
+      "name": "Boston Medical Center",
       "listings": 1
     },
     {
@@ -74,7 +191,7 @@
       "listings": 1
     },
     {
-      "name": "Mass General Brigham / McLean Hospital",
+      "name": "SMART Recovery",
       "listings": 1
     },
     {
@@ -86,37 +203,45 @@
       "listings": 1
     },
     {
-      "name": "Boston Medical Center",
+      "name": "AdCare Hospital",
+      "listings": 1
+    },
+    {
+      "name": "Mass General Brigham / McLean Hospital",
       "listings": 1
     }
   ],
   "approaches": [
     {
       "name": "AA",
-      "listings": 2820
+      "listings": 15016
     },
     {
       "name": "NA",
-      "listings": 334
-    },
-    {
-      "name": "SMART Recovery",
-      "listings": 40
+      "listings": 3894
     },
     {
       "name": "Recovery Dharma",
-      "listings": 30
+      "listings": 256
+    },
+    {
+      "name": "SMART Recovery",
+      "listings": 219
     },
     {
       "name": "Refuge Recovery",
-      "listings": 13
+      "listings": 42
     }
   ],
   "limitations": [
-    "Provider registry status does not verify professional licensure, insurance or appointment availability.",
-    "Western Massachusetts AA directory currently returns HTTP 508; published official links remain available.",
-    "Additional fellowships and services outside these public source directories are not exhaustively covered.",
-    "Approximate pins use ZIP/city areas. Source review is not direct verification.",
-    "This directory does not establish live beds, admissions or personalized insurance eligibility."
+    "Counts are listings, including separate providers, programs and meetings at shared addresses; they are not unique venues.",
+    "Every mapped search match is represented in the viewport map groups, independent of card pagination. Online-only meetings have no physical pin.",
+    "NPPES registry status does not verify professional licensure, insurance, accepting new patients or current practice operations.",
+    "SAMHSA 2025 facility directories reflect the 2024 survey. Their reported services and broad payment categories require current confirmation; private insurance does not identify a specific plan.",
+    "Regional AA imports cover the public feeds and all-day pages listed in DATA_POLICY.md. Some western Massachusetts, northern New Jersey, Cape Atlantic, Albany, Rochester and Pittsburgh directories still need imports.",
+    "Thirteen meeting records were held for review because their schedule, timezone or coordinates could not be represented reliably.",
+    "The NPPES Counselor search for New Jersey ZIP 08060 reached the API limit of 1,200 results; that partition may omit additional providers.",
+    "Approximate pins use a source-supported ZIP or city area. Street geocoding does not verify the building entrance. Source review is not direct verification.",
+    "Coverage varies by state and fellowship and is not exhaustive. This directory does not establish live beds, admissions or personalized insurance eligibility."
   ]
 }

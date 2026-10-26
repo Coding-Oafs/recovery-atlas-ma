@@ -1,12 +1,12 @@
-# Recovery Atlas · Massachusetts
+# Recovery Atlas · Northeast
 
-A mobile-friendly map and directory for people exploring recovery, substance use treatment and mental health support in Massachusetts.
+A mobile-friendly map and directory for people exploring recovery, substance use treatment and mental health support across Connecticut, Massachusetts, Maine, New Hampshire, New Jersey, New York, Pennsylvania, Rhode Island and Vermont.
 
 ## What is included
 
-- Statewide public listings from BSAS, NPPES, MassGIS, AA, NA, SMART Recovery, Recovery Dharma and Refuge Recovery, alongside the original 49 curated listings. See `public/coverage.json` for source counts and limitations.
-- Individual map pins for every mapped search match, independent of list pagination. Overlapping pins have paginated resource choices. City/ZIP/address search, browser location and mileage radius.
-- Keyword, service, recovery approach, format, payment, language, participation, meeting day and wheelchair-access filters.
+- Regional public listings from NPPES, SAMHSA, New York OASAS, Massachusetts BSAS and MassGIS, AA, NA, SMART Recovery, Recovery Dharma and Refuge Recovery, alongside the original 49 curated listings. See `public/coverage.json` for source counts and limitations.
+- Every mapped search match is represented, independent of list pagination. A viewport endpoint groups pins when zoomed out; zooming reveals individuals. Shared locations have paginated resource choices. City/ZIP/address search, browser location and mileage radius.
+- State, keyword, service, recovery approach, format, payment, language, participation, meeting day and wheelchair-access filters.
 - Recurring meeting calculation in Eastern time with next occurrences displayed in the visitor's time zone. Online-only meetings have no pins or physical radius restrictions.
 - Evidence-labeled payment and insurer records, including McLean's published product restrictions.
 - Device-local bookmarks, crisis/help links, source dates, correction/new-resource submissions.
@@ -47,6 +47,10 @@ Without a database the public directory serves the dated bundled snapshot. Mutat
 
 Production and preview use separate Neon branches. Preview code must never receive the production connection. Keep secret environment variables in Vercel project settings. The map uses OpenFreeMap, OpenMapTiles and OpenStreetMap with built-in attribution; it does not require a paid map API key. Fonts are bundled locally with SIL Open Font License files in `public/fonts`.
 
+## Public access
+
+Share [Recovery Atlas](https://recovery-atlas-ma-coding-oafs-projects.vercel.app/). Visitors need no login or Vercel account. The footer’s Copy public link button copies this address without personal search terms. The production alias is public; preview and individual deployment URLs remain protected. Keep the existing project/repository names so current links continue to work. A custom domain is optional.
+
 ## Deployment
 
 Connect this repository to the `recovery-atlas-ma` Vercel project. Set the environment variables for production and preview separately. Verify the intended account, project, commit and database branch before deployment. Use Vercel Git integration for preview builds; production tracks `main`. Standard deployment protection keeps preview and per-deployment URLs protected while the production domain is public. `/admin` has its own application authentication.
@@ -72,6 +76,6 @@ Source review, source-reported update, direct verification and import/update dat
 
 ## Scope and privacy
 
-This is an independent directory, not a clinical assessment, referral intermediary, emergency response service or exhaustive statewide registry. There are no paid placements, referral fees, advertising scripts or session replay. Browsing requires no account. Do not collect insurance IDs, clinical histories or appointment records through directory forms. Infrastructure vendors still process technical request metadata.
+This is an independent directory, not a clinical assessment, referral intermediary, emergency response service or exhaustive regional registry. There are no paid placements, referral fees, advertising scripts or session replay. Browsing requires no account. Do not collect insurance IDs, clinical histories or appointment records through directory forms. Infrastructure vendors still process technical request metadata.
 
 Individual clinician license status has not been independently verified. A provider profile or NPI is not license verification. Use official licensing and insurer sources when expanding verification.

@@ -1885,3 +1885,21 @@ body {
 .map-label {
   font-size: 9px;
 }
+.coverage-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.coverage-table caption {
+  text-align: left;
+  margin-bottom: 10px;
+}
+.coverage-table th,
+.coverage-table td {
+  padding: 7px 3px;
+  border-bottom: 1px solid #e2e5dc;
+  text-align: right;
+}
+.coverage-table th:first-child {
+  text-align: left;
+}

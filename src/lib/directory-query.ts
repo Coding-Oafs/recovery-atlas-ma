@@ -5,6 +5,10 @@ export async function queryDirectory(
   f: Filters,
   saved: string[],
   limit: number,
+  options: {
+    map?: { bounds: number[]; zoom: number };
+    selection?: { bounds: number[]; offset: number };
+  } = {},
 ) {
   const values: unknown[] = [];
   const param = (v: unknown) => {
@@ -12,6 +16,8 @@ export async function queryDirectory(
     return "$" + values.length;
   };
   const where = ["published=true"];
+  if (f.state) where.push(`resource_state=${param(f.state)}`);
+  if (f.soon) where.push(`resource_kind='meeting'`);
   const has = (path: string, value: string) => `${path} ? ${param(value)}`;
   if (f.category !== "all") where.push(has("data->'categories'", f.category));
   if (f.format) {
@@ -52,7 +58,7 @@ export async function queryDirectory(
     );
   }
   const online =
-    "(data->>'kind'='meeting' AND data->'formats' ? 'online' AND NOT(data->'formats' ? 'hybrid'))";
+    "(resource_kind='meeting' AND data->'formats' ? 'online' AND NOT(data->'formats' ? 'hybrid'))";
   let distance = "NULL::float8";
   if (f.center) {
     const lng = param(f.center.lng),
@@ -66,7 +72,14 @@ export async function queryDirectory(
   if (f.bounds) {
     const [w, s, e, n] = f.bounds;
     where.push(
-      `(${online} OR ST_Intersects(location,ST_MakeEnvelope(${param(w)}::float8,${param(s)}::float8,${param(e)}::float8,${param(n)}::float8,4326)::geography))`,
+      `(${online} OR ST_Intersects(location::geometry,ST_MakeEnvelope(${param(w)}::float8,${param(s)}::float8,${param(e)}::float8,${param(n)}::float8,4326)))`,
+    );
+  }
+  const view = options.map?.bounds ?? options.selection?.bounds;
+  if (view) {
+    const [w, s, e, n] = view;
+    where.push(
+      `ST_Intersects(location::geometry,ST_MakeEnvelope(${param(w)}::float8,${param(s)}::float8,${param(e)}::float8,${param(n)}::float8,4326))`,
     );
   }
   const next = `(SELECT min(((d::date + (data->'meeting'->>'time')::time)::timestamp AT TIME ZONE 'America/New_York')) FROM generate_series((now() AT TIME ZONE 'America/New_York')::date, (now() AT TIME ZONE 'America/New_York')::date+7,interval '1 day') d WHERE data->'meeting'->'days' @> to_jsonb(ARRAY[extract(dow from d)::int]) AND ((d::date + (data->'meeting'->>'time')::time)::timestamp AT TIME ZONE 'America/New_York') >= now())`;
@@ -80,11 +93,21 @@ export async function queryDirectory(
     : f.center
       ? "distance NULLS LAST, name"
       : "name";
-  const query = `WITH matched AS MATERIALIZED(SELECT id,data,location,data->>'name' AS name,${distance} AS distance,${nextColumn} AS next_meeting FROM resources WHERE ${where.join(" AND ")}),filtered AS MATERIALIZED(SELECT * FROM matched ${f.soon ? "WHERE next_meeting<=now()+interval '3 hours'" : ""}), page AS(SELECT data FROM filtered ORDER BY ${order} LIMIT ${param(limit)}),points AS(SELECT id,data->>'kind' AS kind,(data->>'lat')::float8 AS lat,(data->>'lng')::float8 AS lng FROM filtered WHERE location IS NOT NULL) SELECT (SELECT count(*) FROM filtered) AS total,COALESCE((SELECT jsonb_agg(data) FROM page),'[]') AS resources,COALESCE((SELECT jsonb_agg(to_jsonb(p)) FROM points p),'[]') AS pins,(SELECT count(*) FROM filtered WHERE location IS NULL) AS online_or_unmapped`;
+  const base = `WITH matched AS NOT MATERIALIZED(SELECT id,data,location,resource_name AS name,resource_kind AS kind,${distance} AS distance,${nextColumn} AS next_meeting FROM resources WHERE ${where.join(" AND ")}),filtered AS NOT MATERIALIZED(SELECT * FROM matched ${f.soon ? "WHERE next_meeting<=now()+interval '3 hours'" : ""})`;
+  if (options.map) {
+    const zoom = Math.floor(options.map.zoom),
+      size = ((40075016.68557849 / 2 ** zoom) * (zoom >= 14 ? 12 : 55)) / 512,
+      cell = param(size);
+    const query = `${base},projected AS(SELECT id,kind,ST_X(location::geometry) AS lng,ST_Y(location::geometry) AS lat,ST_SnapToGrid(ST_Transform(location::geometry,3857),${cell}::float8) AS cell FROM filtered WHERE location IS NOT NULL),grouped AS(SELECT ST_X(cell) AS x,ST_Y(cell) AS y,min(id) AS id,min(kind) AS kind,count(*)::int AS count,avg(lat) AS lat,avg(lng) AS lng,ARRAY[min(lng)-0.0000001,min(lat)-0.0000001,max(lng)+0.0000001,max(lat)+0.0000001] AS bounds FROM projected GROUP BY cell),points AS(SELECT CASE WHEN count=1 THEN id ELSE 'group-'||x||'-'||y END AS id,CASE WHEN count=1 THEN kind ELSE 'cluster' END AS kind,count,lat,lng,bounds FROM grouped) SELECT COALESCE(jsonb_agg(to_jsonb(p)),'[]') AS pins,COALESCE(sum(count),0)::int AS represented FROM points p`;
+    const [row] = await db().query(query, values);
+    return { pins: row.pins, represented: Number(row.represented) };
+  }
+  const query = `${base},page AS(SELECT data FROM filtered ORDER BY ${order},id LIMIT ${param(limit)} OFFSET ${param(options.selection?.offset ?? 0)}),counts AS(SELECT count(*) AS total,count(*) FILTER(WHERE location IS NULL) AS online_or_unmapped,count(location) AS mapped FROM filtered) SELECT counts.*,COALESCE((SELECT jsonb_agg(data) FROM page),'[]') AS resources FROM counts`;
   const rows = await db().query(query, values);
   return {
     ...rows[0],
     total: Number(rows[0].total),
+    mapped: Number(rows[0].mapped),
     online_or_unmapped: Number(rows[0].online_or_unmapped),
   };
 }

@@ -65,6 +65,7 @@ export async function saveResource(form: FormData) {
     "name",
     "address",
     "city",
+    "state",
     "zip",
     "phone",
     "website",

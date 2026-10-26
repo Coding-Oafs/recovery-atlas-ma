@@ -1,9 +1,9 @@
 import type { MetadataRoute } from "next";
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Recovery Atlas Massachusetts",
+    name: "Recovery Atlas Northeast",
     short_name: "Recovery Atlas",
-    description: "Find recovery and treatment resources in Massachusetts.",
+    description: "Find recovery and treatment resources across the Northeast.",
     start_url: "/",
     display: "standalone",
     background_color: "#f8f7f2",

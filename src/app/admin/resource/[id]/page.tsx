@@ -4,6 +4,7 @@ import { isAdmin } from "@/lib/security";
 import { db } from "@/lib/db";
 import { saveResource } from "../../actions";
 import AdminResourceFields from "@/components/admin-resource-fields";
+import { regionStates, stateNames } from "@/lib/region";
 export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Edit resource · Recovery Atlas",
@@ -54,6 +55,16 @@ export default async function Edit({
       </p>
       <form action={saveResource} className="admin-box admin-fields">
         <input type="hidden" name="id" value={id} />
+        <label>
+          State
+          <select name="state" defaultValue={r.state}>
+            {regionStates.map((s) => (
+              <option key={s} value={s}>
+                {stateNames[s]}
+              </option>
+            ))}
+          </select>
+        </label>
         {textFields.map(([key, label]) => (
           <label key={key}>
             {label}

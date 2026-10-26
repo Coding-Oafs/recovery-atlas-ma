@@ -32,6 +32,6 @@ export const getResources = unstable_cache(
       };
     }
   },
-  ["public-directory-v2"],
+  ["public-directory-v3-northeast"],
   { revalidate: 300, tags: ["resources"] },
 );

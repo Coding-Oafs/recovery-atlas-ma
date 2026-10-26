@@ -1,11 +1,16 @@
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import { neon } from "@neondatabase/serverless";
 if (!process.env.DATABASE_URL) throw Error("Set DATABASE_URL");
 const sql = neon(process.env.DATABASE_URL);
-const source = await readFile(
-  new URL("../db/001_initial.sql", import.meta.url),
-  "utf8",
-);
+const directory = new URL("../db/", import.meta.url);
+const source = (
+  await Promise.all(
+    (await readdir(directory))
+      .filter((f) => f.endsWith(".sql"))
+      .sort()
+      .map((f) => readFile(new URL(f, directory), "utf8")),
+  )
+).join("\n");
 const statements = [];
 let current = "",
   quoted = false;

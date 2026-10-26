@@ -34,7 +34,9 @@ import { defaultFilters, filterResources, miles } from "@/lib/search";
 import Modal from "./modal";
 import ResourceDetail, { CorrectionForm, NextTime } from "./resource-detail";
 import coverage from "../../public/coverage.json";
-const RecoveryMap = dynamic(() => import("./recovery-map"), {
+import { regionStates, stateNames } from "@/lib/region";
+import { publicSiteUrl } from "@/lib/site";
+const RecoveryMap = dynamic(() => import("./region-map"), {
   ssr: false,
   loading: () => <div className="map-loading">Loading map…</div>,
 });
@@ -143,16 +145,18 @@ function ResourceCard({
           <TypeIcon r={r} />
         </span>
         <span className="card-type">
-          {r.fellowship ??
-            (r.kind === "clinic"
-              ? "Community care"
-              : r.kind === "hospital"
-                ? "Psychiatric hospital"
-                : r.kind === "provider"
-                  ? r.sourceName === "NPPES public provider registry"
-                    ? "Provider registry"
-                    : "Care provider"
-                  : "Treatment center")}
+          {r.sourceName === "NPPES public facility registry"
+            ? "Facility registry"
+            : (r.fellowship ??
+              (r.kind === "clinic"
+                ? "Community care"
+                : r.kind === "hospital"
+                  ? "Hospital services"
+                  : r.kind === "provider"
+                    ? r.sourceName.startsWith("NPPES")
+                      ? "Provider registry"
+                      : "Care provider"
+                    : "Treatment center"))}
         </span>
         <button
           className={`save-button ${saved ? "saved" : ""}`}
@@ -167,7 +171,9 @@ function ResourceCard({
         <h3>{r.name}</h3>
         <p className="card-location">
           <MapPin size={13} />
-          {r.address ? r.city + ", MA" : "Online · based in " + r.city}
+          {r.address
+            ? `${r.city}, ${r.state}`
+            : `Online · based in ${r.city}, ${r.state}`}
           {distance !== null ? (
             <span>
               · {distance.toFixed(1)} mi
@@ -206,7 +212,7 @@ function ResourceCard({
       <div className="card-bottom">
         <span>
           <ShieldCheck size={13} />
-          {r.sourceName === "NPPES public provider registry"
+          {r.sourceName.startsWith("NPPES")
             ? "Registry · license not checked"
             : "Sourced listing"}
         </span>
@@ -238,13 +244,18 @@ export default function Directory({
     [limit, setLimit] = useState(20),
     [now, setNow] = useState<Date | null>(null);
   const query = useDeferredValue(filters.query);
+  const effectiveFilters = useMemo(
+    () => ({ ...filters, query }),
+    [filters, query],
+  );
   const [remote, setRemote] = useState<{
     resources: Resource[];
-    pins: MapResource[];
+    mapped: number;
     total: number;
     online_or_unmapped: number;
   } | null>(null);
   const [searching, setSearching] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [facets, setFacets] = useState<Record<string, string[]>>({});
   useEffect(() => {
     fetch("/api/facets")
@@ -271,8 +282,13 @@ export default function Directory({
         if (!response.ok) throw Error(data.error);
         setRemote(data);
       } catch (e) {
-        if (!abort.signal.aborted)
-          setMessage(e instanceof Error ? e.message : "Search unavailable");
+        if (!abort.signal.aborted) {
+          setRemote(null);
+          setMessage(
+            (e instanceof Error ? e.message : "Search unavailable") +
+              ". Showing only the loaded backup listings.",
+          );
+        }
       } finally {
         if (!abort.signal.aborted) setSearching(false);
       }
@@ -321,6 +337,7 @@ export default function Directory({
   const results = remote?.resources ?? localResults;
   const resultCount = remote?.total ?? results.length;
   const activeCount = [
+    filters.state ?? "",
     filters.format,
     filters.fellowship,
     filters.payment,
@@ -361,7 +378,7 @@ export default function Directory({
       const res = await fetch("/api/location", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: location }),
+        body: JSON.stringify({ query: location, state: filters.state ?? "" }),
       });
       const data = await res.json();
       if (!res.ok) throw Error(data.error);
@@ -472,7 +489,7 @@ export default function Directory({
           <div className="intro-text">
             <span className="eyebrow">
               <span className="live-dot" />
-              THE MASSACHUSETTS PILOT
+              RECOVERY ACROSS THE NORTHEAST
             </span>
             <h1>
               Your next step starts <em>here.</em>
@@ -509,12 +526,12 @@ export default function Directory({
               <label className="location-field">
                 <MapPin size={19} />
                 <span className="sr-only">
-                  Massachusetts city, ZIP or address
+                  Northeast city, state, ZIP or address
                 </span>
                 <input
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  placeholder="City, ZIP, or street address"
+                  placeholder="City, state, ZIP or street address"
                 />
               </label>
               <button
@@ -665,6 +682,21 @@ export default function Directory({
           {more ? (
             <div className="expanded-filters">
               <label>
+                State
+                <select
+                  aria-label="State"
+                  value={filters.state ?? ""}
+                  onChange={(e) => update("state", e.target.value)}
+                >
+                  <option value="">All Northeast states</option>
+                  {regionStates.map((s) => (
+                    <option key={s} value={s}>
+                      {stateNames[s]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
                 Recovery approach
                 <select
                   value={filters.fellowship}
@@ -795,8 +827,8 @@ export default function Directory({
               <Info size={15} />
               <p>
                 {searching
-                  ? "Searching statewide sources…"
-                  : "Statewide source coverage · published listings and provider registry records."}
+                  ? "Searching regional sources…"
+                  : "Regional source coverage · published listings and provider registry records."}
                 {remote && remote.online_or_unmapped > 0 ? (
                   <span>
                     {" "}
@@ -902,7 +934,12 @@ export default function Directory({
             className={`map-panel ${mobileView === "list" ? "mobile-hidden" : ""}`}
           >
             <RecoveryMap
-              resources={remote?.pins ?? results}
+              resources={results}
+              filters={effectiveFilters}
+              saved={saved}
+              mappedTotal={
+                remote?.mapped ?? results.filter((r) => r.lat !== null).length
+              }
               center={filters.center}
               onSelect={openMapResource}
               onBounds={(b) => {
@@ -920,6 +957,18 @@ export default function Directory({
         </span>
         <p>Independent. Free to explore. Built with care.</p>
         <div>
+          <button
+            onClick={async () => {
+              try {
+                await navigator.clipboard.writeText(publicSiteUrl + "/");
+                setCopied(true);
+              } catch {
+                setMessage("Public link: " + publicSiteUrl + "/");
+              }
+            }}
+          >
+            {copied ? "Public link copied" : "Copy public link"}
+          </button>
           <button onClick={() => setPanel("privacy")}>Privacy</button>
           <button onClick={() => setPanel("coverage")}>
             Sources & coverage
@@ -974,6 +1023,22 @@ export default function Directory({
       >
         {panel === "help" ? (
           <div className="stack">
+            <a
+              className="help-card"
+              href="https://findtreatment.gov/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <MapPin />
+              <span>
+                <strong>Find treatment in any covered state</strong>
+                <small>
+                  SAMHSA’s public treatment finder · No directory account
+                  required
+                </small>
+              </span>
+              <ArrowUpRight size={17} />
+            </a>
             <p>
               If there is an immediate medical emergency or suspected overdose,
               call <a href="tel:911">911</a>.
@@ -1061,9 +1126,9 @@ export default function Directory({
                 <h3>Explore treatment</h3>
                 <p>
                   Detox, residential and outpatient services offer different
-                  levels of support. A provider or the Massachusetts Substance
-                  Use Helpline can help you understand the options and arrange
-                  an assessment.
+                  levels of support. A provider or an official state treatment
+                  helpline can help you understand the options and arrange an
+                  assessment.
                 </p>
                 <button
                   className="text-link"
@@ -1106,8 +1171,9 @@ export default function Directory({
           <div className="stack">
             <p>
               Recovery Atlas brings recovery meetings, treatment and mental
-              health resources into one approachable place, starting in
-              Massachusetts.
+              health resources into one approachable place across Connecticut,
+              Massachusetts, Maine, New Hampshire, New Jersey, New York,
+              Pennsylvania, Rhode Island and Vermont.
             </p>
             <p>
               We believe people deserve clear information, room to choose their
@@ -1169,28 +1235,50 @@ export default function Directory({
             <p>
               <strong>
                 {coverage.total.toLocaleString()} published listings ·{" "}
-                {coverage.mapped.toLocaleString()} physical map pins
+                {coverage.mapped.toLocaleString()} mapped resources
               </strong>
               <br />
               {coverage.approaches
                 .map((a) => `${a.listings.toLocaleString()} ${a.name}`)
                 .join(" · ")}{" "}
-              meetings. Source snapshot reviewed October 22, 2026.
+              meetings. See the source review dates and state coverage below.
+            </p>
+            <table className="coverage-table">
+              <caption>
+                Listings by state · source review {coverage.reviewedAt}
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">State</th>
+                  <th scope="col">Listings</th>
+                  <th scope="col">Mapped</th>
+                  <th scope="col">Meetings</th>
+                </tr>
+              </thead>
+              <tbody>
+                {coverage.states.map((s) => (
+                  <tr key={s.state}>
+                    <th scope="row">
+                      {stateNames[s.state as keyof typeof stateNames]}
+                    </th>
+                    <td>{s.listings.toLocaleString()}</td>
+                    <td>{s.mapped.toLocaleString()}</td>
+                    <td>{s.meetings.toLocaleString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <p>
+              Northeast coverage includes public professional and facility
+              registries, SAMHSA’s 2025 facility directories, state treatment
+              listings and regional AA, NA, SMART, Dharma and Refuge meetings.
+              Coverage varies by state and fellowship. A state count does not
+              mean every local service or meeting is included.
             </p>
             <p>
-              Statewide coverage includes the state’s CBHC directory, licensed
-              BSAS treatment programs, hospitals with psychiatric beds, regional
-              NA meetings, Boston and central Massachusetts AA listings, SMART
-              Recovery, Recovery Dharma, Refuge Recovery and public
-              mental-health and addiction provider registry records. Other
-              fellowships currently have selected listings and official
-              directory links below.
-            </p>
-            <p>
-              Initial public sources were reviewed October 22, 2026. Every
-              listing links to its source. “Source reviewed” does not mean we
-              contacted the provider or group; direct verification is shown
-              separately.
+              Every listing links to its dated source. “Source reviewed” does
+              not mean we contacted the provider or group; direct verification
+              is shown separately.
             </p>
             <p>
               Some source meeting schedules have older update dates. Confirm
@@ -1204,18 +1292,20 @@ export default function Directory({
               remain unknown. Confirm with the provider and your insurer.
             </p>
             <p>
-              Every matching resource with coordinates receives an individual
-              pin, independent of the number of list results displayed.
-              Overlapping pins offer a choice of resources. Some pins use an
-              approximate ZIP-area location; check the address in the details.
-              Published directories can omit services or contain stale records;
-              coverage is not a guarantee that every Massachusetts resource is
-              listed.
+              Every mapped resource is represented on the map, independently of
+              list pagination. Groups show the number of matching resources
+              inside them; zoom in to explore individuals. Shared locations
+              offer a choice of resources. Some pins use an approximate ZIP-area
+              location; check the address in the details. Published directories
+              can omit services or contain stale records; coverage is not a
+              guarantee that every Northeast resource is listed.
             </p>
             <p>
-              Western Mass Intergroup’s meeting server is currently unavailable
-              (HTTP 508); use its official website for updates. Additional
-              fellowships still need imports.
+              SAMHSA’s facility records reflect the 2025 directory and 2024
+              survey. Confirm current operations, payment and admission details.
+              State directories and individual sources can be newer. Additional
+              fellowships and some regional meeting directories still need
+              imports.
             </p>
             <a
               className="text-link"
