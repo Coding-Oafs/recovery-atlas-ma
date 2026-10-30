@@ -1,0 +1,5 @@
+/* Only public application assets are cached. Account, API, community and message responses are excluded. */
+const CACHE='atlas-public-v1';
+self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(['/offline','/fonts/fonts.css','/icon.svg'])));self.skipWaiting();});
+self.addEventListener('activate',event=>event.waitUntil(self.clients.claim()));
+self.addEventListener('fetch',event=>{const request=event.request,url=new URL(request.url);if(request.method!=='GET'||url.origin!==self.location.origin)return;if(url.pathname.startsWith('/_next/static/')||url.pathname.startsWith('/fonts/')||url.pathname==='/icon.svg'){event.respondWith(caches.open(CACHE).then(async cache=>{const cached=await cache.match(request);if(cached)return cached;const response=await fetch(request);if(response.ok)await cache.put(request,response.clone());return response;}));}else if(request.mode==='navigate'){event.respondWith(fetch(request).catch(async()=>await caches.match('/offline')||new Response('Offline. Connect to load Recovery Atlas.',{status:503,headers:{'Content-Type':'text/plain'}})));}});

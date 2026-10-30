@@ -32,6 +32,30 @@ export const filtersSchema = z.object({
   population: z.string().max(100),
   day: z.union([z.literal(""), z.string().regex(/^[0-6]$/)]),
   soon: z.boolean(),
+  meetingWindow: z
+    .enum(["", "today", "tomorrow", "24h", "weekend", "7days", "date"])
+    .default(""),
+  meetingDate: z.union([z.literal(""), z.iso.date()]).default(""),
+  startAfter: z
+    .string()
+    .regex(/^$|^(?:[01]\d|2[0-3]):[0-5]\d$/)
+    .default(""),
+  startBefore: z
+    .string()
+    .regex(/^$|^(?:[01]\d|2[0-3]):[0-5]\d$/)
+    .default(""),
+  timeZone: z
+    .string()
+    .max(100)
+    .refine((v) => {
+      try {
+        new Intl.DateTimeFormat("en", { timeZone: v });
+        return true;
+      } catch {
+        return false;
+      }
+    })
+    .default("America/New_York"),
   radius: z.number().min(1).max(500),
   center: z
     .object({
@@ -46,6 +70,7 @@ export const savedSchema = z
   .array(z.string().regex(/^[a-z0-9-]{1,150}$/))
   .max(1000);
 export const searchInput = z.object({
+  offset: z.number().int().min(0).max(10000000).default(0),
   filters: filtersSchema,
   saved: savedSchema,
   limit: z.number().int().min(1).max(500),

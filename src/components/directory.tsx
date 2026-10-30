@@ -39,25 +39,27 @@ import { publicSiteUrl } from "@/lib/site";
 import { useSaved } from "./saved-provider";
 import AccountButton from "./account-panel";
 import SavedActions from "./saved-actions";
+import Link from "next/link";
+import { useLanguage } from "./language-provider";
 const RecoveryMap = dynamic(() => import("./region-map"), {
   ssr: false,
-  loading: () => <div className="map-loading">Loading map…</div>,
+  loading: () => <div className="map-loading">Loading map�</div>,
 });
 const directoryLinks = [
   {
-    name: "AA · Western Massachusetts",
+    name: "AA � Western Massachusetts",
     detail: "Western Mass Intergroup",
     url: "https://westernmassaa.org/",
     type: "meetings",
   },
   {
-    name: "AA · Eastern Massachusetts",
+    name: "AA � Eastern Massachusetts",
     detail: "Local meetings & online options",
     url: "https://aaboston.org/meetings",
     type: "meetings",
   },
   {
-    name: "AA · Central Massachusetts",
+    name: "AA � Central Massachusetts",
     detail: "Worcester & MetroWest",
     url: "https://aaworcester.org/meetinglist.aspx?grp=wai",
     type: "meetings",
@@ -124,6 +126,7 @@ function ResourceCard({
   onHover,
   center,
   now,
+  timeFilters,
 }: {
   r: Resource;
   saved: boolean;
@@ -132,6 +135,7 @@ function ResourceCard({
   onHover: (id: string | null) => void;
   center: Filters["center"];
   now: Date | null;
+  timeFilters: Filters;
 }) {
   const { loading: savesLoading } = useSaved();
   const distance =
@@ -178,10 +182,10 @@ function ResourceCard({
           <MapPin size={13} />
           {r.address
             ? `${r.city}, ${r.state}`
-            : `Online · based in ${r.city}, ${r.state}`}
+            : `Online � based in ${r.city}, ${r.state}`}
           {distance !== null ? (
             <span>
-              · {distance.toFixed(1)} mi
+              � {distance.toFixed(1)} mi
               {r.coordinateAccuracy === "approximate" ? " (approx.)" : ""}
             </span>
           ) : null}
@@ -193,7 +197,7 @@ function ResourceCard({
           <>
             <span className="tag meeting-tag">
               <Clock size={12} />
-              <NextTime resource={r} now={now} />
+              <NextTime resource={r} now={now} timeFilters={timeFilters} />
             </span>
             <span className="tag neutral">
               {r.formats.includes("hybrid")
@@ -207,7 +211,7 @@ function ResourceCard({
           <>
             <span className="tag">{r.services[0]}</span>
             {r.payment.includes("MassHealth") ? (
-              <span className="tag neutral">MassHealth · confirm benefits</span>
+              <span className="tag neutral">MassHealth � confirm benefits</span>
             ) : (
               <span className="tag neutral">Payment: ask provider</span>
             )}
@@ -218,7 +222,7 @@ function ResourceCard({
         <span>
           <ShieldCheck size={13} />
           {r.sourceName.startsWith("NPPES")
-            ? "Registry · license not checked"
+            ? "Registry � license not checked"
             : "Sourced listing"}
         </span>
         <button onClick={onOpen}>
@@ -248,7 +252,18 @@ export default function Directory({
     [limit, setLimit] = useState(20),
     [now, setNow] = useState<Date | null>(null);
   const { saved, toggleSave, clearGuest, error: savedError } = useSaved();
+  const { t, language } = useLanguage();
+  const [offset, setOffset] = useState(0);
+  const [viewerZone, setViewerZone] = useState("America/New_York");
+  useEffect(() => {
+    const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    setViewerZone(zone);
+    setFilters((f) => ({ ...f, timeZone: zone }));
+  }, []);
   const query = useDeferredValue(filters.query);
+  useEffect(() => {
+    setOffset(0);
+  }, [filters, query, saved]);
   const effectiveFilters = useMemo(
     () => ({ ...filters, query }),
     [filters, query],
@@ -280,6 +295,7 @@ export default function Directory({
             filters: { ...filters, query },
             saved,
             limit: Math.min(limit, 500),
+            offset,
           }),
           signal: abort.signal,
         });
@@ -302,7 +318,7 @@ export default function Directory({
       clearTimeout(timer);
       abort.abort();
     };
-  }, [filters, query, saved, limit]);
+  }, [filters, query, saved, limit, offset]);
   async function openMapResource(pin: MapResource) {
     const local =
       remote?.resources.find((r) => r.id === pin.id) ??
@@ -334,8 +350,9 @@ export default function Directory({
       ),
     [resources, filters, query, saved, now],
   );
-  const results = remote?.resources ?? localResults;
-  const resultCount = remote?.total ?? results.length;
+  const results =
+    remote?.resources ?? localResults.slice(offset, offset + limit);
+  const resultCount = remote?.total ?? localResults.length;
   const activeCount = [
     filters.state ?? "",
     filters.format,
@@ -347,6 +364,9 @@ export default function Directory({
     filters.day,
     filters.accessibility,
     filters.soon,
+    filters.meetingWindow ?? "",
+    filters.startAfter ?? "",
+    filters.startBefore ?? "",
   ].filter((v) => v !== "" && v !== false).length;
   function update<K extends keyof Filters>(k: K, v: Filters[K]) {
     setFilters((f) => ({ ...f, [k]: v }));
@@ -375,7 +395,7 @@ export default function Directory({
         bounds: null,
       }));
       setLocationLabel(
-        data.label + (data.approximate ? " · approximate center" : ""),
+        data.label + (data.approximate ? " � approximate center" : ""),
       );
       setLimit(20);
     } catch (e) {
@@ -406,7 +426,7 @@ export default function Directory({
       },
       () => {
         setMessage(
-          "Location access wasn’t available. Enter a city or ZIP instead.",
+          "Location access wasn�t available. Enter a city or ZIP instead.",
         );
         setLocating(false);
       },
@@ -414,7 +434,7 @@ export default function Directory({
     );
   }
   function reset() {
-    setFilters(defaultFilters);
+    setFilters({ ...defaultFilters, timeZone: viewerZone });
     setLocation("");
     setLocationLabel("");
     setMessage("");
@@ -430,7 +450,7 @@ export default function Directory({
       <div className="help-strip">
         <span>
           <Heart size={13} />
-          You don’t have to figure it out alone.
+          You don�t have to figure it out alone.
         </span>
         <button onClick={() => setPanel("help")}>
           Talk to someone who can help <ArrowUpRight size={13} />
@@ -454,12 +474,15 @@ export default function Directory({
               setPanel("");
             }}
           >
-            Explore resources
+            {t("Explore resources")}
           </button>
           <button onClick={() => setPanel("guide")}>
-            Finding your next step
+            {t("Finding your next step")}
           </button>
-          <button onClick={() => setPanel("about")}>About the project</button>
+          <button onClick={() => setPanel("about")}>
+            {t("About the project")}
+          </button>
+          <Link href="/community">{t("Community")}</Link>
         </nav>
         <button
           className={`saved-nav ${filters.savedOnly ? "active" : ""}`}
@@ -468,7 +491,8 @@ export default function Directory({
           }}
         >
           <Bookmark size={16} />
-          Saved<span>{saved.length}</span>
+          {t("Saved")}
+          <span>{saved.length}</span>
         </button>
         <AccountButton />
       </header>
@@ -477,7 +501,7 @@ export default function Directory({
           <div className="intro-text">
             <span className="eyebrow">
               <span className="live-dot" />
-              giving recovery a home
+              {t("giving recovery a home")}
             </span>
             <h1>
               Your next step starts <em>here.</em>
@@ -485,6 +509,35 @@ export default function Directory({
           </div>
         </section>
         <section className="search-section" aria-label="Search resources">
+          <div className="guided-paths" aria-label="Choose a starting point">
+            {[
+              ["Find a meeting", "meetings"],
+              ["Explore treatment", "treatment"],
+              ["Find a therapist", "counseling"],
+            ].map(([label, category]) => (
+              <button
+                key={category}
+                className="secondary"
+                onClick={() => {
+                  setFilters((f) => ({
+                    ...defaultFilters,
+                    center: f.center,
+                    radius: f.radius,
+                    state: f.state,
+                    timeZone: f.timeZone,
+                    category,
+                  }));
+                  setLimit(20);
+                  setOffset(0);
+                }}
+              >
+                {t(label)}
+              </button>
+            ))}
+            <Link className="secondary" href="/support">
+              {t("Support for daily life")}
+            </Link>
+          </div>
           <div className="search-bar">
             <label className="keyword-field">
               <Search size={19} />
@@ -492,7 +545,7 @@ export default function Directory({
               <input
                 value={filters.query}
                 onChange={(e) => update("query", e.target.value)}
-                placeholder="Meeting, service, or keyword…"
+                placeholder={t("Meeting, service, or keyword�")}
               />
             </label>
             <form className="location-form" onSubmit={searchLocation}>
@@ -504,7 +557,7 @@ export default function Directory({
                 <input
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  placeholder="City, state, ZIP or street address"
+                  placeholder={t("City, state, ZIP or street address")}
                 />
               </label>
               <button
@@ -531,10 +584,10 @@ export default function Directory({
               </label>
               <button className="primary search-submit" disabled={locating}>
                 {locating ? (
-                  "Locating…"
+                  "Locating�"
                 ) : (
                   <>
-                    Find support <ArrowRight size={17} />
+                    {t("Find support")} <ArrowRight size={17} />
                   </>
                 )}
               </button>
@@ -588,7 +641,7 @@ export default function Directory({
                   }}
                 >
                   <Icon size={16} />
-                  {c.label}
+                  {t(c.label)}
                 </button>
               );
             })}
@@ -640,7 +693,8 @@ export default function Directory({
               aria-expanded={more}
             >
               <SlidersHorizontal size={15} />
-              More filters{activeCount ? <span>{activeCount}</span> : null}
+              {t("More filters")}
+              {activeCount ? <span>{activeCount}</span> : null}
             </button>
             {activeCount ||
             filters.query ||
@@ -733,6 +787,138 @@ export default function Directory({
                   ))}
                 </select>
               </label>
+              <fieldset className="meeting-time-filters stack">
+                <legend>Meeting date &amp; time</legend>
+                <label>
+                  When
+                  <select
+                    aria-label="Meeting date window"
+                    value={filters.meetingWindow ?? ""}
+                    onChange={(e) =>
+                      update(
+                        "meetingWindow",
+                        e.target.value as Filters["meetingWindow"],
+                      )
+                    }
+                  >
+                    <option value="">Any upcoming date</option>
+                    <option value="today">Today</option>
+                    <option value="tomorrow">Tomorrow</option>
+                    <option value="24h">Next 24 hours</option>
+                    <option value="weekend">This weekend</option>
+                    <option value="7days">Next 7 days</option>
+                    <option value="date">Choose a date</option>
+                  </select>
+                </label>
+                {filters.meetingWindow === "date" ? (
+                  <label>
+                    Meeting date
+                    <input
+                      type="date"
+                      value={filters.meetingDate ?? ""}
+                      onChange={(e) => update("meetingDate", e.target.value)}
+                    />
+                  </label>
+                ) : null}
+                <label>
+                  Time of day
+                  <select
+                    aria-label="Time of day preset"
+                    value={
+                      [
+                        ["05:00", "12:00"],
+                        ["12:00", "17:00"],
+                        ["17:00", "22:00"],
+                        ["22:00", "05:00"],
+                      ].findIndex(
+                        ([a, b]) =>
+                          filters.startAfter === a && filters.startBefore === b,
+                      ) >= 0
+                        ? ["morning", "afternoon", "evening", "overnight"][
+                            [
+                              ["05:00", "12:00"],
+                              ["12:00", "17:00"],
+                              ["17:00", "22:00"],
+                              ["22:00", "05:00"],
+                            ].findIndex(
+                              ([a, b]) =>
+                                filters.startAfter === a &&
+                                filters.startBefore === b,
+                            )
+                          ]
+                        : !filters.startAfter && !filters.startBefore
+                          ? "any"
+                          : "custom"
+                    }
+                    onChange={(e) => {
+                      const presets: Record<string, string[]> = {
+                        any: ["", ""],
+                        custom: ["00:00", ""],
+                        morning: ["05:00", "12:00"],
+                        afternoon: ["12:00", "17:00"],
+                        evening: ["17:00", "22:00"],
+                        overnight: ["22:00", "05:00"],
+                      };
+                      const p = presets[e.target.value];
+                      if (p)
+                        setFilters((f) => ({
+                          ...f,
+                          startAfter: p[0],
+                          startBefore: p[1],
+                        }));
+                    }}
+                  >
+                    <option value="any">Any start time</option>
+                    <option value="morning">Morning (5am�noon)</option>
+                    <option value="afternoon">Afternoon (noon�5pm)</option>
+                    <option value="evening">Evening (5pm�10pm)</option>
+                    <option value="overnight">Overnight (10pm�5am)</option>
+                    <option value="custom">Custom hours</option>
+                  </select>
+                </label>
+                <div className="time-range">
+                  <label>
+                    Starts at or after
+                    <input
+                      type="time"
+                      value={filters.startAfter ?? ""}
+                      onChange={(e) => update("startAfter", e.target.value)}
+                    />
+                  </label>
+                  <label>
+                    Starts before
+                    <input
+                      type="time"
+                      value={filters.startBefore ?? ""}
+                      onChange={(e) => update("startBefore", e.target.value)}
+                    />
+                  </label>
+                </div>
+                <label>
+                  Filter time zone
+                  <select
+                    aria-label="Filter time zone"
+                    value={filters.timeZone ?? "America/New_York"}
+                    onChange={(e) => update("timeZone", e.target.value)}
+                  >
+                    {[...new Set([viewerZone, "America/New_York", "UTC"])].map(
+                      (zone) => (
+                        <option value={zone} key={zone}>
+                          {zone === viewerZone ? "Your local time: " : ""}
+                          {zone}
+                        </option>
+                      ),
+                    )}
+                  </select>
+                </label>
+                <p className="small muted">
+                  Date and clock filters use the selected zone. The meeting-day
+                  filter uses the group�s source time zone. Overnight ranges can
+                  cross midnight. These filters use scheduled start times;
+                  cancellations shown in our data are excluded. They do not show
+                  provider opening hours.
+                </p>
+              </fieldset>
               <label>
                 Participants
                 <select
@@ -763,7 +949,7 @@ export default function Directory({
               </label>
               <p className="filter-footnote">
                 Filters match reported information. Missing information means
-                “not reported.” Some approaches currently have
+                �not reported.� Some approaches currently have
                 official-directory links only.
               </p>
             </div>
@@ -793,7 +979,7 @@ export default function Directory({
                   ? "Next meeting first"
                   : filters.center
                     ? "Nearest first"
-                    : "A–Z"}
+                    : "A�Z"}
               </span>
             </div>
             {filters.savedOnly ? (
@@ -807,8 +993,8 @@ export default function Directory({
               <Info size={15} />
               <p>
                 {searching
-                  ? "Searching regional sources…"
-                  : "Regional source coverage · published listings and provider registry records."}
+                  ? "Searching regional sources�"
+                  : "Regional source coverage � published listings and provider registry records."}
                 {remote && remote.online_or_unmapped > 0 ? (
                   <span>
                     {" "}
@@ -836,6 +1022,7 @@ export default function Directory({
                     onHover={setHighlight}
                     center={filters.center}
                     now={now}
+                    timeFilters={filters}
                   />
                 ))}
               </div>
@@ -845,7 +1032,7 @@ export default function Directory({
                 <h3>There are more paths to explore.</h3>
                 <p>
                   {filters.savedOnly
-                    ? "Save a resource using its bookmark button. Your list stays on this device."
+                    ? "Save a resource using its bookmark button. Sign in to keep a private list across devices."
                     : "No published listings match these filters. Try a wider radius, fewer filters, or an official directory below."}
                 </p>
                 <button className="secondary" onClick={reset}>
@@ -853,19 +1040,40 @@ export default function Directory({
                 </button>
               </div>
             )}
-            {limit >= 500 && resultCount > 500 ? (
-              <p className="notice">
-                Showing the first 500 matching cards. All mapped matches remain
-                on the map. Narrow the search to find a specific resource.
-              </p>
-            ) : null}
-            {resultCount > Math.min(limit, 500) && limit < 500 ? (
-              <button
-                className="load-more secondary"
-                onClick={() => setLimit((n) => n + 20)}
+            {resultCount > limit ? (
+              <nav
+                className="result-pagination"
+                aria-label="Resource result pages"
               >
-                Show more resources <Plus size={16} />
-              </button>
+                <button
+                  className="secondary"
+                  disabled={offset === 0 || searching}
+                  onClick={() => {
+                    setOffset((n) => Math.max(0, n - limit));
+                    document
+                      .getElementById("results")
+                      ?.scrollIntoView({ block: "start" });
+                  }}
+                >
+                  {t("Previous resources")}
+                </button>
+                <span role="status">
+                  {offset + 1}�{Math.min(offset + limit, resultCount)} of{" "}
+                  {resultCount.toLocaleString()}
+                </span>
+                <button
+                  className="secondary"
+                  disabled={offset + limit >= resultCount || searching}
+                  onClick={() => {
+                    setOffset((n) => n + limit);
+                    document
+                      .getElementById("results")
+                      ?.scrollIntoView({ block: "start" });
+                  }}
+                >
+                  {t("Next resources")}
+                </button>
+              </nav>
             ) : null}
             <div className="directory-fallback">
               <div className="section-inline">
@@ -896,7 +1104,7 @@ export default function Directory({
                   ))}
               </div>
             </div>
-            <div className="suggest-box">
+            <div className="suggest-box" id="feedback">
               <HandHeart size={26} strokeWidth={1.3} />
               <div>
                 <strong>Good information helps people find help.</strong>
@@ -978,6 +1186,7 @@ export default function Directory({
         <ResourceDetail
           key={selected.id}
           resource={selected}
+          timeFilters={filters}
           onClose={() => setSelected(null)}
           saved={saved.includes(selected.id)}
           onSave={() => toggleSave(selected.id)}
@@ -991,7 +1200,7 @@ export default function Directory({
           panel === "help"
             ? "A real person. A next step."
             : panel === "guide"
-              ? "There’s more than one path."
+              ? "There�s more than one path."
               : panel === "privacy"
                 ? "Your search is personal."
                 : panel === "suggest"
@@ -1013,7 +1222,7 @@ export default function Directory({
               <span>
                 <strong>Find treatment in any covered state</strong>
                 <small>
-                  SAMHSA’s public treatment finder · No directory account
+                  SAMHSA�s public treatment finder � No directory account
                   required
                 </small>
               </span>
@@ -1027,7 +1236,7 @@ export default function Directory({
               <Heart />
               <span>
                 <strong>Massachusetts Substance Use Helpline</strong>
-                <small>800-327-5050 · Free and confidential · 24/7</small>
+                <small>800-327-5050 � Free and confidential � 24/7</small>
               </span>
               <Phone size={17} />
             </a>
@@ -1035,7 +1244,7 @@ export default function Directory({
               <Brain />
               <span>
                 <strong>Massachusetts Behavioral Health Help Line</strong>
-                <small>833-773-2445 · Call or text · 24/7</small>
+                <small>833-773-2445 � Call or text � 24/7</small>
               </span>
               <Phone size={17} />
             </a>
@@ -1067,7 +1276,7 @@ export default function Directory({
               >
                 MA Substance Use Helpline
               </a>{" "}
-              ·{" "}
+              �{" "}
               <a
                 href="https://www.mass.gov/community-behavioral-health-centers"
                 target="_blank"
@@ -1173,6 +1382,29 @@ export default function Directory({
         {panel === "privacy" ? (
           <div className="stack">
             <p>
+              Community profiles are hidden by default. Adults can choose to
+              make their handle, display name, bio, broad region and languages
+              visible to signed-in adult members. A conversation starts with a
+              request that the other person must accept. You can block or report
+              received messages.
+            </p>
+            <p>
+              Messages are encrypted in storage and transit, but are not
+              end-to-end encrypted. The moderation inbox shows only messages
+              specifically reported by a participant. Messages are removed after
+              180 days, pending requests after 30 days and report evidence after
+              90 days. Deleting an account removes its conversations for both
+              participants; report evidence can remain for the moderation
+              period.
+            </p>
+            <p>
+              Calendar buttons share meeting details with the calendar service
+              you choose. Downloads are snapshots and do not receive automatic
+              schedule changes. Optional offline copies remain readable on this
+              device after sign-out; remove them from the Offline resources
+              page. Profiles and messages are never cached for offline use.
+            </p>
+            <p>
               No account is needed to browse. Signed-out saves stay in this
               browser. If you create an account, its saved resource IDs are
               stored privately in our database and can be accessed after signing
@@ -1194,7 +1426,7 @@ export default function Directory({
               infrastructure logs contain no metadata.
             </p>
             <p>
-              Correction submissions are stored in our review inbox. Don’t
+              Correction submissions are stored in our review inbox. Don�t
               include medical or insurance identification information. Rate
               limits use a keyed hash of your IP address with an expiration, not
               your raw IP address.
@@ -1226,18 +1458,18 @@ export default function Directory({
           <div className="stack">
             <p>
               <strong>
-                {coverage.total.toLocaleString()} published listings ·{" "}
+                {coverage.total.toLocaleString()} published listings �{" "}
                 {coverage.mapped.toLocaleString()} mapped resources
               </strong>
               <br />
               {coverage.approaches
                 .map((a) => `${a.listings.toLocaleString()} ${a.name}`)
-                .join(" · ")}{" "}
+                .join(" � ")}{" "}
               meetings. See the source review dates and state coverage below.
             </p>
             <table className="coverage-table">
               <caption>
-                Listings by state · source review {coverage.reviewedAt}
+                Listings by state � source review {coverage.reviewedAt}
               </caption>
               <thead>
                 <tr>
@@ -1262,13 +1494,13 @@ export default function Directory({
             </table>
             <p>
               Northeast coverage includes public professional and facility
-              registries, SAMHSA’s 2025 facility directories, state treatment
+              registries, SAMHSA�s 2025 facility directories, state treatment
               listings and regional AA, NA, SMART, Dharma and Refuge meetings.
               Coverage varies by state and fellowship. A state count does not
               mean every local service or meeting is included.
             </p>
             <p>
-              Every listing links to its dated source. “Source reviewed” does
+              Every listing links to its dated source. �Source reviewed� does
               not mean we contacted the provider or group; direct verification
               is shown separately.
             </p>
@@ -1293,7 +1525,7 @@ export default function Directory({
               guarantee that every Northeast resource is listed.
             </p>
             <p>
-              SAMHSA’s facility records reflect the 2025 directory and 2024
+              SAMHSA�s facility records reflect the 2025 directory and 2024
               survey. Confirm current operations, payment and admission details.
               State directories and individual sources can be newer. Additional
               fellowships and some regional meeting directories still need

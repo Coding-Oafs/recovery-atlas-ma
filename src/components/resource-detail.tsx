@@ -13,8 +13,10 @@ import {
   Video,
 } from "lucide-react";
 import Modal from "./modal";
+import PracticalDetails from "./practical-details";
+import AddCalendar from "./add-calendar";
 import { useSaved } from "./saved-provider";
-import type { Resource } from "@/lib/types";
+import type { Resource, Filters } from "@/lib/types";
 import { nextMeeting } from "@/lib/search";
 import { submitCorrection } from "@/app/actions";
 export function SourceDate({ value }: { value: string | null }) {
@@ -34,12 +36,14 @@ export function SourceDate({ value }: { value: string | null }) {
 export function NextTime({
   resource,
   now,
+  timeFilters,
 }: {
   resource: Resource;
   now: Date | null;
+  timeFilters?: Filters;
 }) {
   if (!resource.meeting) return null;
-  const next = now ? nextMeeting(resource, now) : null;
+  const next = now ? nextMeeting(resource, now, timeFilters) : null;
   return (
     <>
       {next
@@ -48,6 +52,7 @@ export function NextTime({
             hour: "numeric",
             minute: "2-digit",
             timeZoneName: "short",
+            timeZone: timeFilters?.timeZone,
           }).format(next)
         : "See meeting schedule"}
     </>
@@ -97,7 +102,7 @@ export function CorrectionForm({
       }}
     >
       <p className="notice">
-        Include public listing details only. Please don’t submit medical
+        Include public listing details only. Please don�t submit medical
         histories, insurance member numbers, or other private information.
       </p>
       <label>
@@ -110,7 +115,7 @@ export function CorrectionForm({
           maxLength={2500}
           rows={5}
           required
-          placeholder="Tell us what should be added or corrected…"
+          placeholder="Tell us what should be added or corrected�"
         />
       </label>
       <label>
@@ -139,7 +144,7 @@ export function CorrectionForm({
         </p>
       ) : null}
       <button className="primary" disabled={busy}>
-        {busy ? "Sending…" : "Submit for review"}
+        {busy ? "Sending�" : "Submit for review"}
         <ArrowUpRight size={17} />
       </button>
     </form>
@@ -151,12 +156,14 @@ export default function ResourceDetail({
   saved,
   onSave,
   now,
+  timeFilters,
 }: {
   resource: Resource;
   onClose: () => void;
   saved: boolean;
   onSave: () => void;
   now: Date | null;
+  timeFilters?: Filters;
 }) {
   const [correction, setCorrection] = useState(false);
   const { loading: savesLoading } = useSaved();
@@ -165,7 +172,7 @@ export default function ResourceDetail({
       open
       onClose={onClose}
       title={r.name}
-      description={`${r.fellowship ?? (r.kind === "clinic" ? "Behavioral health services" : r.kind === "hospital" ? "Psychiatric hospital" : r.kind === "provider" ? "Care provider" : "Treatment & support")} · ${r.city}, ${r.state}`}
+      description={`${r.fellowship ?? (r.kind === "clinic" ? "Behavioral health services" : r.kind === "hospital" ? "Psychiatric hospital" : r.kind === "provider" ? "Care provider" : "Treatment & support")} � ${r.city}, ${r.state}`}
       wide
     >
       <div className="detail-tags">
@@ -212,6 +219,7 @@ export default function ResourceDetail({
           {saved ? "Saved" : "Save"}
         </button>
       </div>
+      <PracticalDetails resource={r} />
       <section className="detail-section">
         <h3>
           <MapPin size={18} />
@@ -240,7 +248,7 @@ export default function ResourceDetail({
           </>
         ) : (
           <p>
-            <Video size={16} /> Online only — no physical meeting location.
+            <Video size={16} /> Online only � no physical meeting location.
           </p>
         )}
         <p>{r.intake}</p>
@@ -255,7 +263,8 @@ export default function ResourceDetail({
             Meeting schedule
           </h3>
           <p className="schedule-next">
-            Next scheduled: <NextTime resource={r} now={now} />
+            Next matching schedule:{" "}
+            <NextTime resource={r} now={now} timeFilters={timeFilters} />
           </p>
           <p>
             {r.meeting.days
@@ -272,16 +281,28 @@ export default function ResourceDetail({
                   ][d],
               )
               .join(", ")}{" "}
-            · {r.meeting.time} · America/New_York ·{" "}
+            � {r.meeting.time} � {r.meeting.timezone} �{" "}
             {r.meeting.duration === null
               ? "Duration not reported"
               : `${r.meeting.duration} minutes`}
           </p>
           <p className="muted">
-            The next occurrence above is shown in your device’s time zone.
+            The next occurrence above is shown in your device�s time zone.
             Recurring schedules can change; confirm on the source page.
           </p>
           <p>{r.meeting.notes}</p>
+          {r.meeting.exceptions?.length ? (
+            <div>
+              {r.meeting.exceptions
+                .filter((e) => e.cancelled)
+                .map((e) => (
+                  <p className="notice" key={e.date}>
+                    Cancelled {e.date}: {e.note}
+                  </p>
+                ))}
+            </div>
+          ) : null}
+          <AddCalendar resource={r} timeFilters={timeFilters} />
         </section>
       ) : r.hours ? (
         <section className="detail-section">
@@ -345,7 +366,7 @@ export default function ResourceDetail({
         ))}
         <p className="notice">
           <Info size={16} />
-          Acceptance of an insurer does not guarantee your plan’s network
+          Acceptance of an insurer does not guarantee your plan�s network
           participation or coverage. Confirm the service, location, benefits and
           prior authorization with the provider and your insurer.
         </p>
@@ -364,7 +385,7 @@ export default function ResourceDetail({
         <p>
           Source reviewed: <SourceDate value={r.sourceCheckedAt} />
           <br />
-          Source’s own update date: <SourceDate value={r.sourceUpdatedAt} />
+          Source�s own update date: <SourceDate value={r.sourceUpdatedAt} />
           <br />
           Directly verified with provider/group:{" "}
           <SourceDate value={r.verifiedAt} />

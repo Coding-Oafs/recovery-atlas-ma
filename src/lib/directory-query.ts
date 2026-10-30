@@ -1,6 +1,7 @@
 import "server-only";
 import { db } from "./db";
 import type { Filters } from "./types";
+import { meetingTimeBounds, hasMeetingTimeFilter } from "./meeting-time";
 export async function queryDirectory(
   f: Filters,
   saved: string[],
@@ -8,6 +9,7 @@ export async function queryDirectory(
   options: {
     map?: { bounds: number[]; zoom: number };
     selection?: { bounds: number[]; offset: number };
+    offset?: number;
   } = {},
 ) {
   const values: unknown[] = [];
@@ -17,7 +19,7 @@ export async function queryDirectory(
   };
   const where = ["published=true"];
   if (f.state) where.push(`resource_state=${param(f.state)}`);
-  if (f.soon) where.push(`resource_kind='meeting'`);
+  if (hasMeetingTimeFilter(f)) where.push(`resource_kind='meeting'`);
   const has = (path: string, value: string) => `${path} ? ${param(value)}`;
   if (f.category !== "all") where.push(has("data->'categories'", f.category));
   if (f.format) {
@@ -82,9 +84,46 @@ export async function queryDirectory(
       `ST_Intersects(location::geometry,ST_MakeEnvelope(${param(w)}::float8,${param(s)}::float8,${param(e)}::float8,${param(n)}::float8,4326))`,
     );
   }
-  const next = `(SELECT min(((d::date + (data->'meeting'->>'time')::time)::timestamp AT TIME ZONE 'America/New_York')) FROM generate_series((now() AT TIME ZONE 'America/New_York')::date, (now() AT TIME ZONE 'America/New_York')::date+7,interval '1 day') d WHERE data->'meeting'->'days' @> to_jsonb(ARRAY[extract(dow from d)::int]) AND ((d::date + (data->'meeting'->>'time')::time)::timestamp AT TIME ZONE 'America/New_York') >= now())`;
   const meetingOrder =
-    f.category === "meetings" || f.format === "online" || f.soon;
+    f.category === "meetings" ||
+    f.format === "online" ||
+    hasMeetingTimeFilter(f);
+  const bounds = meetingTimeBounds(f),
+    start = meetingOrder ? param(bounds.start.toISOString()) : "now()",
+    end = bounds.end ? param(bounds.end.toISOString()) : null;
+  const zone =
+    "COALESCE(NULLIF(data->'meeting'->>'timezone',''),'America/New_York')";
+  const candidate =
+    "((d::date + (data->'meeting'->>'time')::time)::timestamp AT TIME ZONE " +
+    zone +
+    ")";
+  const conditions = [candidate + ">=" + start + "::timestamptz"];
+  if (end) conditions.push(candidate + "<" + end + "::timestamptz");
+  if (f.day) conditions.push("extract(dow from d)=" + param(Number(f.day)));
+  if (f.startAfter || f.startBefore) {
+    const local =
+      "(" +
+      candidate +
+      " AT TIME ZONE " +
+      param(f.timeZone || "America/New_York") +
+      ")::time";
+    const after = f.startAfter
+        ? local + ">=" + param(f.startAfter) + "::time"
+        : null,
+      before = f.startBefore
+        ? local + "<" + param(f.startBefore) + "::time"
+        : null;
+    conditions.push(
+      after && before
+        ? "(" +
+            after +
+            (f.startAfter! > f.startBefore! ? " OR " : " AND ") +
+            before +
+            ")"
+        : (after || before)!,
+    );
+  }
+  const next = `(SELECT min(${candidate}) FROM generate_series((${start}::timestamptz AT TIME ZONE ${zone})::date, (${start}::timestamptz AT TIME ZONE ${zone})::date+34,interval '1 day') d WHERE NOT EXISTS(SELECT 1 FROM jsonb_array_elements(COALESCE(data->'meeting'->'exceptions','[]'::jsonb)) e WHERE e->>'date'=d::date::text AND e->>'cancelled'='true') AND data->'meeting'->'days' @> to_jsonb(ARRAY[extract(dow from d)::int]) AND ${conditions.join(" AND ")})`;
   const nextColumn = meetingOrder
     ? `CASE WHEN data->'meeting' IS NOT NULL AND data->'meeting' <> 'null'::jsonb THEN ${next} ELSE NULL END`
     : "NULL::timestamptz";
@@ -93,7 +132,7 @@ export async function queryDirectory(
     : f.center
       ? "distance NULLS LAST, name"
       : "name";
-  const base = `WITH matched AS NOT MATERIALIZED(SELECT id,data,location,resource_name AS name,resource_kind AS kind,${distance} AS distance,${nextColumn} AS next_meeting FROM resources WHERE ${where.join(" AND ")}),filtered AS NOT MATERIALIZED(SELECT * FROM matched ${f.soon ? "WHERE next_meeting<=now()+interval '3 hours'" : ""})`;
+  const base = `WITH matched AS NOT MATERIALIZED(SELECT id,data,location,resource_name AS name,resource_kind AS kind,${distance} AS distance,${nextColumn} AS next_meeting FROM resources WHERE ${where.join(" AND ")}),filtered AS NOT MATERIALIZED(SELECT * FROM matched ${hasMeetingTimeFilter(f) ? "WHERE next_meeting IS NOT NULL" : ""})`;
   if (options.map) {
     const zoom = Math.floor(options.map.zoom),
       size = ((40075016.68557849 / 2 ** zoom) * (zoom >= 14 ? 12 : 55)) / 512,
@@ -102,7 +141,7 @@ export async function queryDirectory(
     const [row] = await db().query(query, values);
     return { pins: row.pins, represented: Number(row.represented) };
   }
-  const query = `${base},page AS(SELECT data FROM filtered ORDER BY ${order},id LIMIT ${param(limit)} OFFSET ${param(options.selection?.offset ?? 0)}),counts AS(SELECT count(*) AS total,count(*) FILTER(WHERE location IS NULL) AS online_or_unmapped,count(location) AS mapped FROM filtered) SELECT counts.*,COALESCE((SELECT jsonb_agg(data) FROM page),'[]') AS resources FROM counts`;
+  const query = `${base},page AS(SELECT data FROM filtered ORDER BY ${order},id LIMIT ${param(limit)} OFFSET ${param(options.selection?.offset ?? options.offset ?? 0)}),counts AS(SELECT count(*) AS total,count(*) FILTER(WHERE location IS NULL) AS online_or_unmapped,count(location) AS mapped FROM filtered) SELECT counts.*,COALESCE((SELECT jsonb_agg(data) FROM page),'[]') AS resources FROM counts`;
   const rows = await db().query(query, values);
   return {
     ...rows[0],

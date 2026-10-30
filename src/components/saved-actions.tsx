@@ -1,9 +1,21 @@
 "use client";
 import { useState } from "react";
 import { Download, Printer, CalendarDays } from "lucide-react";
+import { OfflineSave } from "./offline-tools";
 import { useSaved } from "./saved-provider";
-export default function SavedActions() {
-  const { saved, user, loading, syncing, error, refresh } = useSaved(),
+export default function SavedActions({
+  resourceIds,
+}: { resourceIds?: string[] } = {}) {
+  const {
+      saved: allSaved,
+      user,
+      loading,
+      syncing,
+      error,
+      refresh,
+    } = useSaved(),
+    saved = resourceIds ?? allSaved,
+    [reminder, setReminder] = useState(false),
     [busy, setBusy] = useState(""),
     [notice, setNotice] = useState("");
   async function download(format: string) {
@@ -13,7 +25,7 @@ export default function SavedActions() {
       const r = await fetch("/api/saved/export", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ids: saved, format }),
+        body: JSON.stringify({ ids: saved, format, reminder }),
       });
       if (!r.ok) throw Error((await r.json()).error);
       const url = URL.createObjectURL(await r.blob()),
@@ -37,9 +49,9 @@ export default function SavedActions() {
       <p>
         {user
           ? syncing
-            ? "Saving changes…"
+            ? "Saving changes�"
             : loading
-              ? "Loading your account saves…"
+              ? "Loading your account saves�"
               : "Your private list is saved to your account."
           : "Saved in this browser. Sign in to keep a private copy across devices."}
       </p>
@@ -81,9 +93,11 @@ export default function SavedActions() {
         </form>
       </div>
       <p className="small muted">
-        Exports include all saved listings, even when the search list is
-        filtered. Calendar files include meetings only. Confirm current
-        schedules with the source.
+        {resourceIds
+          ? "Exports include the selected saved list."
+          : "Exports include all saved listings, even when search is filtered."}{" "}
+        Calendar files include meetings only. Confirm current schedules with the
+        source.
       </p>
       {error ? (
         <p className="notice" role="alert">
@@ -97,6 +111,21 @@ export default function SavedActions() {
         </p>
       ) : null}
       {notice ? <p role="status">{notice}</p> : null}
+      <label className="check-row">
+        <input
+          type="checkbox"
+          checked={reminder}
+          onChange={(e) => setReminder(e.target.checked)}
+        />
+        Include a 10-minute calendar reminder (meeting names may appear on your
+        calendar�s notifications)
+      </label>
+      {user ? (
+        <a className="text-link" href="/saved">
+          Organize private saved lists
+        </a>
+      ) : null}
+      <OfflineSave resourceIds={saved} />
     </section>
   );
 }

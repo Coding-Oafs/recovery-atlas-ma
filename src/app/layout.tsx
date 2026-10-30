@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { publicSiteUrl } from "@/lib/site";
+import { LanguageProvider } from "@/components/language-provider";
+import { OfflineSetup } from "@/components/offline-tools";
 import { SavedProvider } from "@/components/saved-provider";
 export const metadata: Metadata = {
   metadataBase: new URL(publicSiteUrl),
@@ -9,9 +11,9 @@ export const metadata: Metadata = {
     type: "website",
     url: "/",
     siteName: "Recovery Atlas",
-    title: "Recovery Atlas · Recovery support across the Northeast",
+    title: "Recovery Atlas � Recovery support across the Northeast",
   },
-  title: "Recovery Atlas · Find your way forward in the Northeast",
+  title: "Recovery Atlas � Find your way forward in the Northeast",
   description:
     "Find recovery meetings, treatment, mental health care and support across CT, MA, ME, NH, NJ, NY, PA, RI and VT. Explore sourced listings, payment information and ways to connect.",
   applicationName: "Recovery Atlas",
@@ -34,7 +36,10 @@ export default function RootLayout({
         <link rel="stylesheet" href="/fonts/fonts.css" />
       </head>
       <body>
-        <SavedProvider>{children}</SavedProvider>
+        <LanguageProvider>
+          <OfflineSetup />
+          <SavedProvider>{children}</SavedProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

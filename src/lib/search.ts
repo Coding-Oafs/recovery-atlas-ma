@@ -1,4 +1,10 @@
 import type { Resource, Filters } from "./types";
+import {
+  meetingTimeBounds,
+  matchingStartTime,
+  hasMeetingTimeFilter,
+  type MeetingTimeFilters,
+} from "./meeting-time";
 export function miles(
   a: { lat: number; lng: number },
   b: { lat: number; lng: number },
@@ -30,14 +36,26 @@ function wallParts(d: Date, tz: string) {
     minute: v("minute"),
   };
 }
-export function nextMeeting(r: Resource, now = new Date()): Date | null {
+export function nextMeeting(
+  r: Resource,
+  now = new Date(),
+  criteria: Partial<MeetingTimeFilters> = {},
+): Date | null {
   if (!r.meeting) return null;
+  const bounds = meetingTimeBounds(criteria, now);
   const m = r.meeting,
-    p = wallParts(now, m.timezone);
+    p = wallParts(bounds.start, m.timezone);
   const [hour, minute] = m.time.split(":").map(Number);
-  for (let n = 0; n < 8; n++) {
+  for (let n = 0; n < 35; n++) {
     const day = new Date(Date.UTC(p.year, p.month - 1, p.day + n));
     if (!m.days.includes(day.getUTCDay())) continue;
+    if (criteria.day && Number(criteria.day) !== day.getUTCDay()) continue;
+    if (
+      m.exceptions?.some(
+        (x) => x.cancelled && x.date === day.toISOString().slice(0, 10),
+      )
+    )
+      continue;
     const target = Date.UTC(
       day.getUTCFullYear(),
       day.getUTCMonth(),
@@ -53,7 +71,12 @@ export function nextMeeting(r: Resource, now = new Date()): Date | null {
     const candidate = new Date(t);
     const check = wallParts(candidate, m.timezone);
     if (check.hour !== hour || check.minute !== minute) continue;
-    if (t >= now.getTime()) return candidate;
+    if (
+      t >= bounds.start.getTime() &&
+      (!bounds.end || t < bounds.end.getTime()) &&
+      matchingStartTime(candidate, criteria)
+    )
+      return candidate;
   }
   return null;
 }
@@ -105,10 +128,7 @@ export function filterResources(
         (!r.meeting || !r.meeting.days.includes(Number(f.day)))
       )
         return false;
-      if (f.soon) {
-        const next = nextMeeting(r, now);
-        if (!next || next.getTime() - now.getTime() > 3 * 3600000) return false;
-      }
+      if (hasMeetingTimeFilter(f) && !nextMeeting(r, now, f)) return false;
       const online =
         r.kind === "meeting" &&
         r.formats.includes("online") &&
@@ -143,10 +163,14 @@ export function filterResources(
       return words.every((w) => hay.includes(w));
     })
     .sort((a, b) => {
-      if (f.category === "meetings" || f.format === "online" || f.soon) {
+      if (
+        f.category === "meetings" ||
+        f.format === "online" ||
+        hasMeetingTimeFilter(f)
+      ) {
         return (
-          (nextMeeting(a, now)?.getTime() ?? Infinity) -
-            (nextMeeting(b, now)?.getTime() ?? Infinity) ||
+          (nextMeeting(a, now, f)?.getTime() ?? Infinity) -
+            (nextMeeting(b, now, f)?.getTime() ?? Infinity) ||
           a.name.localeCompare(b.name)
         );
       }
@@ -173,6 +197,11 @@ export const defaultFilters: Filters = {
   population: "",
   day: "",
   soon: false,
+  meetingWindow: "",
+  meetingDate: "",
+  startAfter: "",
+  startBefore: "",
+  timeZone: "America/New_York",
   radius: 25,
   center: null,
   bounds: null,

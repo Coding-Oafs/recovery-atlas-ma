@@ -5,6 +5,8 @@ import { publicSiteUrl } from "@/lib/site";
 import { useSaved } from "./saved-provider";
 import SavedActions from "./saved-actions";
 import Modal from "./modal";
+import Link from "next/link";
+import OrganizationUpdates from "./organization-updates";
 import { UserRound, KeyRound } from "lucide-react";
 type Mode = "sign-in" | "create" | "recover";
 export function AccountPanel() {
@@ -155,7 +157,7 @@ export function AccountPanel() {
             <div className="notice">
               <p>
                 You have {guestSaved.length} browser-only saves. Copy them into
-                this account when you’re ready.
+                this account when you�re ready.
               </p>
               <button
                 className="secondary"
@@ -173,7 +175,14 @@ export function AccountPanel() {
               </button>
             </div>
           ) : null}
+          <Link className="primary" href="/community">
+            Your profile & peer messages
+          </Link>
           <SavedActions />
+          <details className="account-section">
+            <summary>Organization listing updates</summary>
+            <OrganizationUpdates />
+          </details>
           <div className="account-section">
             <h3>Easy sign-in with a passkey</h3>
             <p>
@@ -233,7 +242,7 @@ export function AccountPanel() {
             <h3>Keep a recovery code</h3>
             <p>
               If you forget your password, this code lets you recover your
-              account. We don’t collect an email address, so there is no email
+              account. We don�t collect an email address, so there is no email
               reset.
             </p>
             {code ? (
@@ -328,16 +337,19 @@ export function AccountPanel() {
           <details className="account-section">
             <summary>Delete account</summary>
             <p>
-              This permanently removes this account, its saved list, passkeys
-              and recovery code. Browser-only saves are separate. Download your
-              saved list first if you want to keep a copy.
+              This permanently removes this account, its saved lists, profile,
+              passkeys, recovery code and conversations for both participants.
+              Report evidence may remain for up to 90 days. Browser saves,
+              downloaded files and optional offline copies are separate; remove
+              the device copy on the Offline resources page. Download your saved
+              list first if you want to keep it.
             </p>
             {!deleteConfirm ? (
               <button
                 className="text-link"
                 onClick={() => setDeleteConfirm(true)}
               >
-                Delete my account…
+                Delete my account�
               </button>
             ) : (
               <form
@@ -475,7 +487,7 @@ export function AccountPanel() {
             ) : null}
             <button className="primary" disabled={busy}>
               {busy
-                ? "Please wait…"
+                ? "Please wait�"
                 : mode === "create"
                   ? "Create my private account"
                   : mode === "recover"

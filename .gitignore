@@ -1,6 +1,7 @@
 node_modules/
 .next/
 .next-accounts/
+.next-community/
 .vercel/
 .env*
 !.env.example

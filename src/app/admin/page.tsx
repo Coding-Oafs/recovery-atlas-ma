@@ -5,7 +5,7 @@ import { login, logout, reviewSubmission, importResources } from "./actions";
 import { SourceDate } from "@/components/resource-detail";
 export const dynamic = "force-dynamic";
 export const metadata = {
-  title: "Administrator · Recovery Atlas",
+  title: "Administrator � Recovery Atlas",
   robots: { index: false, follow: false },
 };
 export default async function Admin({
@@ -18,7 +18,7 @@ export default async function Admin({
     return (
       <main className="standalone">
         <Link href="/" className="text-link">
-          ← Back to directory
+          ? Back to directory
         </Link>
         <h1 style={{ marginTop: 25 }}>Directory care starts here.</h1>
         <p>Administrator access</p>
@@ -66,11 +66,17 @@ export default async function Admin({
       <header className="admin-header">
         <div>
           <Link className="text-link" href="/">
-            ← Public directory
+            ? Public directory
           </Link>
           <h1 style={{ marginTop: 15 }}>A little care for the directory.</h1>
         </div>
         <div className="admin-nav">
+          <Link className="secondary" href="/admin/quality">
+            Quality & refresh inbox
+          </Link>
+          <Link className="secondary" href="/moderation">
+            Community reports
+          </Link>
           <Link href="/admin/export" className="secondary">
             Export listings
           </Link>
@@ -131,7 +137,7 @@ export default async function Admin({
               record.
             </p>
             <p className="muted" style={{ fontSize: 11 }}>
-              Use “Edit” to update facts, verification dates or publication.
+              Use �Edit� to update facts, verification dates or publication.
               Check named insurance plans against the exact service and
               location.
             </p>
@@ -151,7 +157,7 @@ export default async function Admin({
                       {r.data.name}
                       <br />
                       <small className="muted">
-                        {r.data.city} · {r.data.kind}
+                        {r.data.city} � {r.data.kind}
                       </small>
                     </td>
                     <td>
@@ -186,7 +192,7 @@ export default async function Admin({
                   rows={7}
                   maxLength={250000}
                   required
-                  placeholder="[{ … }]"
+                  placeholder="[{ � }]"
                 />
               </label>
               <button className="primary">
@@ -217,7 +223,7 @@ export default async function Admin({
                       rel="noopener noreferrer"
                       href={s.source_url}
                     >
-                      Submitted source ↗
+                      Submitted source ?
                     </a>
                   ) : null}
                   <p className="muted" style={{ fontSize: 10 }}>
@@ -255,7 +261,7 @@ export default async function Admin({
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {s.name} ↗
+                  {s.name} ?
                 </a>
                 <p style={{ fontSize: 10 }}>{s.access_status}</p>
                 <p className="muted" style={{ fontSize: 11 }}>
@@ -269,7 +275,7 @@ export default async function Admin({
             {runs.length ? (
               runs.map((r) => (
                 <p key={r.id} style={{ fontSize: 11 }}>
-                  {r.source} · {r.status}
+                  {r.source} � {r.status}
                   <br />
                   {new Date(r.created_at).toLocaleString("en-US", {
                     timeZone: "America/New_York",
@@ -287,7 +293,7 @@ export default async function Admin({
             {audit.length ? (
               audit.map((a, i) => (
                 <p key={i} style={{ fontSize: 10 }}>
-                  {a.action} · {a.resource_id}
+                  {a.action} � {a.resource_id}
                 </p>
               ))
             ) : (

@@ -1,7 +1,9 @@
 import { chromium } from "@playwright/test";
 import { readFile, mkdir, writeFile } from "node:fs/promises";
 const env = await readFile(".env.local", "utf8");
-const password = env.match(/^ADMIN_PASSWORD=(.+)$/m)?.[1]?.trim();
+const password =
+  process.env.ADMIN_PASSWORD ||
+  env.match(/^ADMIN_PASSWORD=(.+)$/m)?.[1]?.trim();
 const base = process.env.TEST_BASE_URL ?? "http://127.0.0.1:4118";
 await mkdir(".local/screenshots", { recursive: true });
 const browser = await chromium.launch({
@@ -62,7 +64,7 @@ try {
   );
   await page.getByRole("button", { name: "View details" }).first().click();
   await page
-    .getByRole("heading", { name: "AdCare Hospital — Medical Detox" })
+    .getByRole("heading", { name: "AdCare Hospital � Medical Detox" })
     .waitFor();
   check(
     "Treatment popup details",

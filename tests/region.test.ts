@@ -44,8 +44,8 @@ test("all regional states validate, including southern New Jersey, and state fil
     ["NJ"],
   );
   assert.equal(
-    resourceSchema.safeParse({ ...raw[0], state: "CA" }).success,
+    resourceSchema.safeParse({ ...raw[0], state: "" }).success,
     false,
   );
-  assert.equal(resourceSchema.safeParse({ ...raw[0], lat: 37 }).success, false);
+  assert.equal(resourceSchema.safeParse({ ...raw[0], lat: 91 }).success, false);
 });

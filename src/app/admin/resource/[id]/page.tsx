@@ -3,11 +3,12 @@ import { notFound, redirect } from "next/navigation";
 import { isAdmin } from "@/lib/security";
 import { db } from "@/lib/db";
 import { saveResource } from "../../actions";
+import PracticalEditor from "@/components/practical-editor";
 import AdminResourceFields from "@/components/admin-resource-fields";
 import { regionStates, stateNames } from "@/lib/region";
 export const dynamic = "force-dynamic";
 export const metadata = {
-  title: "Edit resource · Recovery Atlas",
+  title: "Edit resource � Recovery Atlas",
   robots: { index: false, follow: false },
 };
 export default async function Edit({
@@ -44,7 +45,7 @@ export default async function Edit({
   return (
     <main className="admin-shell">
       <Link href="/admin" className="text-link">
-        ← Administrator dashboard
+        ? Administrator dashboard
       </Link>
       <h1 style={{ marginTop: 25 }}>Edit {r.name}</h1>
       <p className="notice">
@@ -111,6 +112,7 @@ export default async function Edit({
           Published in public directory
         </label>
         <AdminResourceFields resource={r} />
+        <PracticalEditor resource={r} />
         <button className="primary full">Save listing & record change</button>
       </form>
     </main>

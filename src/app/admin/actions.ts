@@ -124,6 +124,47 @@ export async function saveResource(form: FormData) {
       notes: String(form.get("meetingNotes") ?? ""),
     };
   }
+  if (form.get("practicalPresent") === "yes") {
+    const get = (k: string) => String(form.get("practical_" + k) ?? "");
+    next.practical = {
+      walkIn: get("walkIn"),
+      referral: get("referral"),
+      childcare: get("childcare"),
+      minimumAge: get("minimumAge") ? Number(get("minimumAge")) : null,
+      maximumAge: get("maximumAge") ? Number(get("maximumAge")) : null,
+      transit: get("transit"),
+      entrance: get("entrance"),
+      newcomers: get("newcomers"),
+      notes: get("notes"),
+    };
+    next.evidence = Array.from(
+      { length: Math.min(20, Number(form.get("evidenceCount")) || 0) },
+      (_, i) =>
+        Object.fromEntries(
+          ["field", "note", "sourceUrl", "checkedAt", "expiresAt"].map((k) => [
+            k,
+            String(form.get("evidence_" + i + "_" + k) ?? ""),
+          ]),
+        ),
+    )
+      .filter((e) => e.note.trim())
+      .map((e) => ({ ...e, expiresAt: e.expiresAt || null }));
+  }
+  if (before.meeting && form.has("meetingTimezone")) {
+    next.meeting.timezone = String(form.get("meetingTimezone"));
+    next.meeting.exceptions = String(form.get("meetingExceptions") ?? "")
+      .split(/\r?\n/)
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .map((line) => {
+        const [date, ...note] = line.split("|");
+        return {
+          date: date.trim(),
+          cancelled: true,
+          note: note.join("|").trim(),
+        };
+      });
+  }
   const r = resourceSchema.parse(next);
   const published = form.get("published") === "on";
   await sql.transaction([

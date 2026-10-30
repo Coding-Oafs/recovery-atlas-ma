@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "node:crypto";
+import { z } from "zod";
 import { sameOrigin, rateLimit } from "@/lib/security";
 import { db } from "@/lib/db";
-import { savedSchema } from "@/lib/search-input";
+import { savedSchema, filtersSchema } from "@/lib/search-input";
 import { resourceSchema } from "@/lib/types";
 import {
   savedCSV,
@@ -64,7 +65,18 @@ export async function POST(request: NextRequest) {
       format === "csv"
         ? savedCSV(resources)
         : format === "ics"
-          ? savedCalendar(resources)
+          ? savedCalendar(
+              resources,
+              new Date(),
+              z
+                .object({
+                  reminder: z.boolean().optional(),
+                  nextOnly: z.boolean().optional(),
+                  duration: z.number().int().min(1).max(720).optional(),
+                  timeFilters: filtersSchema.partial().optional(),
+                })
+                .parse(body),
+            )
           : format === "print"
             ? savedPrint(resources)
             : JSON.stringify(

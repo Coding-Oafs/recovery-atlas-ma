@@ -1,5 +1,6 @@
 import "server-only";
 import { db } from "./db";
+import { refreshMeetingSources } from "./source-refresh";
 const hosts = new Set([
   "www.mass.gov",
   "aaboston.org",
@@ -10,6 +11,17 @@ const hosts = new Set([
   "www.mcleanhospital.org",
   "www.spectrumhealthsystems.org",
   "www.massgeneralbrigham.org",
+  "npiregistry.cms.hhs.gov",
+  "www.samhsa.gov",
+  "webapps.oasas.ny.gov",
+  "nhaa.net",
+  "www.nyintergroup.org",
+  "area59aa.org",
+  "aasj.org",
+  "rhodeisland-aa.org",
+  "buffaloaany.org",
+  "www.aasyracuse.org",
+  "refugerecoverymeetings.org",
 ]);
 export async function checkSources() {
   const sql = db();
@@ -25,7 +37,7 @@ export async function checkSources() {
       const response = await fetch(url, {
         method: "HEAD",
         redirect: "manual",
-        signal: AbortSignal.timeout(6000),
+        signal: AbortSignal.timeout(3500),
         cache: "no-store",
       });
       status = response.status;
@@ -44,7 +56,11 @@ export async function checkSources() {
     sql`DELETE FROM atlas_auth_rate_limit WHERE "lastRequest" < extract(epoch FROM now()-interval '1 day')*1000`,
     sql`DELETE FROM atlas_session WHERE "expiresAt"<now()`,
     sql`DELETE FROM atlas_verification WHERE "expiresAt"<now()`,
+    sql`DELETE FROM atlas_message WHERE created_at<now()-interval '180 days'`,
+    sql`DELETE FROM atlas_conversation WHERE status IN ('pending','declined') AND created_at<now()-interval '30 days'`,
+    sql`DELETE FROM atlas_community_report WHERE created_at<now()-interval '90 days'`,
     sql`INSERT INTO sync_runs(source,status,details) VALUES('source-link-check','completed',${JSON.stringify({ checked: rows.length, note: "No source review or verification dates changed" })}::jsonb)`,
   ]);
+  await refreshMeetingSources();
   return rows.length;
 }

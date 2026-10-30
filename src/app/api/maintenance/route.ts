@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { equal } from "@/lib/security";
 import { checkSources } from "@/lib/maintenance";
+export const maxDuration = 180;
 export async function GET(request: NextRequest) {
   if (
     !process.env.CRON_SECRET ||

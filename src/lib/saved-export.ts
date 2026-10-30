@@ -1,5 +1,7 @@
 import type { Resource } from "./types";
+import type { MeetingTimeFilters } from "./meeting-time";
 import { nextMeeting } from "./search";
+import { getVtimezoneComponent } from "@touch4it/ical-timezones";
 // Referrer-Policy: no-referrer makes Chromium send Origin:null for form navigations.
 // Fetch Metadata still binds a browser's print submission to this exact origin.
 export function isSameOriginPrintNavigation(request: Request) {
@@ -44,7 +46,7 @@ const summary = (r: Resource) => ({
           ][d],
       )
       .join("; ") ?? "",
-  time: r.meeting ? `${r.meeting.time} America/New_York` : "",
+  time: r.meeting ? `${r.meeting.time} ${r.meeting.timezone}` : "",
   duration: r.meeting?.duration ?? "",
   joining: r.meeting?.joinUrl ?? "",
   payment: r.payment.join("; "),
@@ -102,7 +104,17 @@ export function foldICS(line: string) {
   lines.push(part);
   return lines.join("\r\n");
 }
-export function savedCalendar(rows: Resource[], now = new Date()) {
+export type CalendarOptions = {
+  reminder?: boolean;
+  nextOnly?: boolean;
+  duration?: number;
+  timeFilters?: Partial<MeetingTimeFilters>;
+};
+export function savedCalendar(
+  rows: Resource[],
+  now = new Date(),
+  options: CalendarOptions = {},
+) {
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
@@ -110,61 +122,107 @@ export function savedCalendar(rows: Resource[], now = new Date()) {
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
     "X-WR-CALNAME:Recovery Atlas saved meetings",
-    "BEGIN:VTIMEZONE",
-    "TZID:America/New_York",
-    "BEGIN:DAYLIGHT",
-    "DTSTART:20070311T020000",
-    "TZOFFSETFROM:-0500",
-    "TZOFFSETTO:-0400",
-    "TZNAME:EDT",
-    "RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU",
-    "END:DAYLIGHT",
-    "BEGIN:STANDARD",
-    "DTSTART:20071104T020000",
-    "TZOFFSETFROM:-0400",
-    "TZOFFSETTO:-0500",
-    "TZNAME:EST",
-    "RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU",
-    "END:STANDARD",
-    "END:VTIMEZONE",
   ];
-  for (const r of rows) {
-    if (!r.meeting) continue;
-    const start = nextMeeting(r, now);
-    if (!start) continue;
+  const criteria = options.nextOnly ? options.timeFilters : undefined;
+  const meetings = rows.filter(
+    (r) => r.meeting && nextMeeting(r, now, criteria),
+  );
+  for (const zone of new Set(meetings.map((r) => r.meeting!.timezone))) {
+    const component = getVtimezoneComponent(zone);
+    if (!component) throw Error("Calendar time zone is unavailable.");
+    lines.push(
+      ...component
+        .replace(/\r?\n[ \t]/g, "")
+        .trim()
+        .split(/\r?\n/),
+    );
+  }
+  const stamp = now
+    .toISOString()
+    .replace(/[-:]/g, "")
+    .replace(/\.\d{3}Z/, "Z");
+  for (const r of meetings) {
+    const m = r.meeting!,
+      start = nextMeeting(r, now, criteria)!;
     const parts = new Intl.DateTimeFormat("en-CA", {
-        timeZone: "America/New_York",
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      }).formatToParts(start),
-      part = (type: string) => parts.find((p) => p.type === type)!.value,
-      date = part("year") + part("month") + part("day");
+      timeZone: m.timezone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).formatToParts(start);
+    const part = (type: string) => parts.find((p) => p.type === type)!.value;
+    const date = part("year") + part("month") + part("day"),
+      time = m.time.replace(":", "") + "00";
     lines.push(
       "BEGIN:VEVENT",
-      `UID:${r.id}@recoveryatlas.vercel.app`,
-      `DTSTAMP:${now
-        .toISOString()
-        .replace(/[-:]/g, "")
-        .replace(/\.\d{3}Z/, "Z")}`,
-      `DTSTART;TZID=America/New_York:${date}T${r.meeting.time.replace(":", "")}00`,
-      `RRULE:FREQ=WEEKLY;BYDAY=${[...new Set(r.meeting.days)]
-        .sort()
-        .map((d) => ["SU", "MO", "TU", "WE", "TH", "FR", "SA"][d])
-        .join(",")}`,
-      `SUMMARY:${escapeICS(r.name)}`,
-      `LOCATION:${escapeICS(r.address || "Online — see official meeting page")}`,
-      `DESCRIPTION:${escapeICS(`${r.description}\n${r.meeting.notes}\nAttendance: ${r.formats.join(", ")}\n${r.meeting.joinUrl ? "Join: " + r.meeting.joinUrl + "\n" : ""}Confirm current schedule and access before attending. Source reviewed: ${r.sourceCheckedAt}.\n${r.sourceUrl}`)}`,
-      `URL:${r.sourceUrl}`,
+      "UID:" +
+        r.id +
+        (options.nextOnly ? "-" + date : "") +
+        "@recoveryatlas.vercel.app",
+      "DTSTAMP:" + stamp,
+      "DTSTART;TZID=" + m.timezone + ":" + date + "T" + time,
+    );
+    if (!options.nextOnly) {
+      lines.push(
+        "RRULE:FREQ=WEEKLY;BYDAY=" +
+          [...new Set(m.days)]
+            .sort()
+            .map((d) => ["SU", "MO", "TU", "WE", "TH", "FR", "SA"][d])
+            .join(","),
+      );
+      const dates = (m.exceptions ?? [])
+        .filter((e) => e.cancelled)
+        .map((e) => e.date.replace(/-/g, "") + "T" + time);
+      if (dates.length)
+        lines.push(
+          "EXDATE;TZID=" + m.timezone + ":" + [...new Set(dates)].join(","),
+        );
+    }
+    lines.push(
+      "SUMMARY:" + escapeICS(r.name),
+      "LOCATION:" +
+        escapeICS(r.address || "Online � see official meeting page"),
+      "DESCRIPTION:" +
+        escapeICS(
+          r.description +
+            "\n" +
+            m.notes +
+            "\nAttendance: " +
+            r.formats.join(", ") +
+            "\n" +
+            (m.joinUrl ? "Join: " + m.joinUrl + "\n" : "") +
+            "Confirm current schedule and access before attending. Source reviewed: " +
+            r.sourceCheckedAt +
+            ".\n" +
+            r.sourceUrl,
+        ),
+      "URL:" + escapeICS(r.sourceUrl),
       "CLASS:PRIVATE",
       "STATUS:TENTATIVE",
     );
-    if (r.meeting.duration) lines.push(`DURATION:PT${r.meeting.duration}M`);
+    const duration =
+      m.duration ?? (options.nextOnly ? options.duration : undefined);
+    if (
+      duration &&
+      Number.isInteger(duration) &&
+      duration >= 1 &&
+      duration <= 720
+    )
+      lines.push("DURATION:PT" + duration + "M");
+    if (options.reminder)
+      lines.push(
+        "BEGIN:VALARM",
+        "TRIGGER:-PT10M",
+        "ACTION:DISPLAY",
+        "DESCRIPTION:Saved event",
+        "END:VALARM",
+      );
     lines.push("END:VEVENT");
   }
   lines.push("END:VCALENDAR");
   return lines.map(foldICS).join("\r\n") + "\r\n";
 }
+
 const html = (s: unknown) =>
   String(s ?? "").replace(
     /[&<>"']/g,
@@ -176,5 +234,5 @@ const html = (s: unknown) =>
 export const printScript =
   "document.getElementById('print').addEventListener('click',()=>window.print());";
 export function savedPrint(rows: Resource[]) {
-  return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Recovery Atlas · Saved resources</title><style>body{font:15px/1.6 system-ui;max-width:850px;margin:32px auto;padding:0 20px;color:#173e36}h1{font-size:28px}h2{font-size:20px}article{border-top:1px solid #bbb;padding:20px 0;break-inside:avoid}a{color:inherit;overflow-wrap:anywhere}p{margin:8px 0}button{padding:12px 20px;cursor:pointer}.small{font-size:12px} @media print{button{display:none}body{margin:0;max-width:none;padding:0}}</style><body><button id="print">Print / Save as PDF</button><h1>Your saved resources</h1><p>${rows.length} listings · Exported ${html(new Date().toISOString().slice(0, 10))}</p><p class="small">Keep this copy private. Schedules, services, payment and insurance can change. Confirm with the original source before traveling or arranging care.</p>${rows.map((r) => `<article><h2>${html(r.name)}</h2><p>${html(r.fellowship ?? r.kind)} · ${html(r.city)}, ${html(r.state)} · ${html(r.formats.join(", "))}</p><p>${html(r.address || "Online — see source for joining instructions")}${r.coordinateAccuracy === "approximate" ? " (approximate map location)" : ""}</p>${r.phone ? `<p>Phone: ${html(r.phone)}</p>` : ""}${r.meeting ? `<p>${html(r.meeting.days.map((d) => ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][d]).join(", "))} at ${html(r.meeting.time)} Eastern${r.meeting.duration ? " · " + r.meeting.duration + " minutes" : ""}</p>` : ""}<p>${html(r.description)}</p><p>Services: ${html(r.services.join(", "))}</p><p>Payment: ${html(r.payment.join(", ") || "Not reported")}. ${html(r.paymentNote)}</p>${r.insurance.length ? `<p>Insurance: ${html(summary(r).insurance)}</p>` : ""}<p>${html(r.intake)}</p>${r.meeting?.notes ? `<p>${html(r.meeting.notes)}</p>` : ""}<p><a href="${html(r.sourceUrl)}">${html(r.sourceUrl)}</a></p><p class="small">Source reviewed ${html(r.sourceCheckedAt)}. Direct verification: ${html(r.verifiedAt || "Not recorded")}.</p></article>`).join("")}<script>${printScript}</script></body></html>`;
+  return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Recovery Atlas � Saved resources</title><style>body{font:15px/1.6 system-ui;max-width:850px;margin:32px auto;padding:0 20px;color:#173e36}h1{font-size:28px}h2{font-size:20px}article{border-top:1px solid #bbb;padding:20px 0;break-inside:avoid}a{color:inherit;overflow-wrap:anywhere}p{margin:8px 0}button{padding:12px 20px;cursor:pointer}.small{font-size:12px} @media print{button{display:none}body{margin:0;max-width:none;padding:0}}</style><body><button id="print">Print / Save as PDF</button><h1>Your saved resources</h1><p>${rows.length} listings � Exported ${html(new Date().toISOString().slice(0, 10))}</p><p class="small">Keep this copy private. Schedules, services, payment and insurance can change. Confirm with the original source before traveling or arranging care.</p>${rows.map((r) => `<article><h2>${html(r.name)}</h2><p>${html(r.fellowship ?? r.kind)} � ${html(r.city)}, ${html(r.state)} � ${html(r.formats.join(", "))}</p><p>${html(r.address || "Online � see source for joining instructions")}${r.coordinateAccuracy === "approximate" ? " (approximate map location)" : ""}</p>${r.phone ? `<p>Phone: ${html(r.phone)}</p>` : ""}${r.meeting ? `<p>${html(r.meeting.days.map((d) => ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][d]).join(", "))} at ${html(r.meeting.time)} ${html(r.meeting.timezone)}${r.meeting.duration ? " � " + r.meeting.duration + " minutes" : ""}</p>` : ""}<p>${html(r.description)}</p><p>Services: ${html(r.services.join(", "))}</p><p>Payment: ${html(r.payment.join(", ") || "Not reported")}. ${html(r.paymentNote)}</p>${r.insurance.length ? `<p>Insurance: ${html(summary(r).insurance)}</p>` : ""}<p>${html(r.intake)}</p>${r.meeting?.notes ? `<p>${html(r.meeting.notes)}</p>` : ""}<p><a href="${html(r.sourceUrl)}">${html(r.sourceUrl)}</a></p><p class="small">Source reviewed ${html(r.sourceCheckedAt)}. Direct verification: ${html(r.verifiedAt || "Not recorded")}.</p></article>`).join("")}<script>${printScript}</script></body></html>`;
 }

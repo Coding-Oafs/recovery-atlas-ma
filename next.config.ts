@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 const config: NextConfig = {
-  distDir: process.env.NEXT_DIST_DIR || '.next',
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   poweredByHeader: false,
+  serverExternalPackages: ["@touch4it/ical-timezones"],
+  outputFileTracingIncludes: {
+    "/api/saved/export": ["./node_modules/@touch4it/ical-timezones/zones/**/*"],
+  },
   async headers() {
     return [
       {

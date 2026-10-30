@@ -38,7 +38,7 @@ Do not copy a hospital-level policy onto each individual clinician. Preserve exc
 
 US Census address matches identify a street position, not a verified building entrance. Unmatched addresses fall back to a covered-state ZIP/city area only when supported by postal data, with an explicit approximate label. NPPES practice addresses are self-reported public professional data and can be stale; the registry does not establish current licensure or clinical suitability.
 
-Online-only meetings have no coordinates. Hybrid meetings keep one identity with both formats. A recurring schedule is calculated in `America/New_York` and shown in the visitor's zone; source changes/cancellations are not predicted. Do not infer weekly days from a day-filtered index.
+Online-only meetings have no coordinates. Hybrid meetings keep one identity with both formats. A recurring schedule is calculated in its recorded IANA time zone (currently regional sources primarily use America/New_York) and can be filtered in the visitor�s selected zone; future source changes/cancellations are not predicted. Recorded cancellation dates are excluded. Do not infer weekly days from a day-filtered index.
 
 ## Refresh workflow
 
@@ -48,7 +48,7 @@ Online-only meetings have no coordinates. Hybrid meetings keep one identity with
 4. Flag changes, potential duplicates, closures and missing fields for review.
 5. Publish reviewed facts, preserving audit history and each field's evidence.
 
-The current production job checks source-link reachability only. A working URL is not clinical or meeting verification. HTTP 403 means manual review, not closure. The administrator can import reviewed JSON; insert-only imports never overwrite manually maintained records.
+The daily job samples source-link reachability and compares two rotating approved official meeting feeds against known listings, queuing changes for human review. It does not automatically publish those changes or advance direct-verification dates. A working URL is not clinical or meeting verification. HTTP 403 means manual review, not closure. The administrator can import reviewed JSON; insert-only imports never overwrite manually maintained records.
 
 ## Northeast expansion reviewed October 26, 2026
 
@@ -64,3 +64,13 @@ The directory covers CT, MA, ME, NH, NJ, NY, PA, RI and VT. The repository retai
 | [SMART Recovery](https://meetings.smartrecovery.org/meetings/), [Recovery Dharma](https://recoverydharma.org/meetings/), [Refuge Recovery](https://refugerecoverymeetings.org/meetings/) | Public regional meeting pages/feeds, explicit recurrence, attendance mode, location and source URLs                                                                                                           | Unsupported schedules/timezones are held. Calendar timezone is used for SMART, not visitor-local display time.                                                                              |
 
 Source collection uses only public endpoints and links embedded in official pages. It does not bypass authentication or CAPTCHAs. Cached raw exports stay outside Git. Do not copy meeting passcodes or personal contacts into the directory. Per-source update dates remain distinct from our review date. Recheck source access and reuse requirements before each refresh.
+
+## Community privacy and review
+
+Profiles are private by default. Handle discovery and incoming requests require explicit adult confirmation and guideline acceptance. No real name, clinical history or exact personal location is required. Messages are protected by HTTPS and AES-256-GCM server-side encryption with a separate secret. They are not end-to-end encrypted. The moderation UI exposes only a message selected for report, the reporter�s reason and involved handles; it does not provide a general conversation browser. Infrastructure administrators can technically access encrypted data and keys.
+
+Daily maintenance removes messages older than 180 days, pending/declined requests older than 30 days and report evidence older than 90 days. Account deletion removes its profile, blocks, saved collections and conversations for both participants. Reports can remain with deleted account references cleared until retention expires. Encrypted infrastructure recovery copies can persist within Neon�s configured recovery window.
+
+Calendar details are sent only to the service a visitor chooses. Shared calendars and notifications can disclose meeting names. Offline copies require an explicit action and remain readable on the device after sign-out; they can be removed on the offline page. Community/private API responses are never cached for offline use.
+
+Organization access is verified manually using an independently obtained official contact. An approved claim permits proposals, not direct publication or a clinical-quality badge. Proposed updates are validated and compared with the previous record before approval; a concurrent edit creates a conflict rather than an overwrite. Exact-name/address duplicate groups are review suggestions, not automatic merges.
