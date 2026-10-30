@@ -85,7 +85,7 @@ export default function PracticalEditor({
         <details key={i} open={!e}>
           <summary>
             {e
-              ? e.field + " � " + e.checkedAt
+              ? e.field + " · " + e.checkedAt
               : "Add a confirmed fact (optional)"}
           </summary>
           <div className="stack">

@@ -38,7 +38,7 @@ Do not copy a hospital-level policy onto each individual clinician. Preserve exc
 
 US Census address matches identify a street position, not a verified building entrance. Unmatched addresses fall back to a covered-state ZIP/city area only when supported by postal data, with an explicit approximate label. NPPES practice addresses are self-reported public professional data and can be stale; the registry does not establish current licensure or clinical suitability.
 
-Online-only meetings have no coordinates. Hybrid meetings keep one identity with both formats. A recurring schedule is calculated in its recorded IANA time zone (currently regional sources primarily use America/New_York) and can be filtered in the visitor�s selected zone; future source changes/cancellations are not predicted. Recorded cancellation dates are excluded. Do not infer weekly days from a day-filtered index.
+Online-only meetings have no coordinates. Hybrid meetings keep one identity with both formats. A recurring schedule is calculated in its recorded IANA time zone (currently regional sources primarily use America/New_York) and can be filtered in the visitor’s selected zone; future source changes/cancellations are not predicted. Recorded cancellation dates are excluded. Do not infer weekly days from a day-filtered index.
 
 ## Refresh workflow
 
@@ -67,9 +67,9 @@ Source collection uses only public endpoints and links embedded in official page
 
 ## Community privacy and review
 
-Profiles are private by default. Handle discovery and incoming requests require explicit adult confirmation and guideline acceptance. No real name, clinical history or exact personal location is required. Messages are protected by HTTPS and AES-256-GCM server-side encryption with a separate secret. They are not end-to-end encrypted. The moderation UI exposes only a message selected for report, the reporter�s reason and involved handles; it does not provide a general conversation browser. Infrastructure administrators can technically access encrypted data and keys.
+Profiles are private by default. Handle discovery and incoming requests require explicit adult confirmation and guideline acceptance. No real name, clinical history or exact personal location is required. Messages are protected by HTTPS and AES-256-GCM server-side encryption with a separate secret. They are not end-to-end encrypted. The moderation UI exposes only a message selected for report, the reporter’s reason and involved handles; it does not provide a general conversation browser. Infrastructure administrators can technically access encrypted data and keys.
 
-Daily maintenance removes messages older than 180 days, pending/declined requests older than 30 days and report evidence older than 90 days. Account deletion removes its profile, blocks, saved collections and conversations for both participants. Reports can remain with deleted account references cleared until retention expires. Encrypted infrastructure recovery copies can persist within Neon�s configured recovery window.
+Daily maintenance removes messages older than 180 days, pending/declined requests older than 30 days and report evidence older than 90 days. Account deletion removes its profile, blocks, saved collections and conversations for both participants. Reports can remain with deleted account references cleared until retention expires. Encrypted infrastructure recovery copies can persist within Neon’s configured recovery window.
 
 Calendar details are sent only to the service a visitor chooses. Shared calendars and notifications can disclose meeting names. Offline copies require an explicit action and remain readable on the device after sign-out; they can be removed on the offline page. Community/private API responses are never cached for offline use.
 

@@ -41,15 +41,15 @@ export default function OrganizationUpdates() {
     <section className="stack">
       <h2>Organization update requests</h2>
       <p>
-        Request access from a listing�s details. Administrators verify your role
-        through the organization�s official contact. Approved access lets you
+        Request access from a listing’s details. Administrators verify your role
+        through the organization’s official contact. Approved access lets you
         propose changes for review; it is not a clinical endorsement.
       </p>
       {(loadedFor === user?.id ? claims : []).map((c) => (
         <article className="peer-card" key={c.id}>
           <h3>{c.name}</h3>
           <p>
-            {c.role} � {c.status}
+            {c.role} · {c.status}
           </p>
           {c.status === "approved" ? (
             <button

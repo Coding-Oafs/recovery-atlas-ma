@@ -178,7 +178,7 @@ try {
     }),
   );
   check(
-    "Read markers clear the account�s own unread count",
+    "Read markers clear the account’s own unread count",
     (await json(await a.request.get("/api/community/conversations")))
       .conversations[0].unread === 0,
   );

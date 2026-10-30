@@ -2,32 +2,32 @@
 import { createContext, useContext, useEffect, useState } from "react";
 const es: Record<string, string> = {
   "Explore resources": "Explorar recursos",
-  "Finding your next step": "Tu pr�ximo paso",
+  "Finding your next step": "Tu próximo paso",
   "About the project": "Sobre el proyecto",
   Saved: "Guardados",
   "Sign in": "Entrar",
   "Your account": "Tu cuenta",
   Community: "Comunidad",
-  "giving recovery a home": "un hogar para la recuperaci�n",
+  "giving recovery a home": "un hogar para la recuperación",
   "Find support": "Buscar ayuda",
-  "Meeting, service, or keyword�": "Reuni�n, servicio o palabra clave�",
+  "Meeting, service, or keyword…": "Reunión, servicio o palabra clave…",
   "City, state, ZIP or street address":
-    "Ciudad, estado, c�digo postal o direcci�n",
+    "Ciudad, estado, código postal o dirección",
   "All resources": "Todos los recursos",
   Meetings: "Reuniones",
-  "Treatment & detox": "Tratamiento y desintoxicaci�n",
+  "Treatment & detox": "Tratamiento y desintoxicación",
   "Mental health": "Salud mental",
   "Therapy & counseling": "Terapia",
-  "Recovery support": "Apoyo para la recuperaci�n",
-  "More filters": "M�s filtros",
-  "Find a meeting": "Buscar una reuni�n",
+  "Recovery support": "Apoyo para la recuperación",
+  "More filters": "Más filtros",
+  "Find a meeting": "Buscar una reunión",
   "Explore treatment": "Explorar tratamiento",
   "Find a therapist": "Buscar terapeuta",
   "Support for daily life": "Apoyo para la vida diaria",
   "Previous resources": "Resultados anteriores",
-  "Next resources": "M�s resultados",
+  "Next resources": "Más resultados",
   Username: "Nombre de usuario",
-  Password: "Contrase�a",
+  Password: "Contraseña",
   "Create account": "Crear cuenta",
   "Recover account": "Recuperar cuenta",
   "Sign in with a passkey": "Entrar con una clave de acceso",
@@ -62,12 +62,12 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
             }}
           >
             <option value="en">English</option>
-            <option value="es">Espa�ol (beta)</option>
+            <option value="es">Español (beta)</option>
           </select>
         </label>
         {language === "es" ? (
           <span lang="es">
-            La interfaz en espa�ol es una versi�n preliminar. Los datos
+            La interfaz en español es una versión preliminar. Los datos
             conservan el idioma de la fuente.
           </span>
         ) : null}

@@ -5,8 +5,8 @@ const resources = [
   {
     id: "housing",
     title: "Recovery housing",
-    es: "Vivienda para la recuperaci�n",
-    text: "Find your state�s recovery-residence affiliate and ask about certification, cost, house rules, medication policies and available support.",
+    es: "Vivienda para la recuperación",
+    text: "Find your state’s recovery-residence affiliate and ask about certification, cost, house rules, medication policies and available support.",
     links: [
       ["NARR state affiliates", "https://narronline.org/affiliates/"],
       [
@@ -19,7 +19,7 @@ const resources = [
     id: "families",
     title: "For family and friends",
     es: "Para familiares y amistades",
-    text: "Explore support designed for people affected by someone else�s substance use. Confirm the group�s current format and attendance details.",
+    text: "Explore support designed for people affected by someone else’s substance use. Confirm the group’s current format and attendance details.",
     links: [
       [
         "Al-Anon meeting finder",
@@ -56,7 +56,7 @@ const resources = [
   {
     id: "work",
     title: "Work, education and purpose",
-    es: "Trabajo, educaci�n y prop�sito",
+    es: "Trabajo, educación y propósito",
     text: "Explore recovery support that includes employment, learning and community participation.",
     links: [
       [
@@ -68,7 +68,7 @@ const resources = [
   {
     id: "health",
     title: "Treatment and harm-reduction resources",
-    es: "Tratamiento y reducci�n de da�os",
+    es: "Tratamiento y reducción de daños",
     text: "Use official sources to explore treatment and local harm-reduction services. Ask a qualified clinician about clinical care and medications appropriate to your situation.",
     links: [
       ["FindTreatment.gov", "https://findtreatment.gov/"],
@@ -90,7 +90,7 @@ export default function SupportHub() {
       </h1>
       <p>
         {language === "es"
-          ? "La recuperaci�n puede incluir salud, vivienda, prop�sito y comunidad. Estos enlaces abren las fuentes originales; compruebe los detalles y los requisitos."
+          ? "La recuperación puede incluir salud, vivienda, propósito y comunidad. Estos enlaces abren las fuentes originales; compruebe los detalles y los requisitos."
           : "Recovery can include health, home, purpose and community. These links take you to original sources; confirm current services and eligibility directly."}
       </p>
       <div className="support-grid">
@@ -106,7 +106,7 @@ export default function SupportHub() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {name} ?
+                {name} ↗
               </a>
             ))}
           </section>
@@ -131,7 +131,7 @@ export default function SupportHub() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          About recovery � SAMHSA
+          About recovery · SAMHSA
         </a>
       </section>
       <p className="small muted">

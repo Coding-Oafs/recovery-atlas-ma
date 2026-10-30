@@ -64,7 +64,7 @@ try {
   );
   await page.getByRole("button", { name: "View details" }).first().click();
   await page
-    .getByRole("heading", { name: "AdCare Hospital � Medical Detox" })
+    .getByRole("heading", { name: "AdCare Hospital — Medical Detox" })
     .waitFor();
   check(
     "Treatment popup details",

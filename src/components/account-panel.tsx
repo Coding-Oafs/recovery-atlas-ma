@@ -157,7 +157,7 @@ export function AccountPanel() {
             <div className="notice">
               <p>
                 You have {guestSaved.length} browser-only saves. Copy them into
-                this account when you�re ready.
+                this account when you’re ready.
               </p>
               <button
                 className="secondary"
@@ -242,7 +242,7 @@ export function AccountPanel() {
             <h3>Keep a recovery code</h3>
             <p>
               If you forget your password, this code lets you recover your
-              account. We don�t collect an email address, so there is no email
+              account. We don’t collect an email address, so there is no email
               reset.
             </p>
             {code ? (
@@ -349,7 +349,7 @@ export function AccountPanel() {
                 className="text-link"
                 onClick={() => setDeleteConfirm(true)}
               >
-                Delete my account�
+                Delete my account…
               </button>
             ) : (
               <form
@@ -487,7 +487,7 @@ export function AccountPanel() {
             ) : null}
             <button className="primary" disabled={busy}>
               {busy
-                ? "Please wait�"
+                ? "Please wait…"
                 : mode === "create"
                   ? "Create my private account"
                   : mode === "recover"

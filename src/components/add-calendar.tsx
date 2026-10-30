@@ -72,7 +72,7 @@ export default function AddCalendar({
       <p className="small muted">
         These buttons open one event for you to review and save. Meeting details
         are sent to the calendar service you choose. That service controls the
-        event�s privacy and reminders.
+        event’s privacy and reminders.
       </p>
       <div className="saved-tool-buttons">
         <a
@@ -118,7 +118,7 @@ export default function AddCalendar({
       </label>
       <p className="small muted">
         Your calendar may display meeting names on a shared screen or lock
-        screen. The reminder text is �Saved event.�
+        screen. The reminder text is “Saved event.”
       </p>
       <div className="saved-tool-buttons">
         <button className="secondary" onClick={() => download(true)}>

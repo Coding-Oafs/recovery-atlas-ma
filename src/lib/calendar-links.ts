@@ -20,7 +20,7 @@ export function calendarLinks(
     description = `${resource.description}\n\nConfirm current schedule and access with the group before attending.\n${resource.meeting.notes}\nSource reviewed: ${resource.sourceCheckedAt}\n${resource.sourceUrl}`,
     location =
       resource.address ||
-      "Online � see the official source for joining instructions";
+      "Online — see the official source for joining instructions";
   const google = new URL("https://calendar.google.com/calendar/render");
   google.search = new URLSearchParams({
     action: "TEMPLATE",

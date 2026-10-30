@@ -49,9 +49,9 @@ export default function SavedActions({
       <p>
         {user
           ? syncing
-            ? "Saving changes�"
+            ? "Saving changes…"
             : loading
-              ? "Loading your account saves�"
+              ? "Loading your account saves…"
               : "Your private list is saved to your account."
           : "Saved in this browser. Sign in to keep a private copy across devices."}
       </p>
@@ -118,7 +118,7 @@ export default function SavedActions({
           onChange={(e) => setReminder(e.target.checked)}
         />
         Include a 10-minute calendar reminder (meeting names may appear on your
-        calendar�s notifications)
+        calendar’s notifications)
       </label>
       {user ? (
         <a className="text-link" href="/saved">

@@ -11,9 +11,9 @@ export const metadata: Metadata = {
     type: "website",
     url: "/",
     siteName: "Recovery Atlas",
-    title: "Recovery Atlas � Recovery support across the Northeast",
+    title: "Recovery Atlas · Recovery support across the Northeast",
   },
-  title: "Recovery Atlas � Find your way forward in the Northeast",
+  title: "Recovery Atlas · Find your way forward in the Northeast",
   description:
     "Find recovery meetings, treatment, mental health care and support across CT, MA, ME, NH, NJ, NY, PA, RI and VT. Explore sourced listings, payment information and ways to connect.",
   applicationName: "Recovery Atlas",

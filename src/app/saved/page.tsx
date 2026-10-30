@@ -65,11 +65,11 @@ export default function Page() {
   return (
     <main className="community-page">
       <Link className="text-link" href="/">
-        ? Explore resources
+        ← Explore resources
       </Link>
       <h1>Organize your saved resources</h1>
       {loading || (user && loadedFor !== user.id) ? (
-        <p>Loading�</p>
+        <p>Loading…</p>
       ) : !user ? (
         <>
           <p>

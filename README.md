@@ -1,4 +1,4 @@
-# Recovery Atlas � Northeast
+# Recovery Atlas · Northeast
 
 A mobile-friendly map and directory for people exploring recovery, substance use treatment and mental health support across Connecticut, Massachusetts, Maine, New Hampshire, New Jersey, New York, Pennsylvania, Rhode Island and Vermont.
 
@@ -49,7 +49,7 @@ Production and preview use separate Neon branches. Preview code must never recei
 
 ## Public access
 
-Share [Recovery Atlas](https://recoveryatlas.vercel.app/). Visitors need no login or Vercel account. The footer�s Copy public link button copies this address without personal search terms. The production alias is public; preview and individual deployment URLs remain protected. Keep the existing project/repository names so current links continue to work. A custom domain is optional.
+Share [Recovery Atlas](https://recoveryatlas.vercel.app/). Visitors need no login or Vercel account. The footer’s Copy public link button copies this address without personal search terms. The production alias is public; preview and individual deployment URLs remain protected. Keep the existing project/repository names so current links continue to work. A custom domain is optional.
 
 ## Deployment
 
@@ -90,4 +90,4 @@ Meeting details offer Google Calendar, Outlook.com, Microsoft 365 and Yahoo even
 
 The support hub links to official housing, family, peer, transport, food, employment and harm-reduction resources. Practical listing details distinguish unknown access requirements from sourced facts. Organization representatives can request verified update access and submit changes for administrator review. Spanish covers selected interface controls as a preliminary version; source listings remain in their original language.
 
-Apply migrations 006�008 before release and configure a separate MESSAGE_ENCRYPTION_SECRET in production and preview. Read OPERATIONS.md for retention, monitoring, moderation and recovery responsibilities.
+Apply migrations 006–008 before release and configure a separate MESSAGE_ENCRYPTION_SECRET in production and preview. Read OPERATIONS.md for retention, monitoring, moderation and recovery responsibilities.

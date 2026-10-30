@@ -5,7 +5,7 @@ import { decryptPrivate } from "@/lib/community";
 import { moderateReport, reinstateMember } from "./actions";
 export const dynamic = "force-dynamic";
 export const metadata = {
-  title: "Moderation � Recovery Atlas",
+  title: "Moderation · Recovery Atlas",
   robots: { index: false, follow: false },
 };
 export default async function Page() {
@@ -32,7 +32,7 @@ export default async function Page() {
   return (
     <main className="community-page">
       <Link className="text-link" href="/community">
-        ? Community
+        ← Community
       </Link>
       <h1>Moderation inbox</h1>
       <p>
@@ -50,8 +50,8 @@ export default async function Page() {
           return (
             <article className="peer-card stack" key={r.id}>
               <p>
-                <strong>@{r.subject ?? "deleted member"}</strong> � reported by
-                @{r.reporter ?? "deleted member"} �{" "}
+                <strong>@{r.subject ?? "deleted member"}</strong> · reported by
+                @{r.reporter ?? "deleted member"} ·{" "}
                 {new Date(r.created_at).toLocaleString()}
               </p>
               <p>Reason: {r.reason}</p>
@@ -104,7 +104,7 @@ export default async function Page() {
       <ul>
         {audit.map((a, i) => (
           <li key={i}>
-            {a.action} � {new Date(a.created_at).toLocaleString()}
+            {a.action} · {new Date(a.created_at).toLocaleString()}
           </li>
         ))}
       </ul>

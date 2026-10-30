@@ -210,7 +210,7 @@ export default function RegionMap({
           el.append(title, hint, choices);
           async function load(offset: number) {
             choices.replaceChildren();
-            choices.textContent = "Loading resources�";
+            choices.textContent = "Loading resources…";
             try {
               const response = await fetch("/api/map-selection", {
                 method: "POST",
@@ -233,7 +233,7 @@ export default function RegionMap({
                 choices.append(button);
               }
               const pager = document.createElement("p");
-              pager.textContent = `${offset + 1}�${Math.min(offset + 100, data.total)} of ${data.total.toLocaleString()}`;
+              pager.textContent = `${offset + 1}–${Math.min(offset + 100, data.total)} of ${data.total.toLocaleString()}`;
               choices.append(pager);
               for (const [label, next] of [
                 ["Previous resources", offset - 100],
@@ -390,7 +390,7 @@ export default function RegionMap({
       {!ready && !failed ? (
         <div className="map-loading">
           <MapPin />
-          <span>Finding your bearings�</span>
+          <span>Finding your bearings…</span>
         </div>
       ) : null}
       {failed ? (
@@ -402,7 +402,7 @@ export default function RegionMap({
       <div className="map-top">
         <span className="map-label">
           <span className="live-dot" />
-          {mappedTotal.toLocaleString()} MAPPED RESOURCES � GROUPED
+          {mappedTotal.toLocaleString()} MAPPED RESOURCES · GROUPED
         </span>
         <button
           className="map-button"
@@ -443,7 +443,7 @@ export default function RegionMap({
       <div className="map-caption" role="status">
         {error ||
           (busy
-            ? "Updating map�"
+            ? "Updating map…"
             : `${represented.toLocaleString()} resources in this view. Select a group to explore.`)}
       </div>
     </div>

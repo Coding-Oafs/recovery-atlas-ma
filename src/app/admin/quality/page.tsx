@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { reviewQuality } from "./actions";
 export const dynamic = "force-dynamic";
 export const metadata = {
-  title: "Directory quality � Recovery Atlas",
+  title: "Directory quality · Recovery Atlas",
   robots: { index: false, follow: false },
 };
 export default async function Page() {
@@ -26,7 +26,7 @@ export default async function Page() {
   return (
     <main className="community-page">
       <Link className="text-link" href="/admin">
-        ? Administrator dashboard
+        ← Administrator dashboard
       </Link>
       <h1>Directory quality</h1>
       <p className="notice">
@@ -40,14 +40,14 @@ export default async function Page() {
           <article className="peer-card stack" key={c.id}>
             <h3>{c.name}</h3>
             <p>
-              Account @{c.username} � role: {c.role}
+              Account @{c.username} · role: {c.role}
             </p>
             <p>{c.notes}</p>
             <a href={c.evidence_url} target="_blank" rel="noopener noreferrer">
               Submitted evidence page
             </a>
             <p className="notice">
-              Confirm the person�s role through an independently obtained
+              Confirm the person’s role through an independently obtained
               official organization contact before approving.
             </p>
             <form action={reviewQuality} className="saved-tool-buttons">
@@ -78,7 +78,7 @@ export default async function Page() {
               </p>
             ) : null}
             <p>
-              {p.source} � {p.reason}
+              {p.source} · {p.reason}
             </p>
             <details>
               <summary>Review proposed fields</summary>
@@ -135,10 +135,10 @@ export default async function Page() {
       {duplicates.map((d, i) => (
         <details className="peer-card" key={i}>
           <summary>
-            {d.resource_name} � {d.listings} listings
+            {d.resource_name} · {d.listings} listings
           </summary>
           <p>
-            {d.address} � {d.state}
+            {d.address} · {d.state}
           </p>
           {d.ids.map((id: string) => (
             <p key={id}>
@@ -151,7 +151,7 @@ export default async function Page() {
       {runs.map((r, i) => (
         <details className="peer-card" key={i}>
           <summary>
-            {r.source} � {r.status} � {new Date(r.created_at).toLocaleString()}
+            {r.source} · {r.status} · {new Date(r.created_at).toLocaleString()}
           </summary>
           <pre className="wrapped-pre">
             {JSON.stringify(r.details, null, 2)}

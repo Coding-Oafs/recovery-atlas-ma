@@ -43,23 +43,23 @@ import Link from "next/link";
 import { useLanguage } from "./language-provider";
 const RecoveryMap = dynamic(() => import("./region-map"), {
   ssr: false,
-  loading: () => <div className="map-loading">Loading map�</div>,
+  loading: () => <div className="map-loading">Loading map…</div>,
 });
 const directoryLinks = [
   {
-    name: "AA � Western Massachusetts",
+    name: "AA · Western Massachusetts",
     detail: "Western Mass Intergroup",
     url: "https://westernmassaa.org/",
     type: "meetings",
   },
   {
-    name: "AA � Eastern Massachusetts",
+    name: "AA · Eastern Massachusetts",
     detail: "Local meetings & online options",
     url: "https://aaboston.org/meetings",
     type: "meetings",
   },
   {
-    name: "AA � Central Massachusetts",
+    name: "AA · Central Massachusetts",
     detail: "Worcester & MetroWest",
     url: "https://aaworcester.org/meetinglist.aspx?grp=wai",
     type: "meetings",
@@ -182,10 +182,10 @@ function ResourceCard({
           <MapPin size={13} />
           {r.address
             ? `${r.city}, ${r.state}`
-            : `Online � based in ${r.city}, ${r.state}`}
+            : `Online · based in ${r.city}, ${r.state}`}
           {distance !== null ? (
             <span>
-              � {distance.toFixed(1)} mi
+              · {distance.toFixed(1)} mi
               {r.coordinateAccuracy === "approximate" ? " (approx.)" : ""}
             </span>
           ) : null}
@@ -211,7 +211,7 @@ function ResourceCard({
           <>
             <span className="tag">{r.services[0]}</span>
             {r.payment.includes("MassHealth") ? (
-              <span className="tag neutral">MassHealth � confirm benefits</span>
+              <span className="tag neutral">MassHealth · confirm benefits</span>
             ) : (
               <span className="tag neutral">Payment: ask provider</span>
             )}
@@ -222,7 +222,7 @@ function ResourceCard({
         <span>
           <ShieldCheck size={13} />
           {r.sourceName.startsWith("NPPES")
-            ? "Registry � license not checked"
+            ? "Registry · license not checked"
             : "Sourced listing"}
         </span>
         <button onClick={onOpen}>
@@ -395,7 +395,7 @@ export default function Directory({
         bounds: null,
       }));
       setLocationLabel(
-        data.label + (data.approximate ? " � approximate center" : ""),
+        data.label + (data.approximate ? " · approximate center" : ""),
       );
       setLimit(20);
     } catch (e) {
@@ -426,7 +426,7 @@ export default function Directory({
       },
       () => {
         setMessage(
-          "Location access wasn�t available. Enter a city or ZIP instead.",
+          "Location access wasn’t available. Enter a city or ZIP instead.",
         );
         setLocating(false);
       },
@@ -450,7 +450,7 @@ export default function Directory({
       <div className="help-strip">
         <span>
           <Heart size={13} />
-          You don�t have to figure it out alone.
+          You don’t have to figure it out alone.
         </span>
         <button onClick={() => setPanel("help")}>
           Talk to someone who can help <ArrowUpRight size={13} />
@@ -545,7 +545,7 @@ export default function Directory({
               <input
                 value={filters.query}
                 onChange={(e) => update("query", e.target.value)}
-                placeholder={t("Meeting, service, or keyword�")}
+                placeholder={t("Meeting, service, or keyword…")}
               />
             </label>
             <form className="location-form" onSubmit={searchLocation}>
@@ -584,7 +584,7 @@ export default function Directory({
               </label>
               <button className="primary search-submit" disabled={locating}>
                 {locating ? (
-                  "Locating�"
+                  "Locating…"
                 ) : (
                   <>
                     {t("Find support")} <ArrowRight size={17} />
@@ -869,10 +869,10 @@ export default function Directory({
                     }}
                   >
                     <option value="any">Any start time</option>
-                    <option value="morning">Morning (5am�noon)</option>
-                    <option value="afternoon">Afternoon (noon�5pm)</option>
-                    <option value="evening">Evening (5pm�10pm)</option>
-                    <option value="overnight">Overnight (10pm�5am)</option>
+                    <option value="morning">Morning (5am–noon)</option>
+                    <option value="afternoon">Afternoon (noon–5pm)</option>
+                    <option value="evening">Evening (5pm–10pm)</option>
+                    <option value="overnight">Overnight (10pm–5am)</option>
                     <option value="custom">Custom hours</option>
                   </select>
                 </label>
@@ -913,7 +913,7 @@ export default function Directory({
                 </label>
                 <p className="small muted">
                   Date and clock filters use the selected zone. The meeting-day
-                  filter uses the group�s source time zone. Overnight ranges can
+                  filter uses the group’s source time zone. Overnight ranges can
                   cross midnight. These filters use scheduled start times;
                   cancellations shown in our data are excluded. They do not show
                   provider opening hours.
@@ -949,7 +949,7 @@ export default function Directory({
               </label>
               <p className="filter-footnote">
                 Filters match reported information. Missing information means
-                �not reported.� Some approaches currently have
+                “not reported.” Some approaches currently have
                 official-directory links only.
               </p>
             </div>
@@ -979,7 +979,7 @@ export default function Directory({
                   ? "Next meeting first"
                   : filters.center
                     ? "Nearest first"
-                    : "A�Z"}
+                    : "A–Z"}
               </span>
             </div>
             {filters.savedOnly ? (
@@ -993,8 +993,8 @@ export default function Directory({
               <Info size={15} />
               <p>
                 {searching
-                  ? "Searching regional sources�"
-                  : "Regional source coverage � published listings and provider registry records."}
+                  ? "Searching regional sources…"
+                  : "Regional source coverage · published listings and provider registry records."}
                 {remote && remote.online_or_unmapped > 0 ? (
                   <span>
                     {" "}
@@ -1058,7 +1058,7 @@ export default function Directory({
                   {t("Previous resources")}
                 </button>
                 <span role="status">
-                  {offset + 1}�{Math.min(offset + limit, resultCount)} of{" "}
+                  {offset + 1}–{Math.min(offset + limit, resultCount)} of{" "}
                   {resultCount.toLocaleString()}
                 </span>
                 <button
@@ -1200,7 +1200,7 @@ export default function Directory({
           panel === "help"
             ? "A real person. A next step."
             : panel === "guide"
-              ? "There�s more than one path."
+              ? "There’s more than one path."
               : panel === "privacy"
                 ? "Your search is personal."
                 : panel === "suggest"
@@ -1222,7 +1222,7 @@ export default function Directory({
               <span>
                 <strong>Find treatment in any covered state</strong>
                 <small>
-                  SAMHSA�s public treatment finder � No directory account
+                  SAMHSA’s public treatment finder · No directory account
                   required
                 </small>
               </span>
@@ -1236,7 +1236,7 @@ export default function Directory({
               <Heart />
               <span>
                 <strong>Massachusetts Substance Use Helpline</strong>
-                <small>800-327-5050 � Free and confidential � 24/7</small>
+                <small>800-327-5050 · Free and confidential · 24/7</small>
               </span>
               <Phone size={17} />
             </a>
@@ -1244,7 +1244,7 @@ export default function Directory({
               <Brain />
               <span>
                 <strong>Massachusetts Behavioral Health Help Line</strong>
-                <small>833-773-2445 � Call or text � 24/7</small>
+                <small>833-773-2445 · Call or text · 24/7</small>
               </span>
               <Phone size={17} />
             </a>
@@ -1276,7 +1276,7 @@ export default function Directory({
               >
                 MA Substance Use Helpline
               </a>{" "}
-              �{" "}
+              ·{" "}
               <a
                 href="https://www.mass.gov/community-behavioral-health-centers"
                 target="_blank"
@@ -1426,7 +1426,7 @@ export default function Directory({
               infrastructure logs contain no metadata.
             </p>
             <p>
-              Correction submissions are stored in our review inbox. Don�t
+              Correction submissions are stored in our review inbox. Don’t
               include medical or insurance identification information. Rate
               limits use a keyed hash of your IP address with an expiration, not
               your raw IP address.
@@ -1458,18 +1458,18 @@ export default function Directory({
           <div className="stack">
             <p>
               <strong>
-                {coverage.total.toLocaleString()} published listings �{" "}
+                {coverage.total.toLocaleString()} published listings ·{" "}
                 {coverage.mapped.toLocaleString()} mapped resources
               </strong>
               <br />
               {coverage.approaches
                 .map((a) => `${a.listings.toLocaleString()} ${a.name}`)
-                .join(" � ")}{" "}
+                .join(" · ")}{" "}
               meetings. See the source review dates and state coverage below.
             </p>
             <table className="coverage-table">
               <caption>
-                Listings by state � source review {coverage.reviewedAt}
+                Listings by state · source review {coverage.reviewedAt}
               </caption>
               <thead>
                 <tr>
@@ -1494,13 +1494,13 @@ export default function Directory({
             </table>
             <p>
               Northeast coverage includes public professional and facility
-              registries, SAMHSA�s 2025 facility directories, state treatment
+              registries, SAMHSA’s 2025 facility directories, state treatment
               listings and regional AA, NA, SMART, Dharma and Refuge meetings.
               Coverage varies by state and fellowship. A state count does not
               mean every local service or meeting is included.
             </p>
             <p>
-              Every listing links to its dated source. �Source reviewed� does
+              Every listing links to its dated source. “Source reviewed” does
               not mean we contacted the provider or group; direct verification
               is shown separately.
             </p>
@@ -1525,7 +1525,7 @@ export default function Directory({
               guarantee that every Northeast resource is listed.
             </p>
             <p>
-              SAMHSA�s facility records reflect the 2025 directory and 2024
+              SAMHSA’s facility records reflect the 2025 directory and 2024
               survey. Confirm current operations, payment and admission details.
               State directories and individual sources can be newer. Additional
               fellowships and some regional meeting directories still need

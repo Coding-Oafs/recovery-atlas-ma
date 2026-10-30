@@ -31,7 +31,7 @@ export default function PracticalDetails({
               ? "Reported welcome"
               : p?.walkIn === "no"
                 ? "Appointment required"
-                : "Not reported � ask first"}
+                : "Not reported — ask first"}
           </dd>
         </div>
         <div>
@@ -41,7 +41,7 @@ export default function PracticalDetails({
               ? "Reported required"
               : p?.referral === "no"
                 ? "Reported not required"
-                : "Not reported � ask first"}
+                : "Not reported — ask first"}
           </dd>
         </div>
         <div>
@@ -49,7 +49,7 @@ export default function PracticalDetails({
           <dd>
             {p?.minimumAge != null || p?.maximumAge != null
               ? `${p.minimumAge ?? "Not stated"} to ${p.maximumAge ?? "no upper age stated"}`
-              : "Not reported � ask first"}
+              : "Not reported — ask first"}
           </dd>
         </div>
         <div>
@@ -59,7 +59,7 @@ export default function PracticalDetails({
               ? "Reported available"
               : p?.childcare === "no"
                 ? "Reported unavailable"
-                : "Not reported � ask first"}
+                : "Not reported — ask first"}
           </dd>
         </div>
       </dl>
@@ -72,10 +72,10 @@ export default function PracticalDetails({
           <h4>Confirmed facts</h4>
           {fresh.currentEvidence.map((e, i) => (
             <p key={i}>
-              <strong>{e.field}</strong>: {e.note} � checked {e.checkedAt}
+              <strong>{e.field}</strong>: {e.note} · checked {e.checkedAt}
               {e.expiresAt
-                ? " � confirm again after " + e.expiresAt
-                : ""} �{" "}
+                ? " · confirm again after " + e.expiresAt
+                : ""} ·{" "}
               <a href={e.sourceUrl} target="_blank" rel="noopener noreferrer">
                 evidence source
               </a>
@@ -123,7 +123,7 @@ export default function PracticalDetails({
       {user ? (
         <>
           <button className="text-link" onClick={() => setClaim(!claim)}>
-            Do you maintain this organization�s listing?
+            Do you maintain this organization’s listing?
           </button>
           {claim ? (
             <form
@@ -146,7 +146,7 @@ export default function PracticalDetails({
                     data = await response.json();
                   if (!response.ok) throw Error(data.error);
                   setMessage(
-                    "Request received. A directory administrator must verify your connection through the organization�s official contact before granting update access.",
+                    "Request received. A directory administrator must verify your connection through the organization’s official contact before granting update access.",
                   );
                   setClaim(false);
                 } catch (error) {

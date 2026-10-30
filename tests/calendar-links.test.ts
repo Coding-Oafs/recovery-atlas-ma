@@ -9,7 +9,7 @@ import data from "../data/resources.json";
 const source = resourceSchema.parse(data.find((r) => r.meeting));
 const meeting = {
   ...source,
-  name: "Recovery & community ??",
+  name: "Recovery & community 🌱",
   meeting: {
     ...source.meeting!,
     days: [1],

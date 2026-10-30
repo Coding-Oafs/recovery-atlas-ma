@@ -201,7 +201,7 @@ export default function CommunityHub() {
       void loadMessages(selected).catch((e) => setNotice(e.message));
   }, [selected?.id, loadMessages]);
   if ((loading && !user) || (user && loadedFor !== user.id))
-    return <p role="status">Checking sign-in�</p>;
+    return <p role="status">Checking sign-in…</p>;
   if (!user)
     return (
       <div className="stack">
@@ -256,11 +256,11 @@ export default function CommunityHub() {
           >
             {label}
             {id === "messages" && threads.some((t) => (t.unread ?? 0) > 0)
-              ? " � unread"
+              ? " · unread"
               : ""}
             {id === "messages" &&
             threads.some((t) => t.status === "pending" && !t.outgoing)
-              ? " � request"
+              ? " · request"
               : ""}
           </button>
         ))}
@@ -387,7 +387,7 @@ export default function CommunityHub() {
           <h2>Find someone by handle</h2>
           {!messaging ? (
             <p className="notice">
-              Complete your profile�s adult confirmation and community
+              Complete your profile’s adult confirmation and community
               guidelines before connecting.
             </p>
           ) : (
@@ -427,7 +427,7 @@ export default function CommunityHub() {
                   <h3>{p.displayName}</h3>
                   <p>
                     @{p.handle}
-                    {p.region ? " � " + p.region : ""}
+                    {p.region ? " · " + p.region : ""}
                   </p>
                   <p>{p.bio}</p>
                   <p className="muted">{p.languages.join(", ")}</p>
@@ -523,10 +523,10 @@ export default function CommunityHub() {
                 >
                   <strong>
                     {t.displayName}
-                    {t.unread ? ` � ${t.unread} unread` : ""}
+                    {t.unread ? ` · ${t.unread} unread` : ""}
                   </strong>
                   <span>
-                    @{t.handle} �{" "}
+                    @{t.handle} ·{" "}
                     {t.blocked
                       ? "blocked"
                       : t.status === "pending"
@@ -544,7 +544,7 @@ export default function CommunityHub() {
               <>
                 <h2>{selected.displayName}</h2>
                 <p className="small muted">
-                  @{selected.handle} � {status || selected.status}
+                  @{selected.handle} · {status || selected.status}
                 </p>
                 {selected.blocked ? (
                   <p className="notice">
@@ -565,7 +565,7 @@ export default function CommunityHub() {
                         className="text-link"
                         onClick={() => setConfirmBlock(true)}
                       >
-                        Block this member�
+                        Block this member…
                       </button>
                     </div>
                     {confirmBlock ? (
@@ -618,7 +618,7 @@ export default function CommunityHub() {
                       aria-relevant="additions"
                     >
                       {!threadLoaded ? (
-                        <p>Loading messages�</p>
+                        <p>Loading messages…</p>
                       ) : (
                         messages.map((m) => (
                           <article
@@ -627,7 +627,7 @@ export default function CommunityHub() {
                           >
                             <p>{m.body}</p>
                             <small>
-                              {m.mine ? "You" : selected.displayName} �{" "}
+                              {m.mine ? "You" : selected.displayName} ·{" "}
                               {new Date(m.createdAt).toLocaleString()}
                             </small>
                             {!m.mine ? (
@@ -824,18 +824,18 @@ export function CommunityGuidelines() {
       <ul>
         <li>
           Be respectful, support different recovery paths, and honor another
-          person�s boundaries.
+          person’s boundaries.
         </li>
         <li>
           No harassment, threats, sexual solicitation, drug sales, paid
           referrals, recruitment or requests for money.
         </li>
         <li>
-          Do not share someone else�s personal information. Avoid posting your
+          Do not share someone else’s personal information. Avoid posting your
           own private contact or treatment details.
         </li>
         <li>
-          Peers are not verified clinicians or crisis responders. Use the app�s
+          Peers are not verified clinicians or crisis responders. Use the app’s
           Help now resources for urgent professional support.
         </li>
         <li>

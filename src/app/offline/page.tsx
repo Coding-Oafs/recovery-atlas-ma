@@ -19,7 +19,7 @@ export default function Page() {
   return (
     <main className="community-page" lang="en">
       <a className="text-link" href="/">
-        ? Online directory
+        ← Online directory
       </a>
       <h1>Your offline resources</h1>
       <p className="notice">
@@ -28,16 +28,16 @@ export default function Page() {
         messaging need a connection.
       </p>
       {!ready ? (
-        <p>Loading device copy�</p>
+        <p>Loading device copy…</p>
       ) : !data ? (
         <p>
-          No offline copy is stored in this browser. Choose Saved ? Keep an
+          No offline copy is stored in this browser. Choose Saved → Keep an
           optional offline copy while connected.
         </p>
       ) : (
         <>
           <p>
-            Saved {new Date(data.exportedAt).toLocaleString()} �{" "}
+            Saved {new Date(data.exportedAt).toLocaleString()} ·{" "}
             {data.resources.length} resources
           </p>
           <button
@@ -53,7 +53,7 @@ export default function Page() {
             <article key={r.id} className="peer-card">
               <h2>{r.name}</h2>
               <p>
-                {r.address || "Online � see source for joining instructions"}
+                {r.address || "Online — see source for joining instructions"}
               </p>
               {r.phone ? (
                 <p>
@@ -79,7 +79,7 @@ export default function Page() {
                         ][d],
                     )
                     .join(", ")}{" "}
-                  � {r.meeting.time} � {r.meeting.timezone}
+                  · {r.meeting.time} · {r.meeting.timezone}
                 </p>
               ) : null}
               <p>{r.intake}</p>
