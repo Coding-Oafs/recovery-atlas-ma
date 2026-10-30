@@ -11,7 +11,7 @@ const base = process.env.TEST_BASE_URL ?? "http://localhost:4121",
 const check = (name, ok) => {
   if (!ok) throw Error(name);
   checks.push(name);
-  console.log('Verified:',name);
+  console.log("Verified:", name);
 };
 const username = "test_" + randomBytes(7).toString("hex"),
   password = randomBytes(24).toString("base64url"),
@@ -271,6 +271,27 @@ try {
     path: ".local/screenshots/saved-desktop.png",
     fullPage: true,
   });
+  const printPopup = p.waitForEvent("popup");
+  await p
+    .getByRole("button", { name: "Print / Save PDF", exact: true })
+    .click();
+  const printPage = await printPopup;
+  await printPage
+    .getByRole("button", { name: "Print / Save as PDF", exact: true })
+    .waitFor();
+  await printPage.evaluate(() => {
+    window.print = () => {
+      document.body.dataset.printed = "true";
+    };
+  });
+  await printPage
+    .getByRole("button", { name: "Print / Save as PDF", exact: true })
+    .click();
+  check(
+    "Actual browser print/PDF form and print action work",
+    !!(await printPage.locator("body").getAttribute("data-printed")),
+  );
+  await printPage.close();
   const del = await post(device, "/api/auth/delete-user", {
     password: replacement,
   });

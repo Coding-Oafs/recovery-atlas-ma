@@ -6,11 +6,47 @@ import {
   savedCalendar,
   savedCSV,
   savedPrint,
+  isSameOriginPrintNavigation,
 } from "../src/lib/saved-export";
 import { resourceSchema } from "../src/lib/types";
 import data from "../data/resources.json";
 const rows = data.map((r) => resourceSchema.parse(r)),
   meeting = rows.find((r) => r.meeting)!;
+test("print forms with a privacy-reduced Origin require exact same-origin browser navigation metadata", () => {
+  const h = {
+    origin: "null",
+    "sec-fetch-site": "same-origin",
+    "sec-fetch-mode": "navigate",
+    "sec-fetch-dest": "document",
+    "content-type": "application/x-www-form-urlencoded",
+  };
+  const make = (headers: Record<string, string>, format = "print") =>
+    new Request(
+      "https://recoveryatlas.vercel.app/api/saved/export?format=" + format,
+      { method: "POST", headers },
+    );
+  assert.equal(isSameOriginPrintNavigation(make(h)), true);
+  for (const site of ["cross-site", "same-site", "none"])
+    assert.equal(
+      isSameOriginPrintNavigation(make({ ...h, "sec-fetch-site": site })),
+      false,
+    );
+  assert.equal(
+    isSameOriginPrintNavigation(make({ ...h, "sec-fetch-mode": "cors" })),
+    false,
+  );
+  assert.equal(
+    isSameOriginPrintNavigation(make({ ...h, "sec-fetch-dest": "iframe" })),
+    false,
+  );
+  assert.equal(
+    isSameOriginPrintNavigation(
+      make({ ...h, "content-type": "application/json" }),
+    ),
+    false,
+  );
+  assert.equal(isSameOriginPrintNavigation(make(h, "json")), false);
+});
 test("spreadsheet exports quote fields and neutralize formula injection", () => {
   for (const value of [
     "=SUM(A1:A2)",

@@ -1,5 +1,18 @@
 import type { Resource } from "./types";
 import { nextMeeting } from "./search";
+// Referrer-Policy: no-referrer makes Chromium send Origin:null for form navigations.
+// Fetch Metadata still binds a browser's print submission to this exact origin.
+export function isSameOriginPrintNavigation(request: Request) {
+  const h = request.headers;
+  return (
+    new URL(request.url).searchParams.get("format") === "print" &&
+    h.get("origin") === "null" &&
+    h.get("sec-fetch-site") === "same-origin" &&
+    h.get("sec-fetch-mode") === "navigate" &&
+    h.get("sec-fetch-dest") === "document" &&
+    !!h.get("content-type")?.startsWith("application/x-www-form-urlencoded")
+  );
+}
 export function csvCell(value: unknown) {
   let s = String(value ?? "");
   if (/^[\s\uFEFF]*[=+@-]/.test(s) || /^[\t\r\n]/.test(s)) s = "'" + s;

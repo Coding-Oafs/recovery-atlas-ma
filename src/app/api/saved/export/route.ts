@@ -9,6 +9,7 @@ import {
   savedCalendar,
   savedPrint,
   printScript,
+  isSameOriginPrintNavigation,
 } from "@/lib/saved-export";
 export async function POST(request: NextRequest) {
   const headers = {
@@ -16,7 +17,7 @@ export async function POST(request: NextRequest) {
     "X-Robots-Tag": "noindex, nofollow",
     "X-Content-Type-Options": "nosniff",
   };
-  if (!(await sameOrigin()))
+  if (!(await sameOrigin()) && !isSameOriginPrintNavigation(request))
     return NextResponse.json(
       { error: "Invalid origin" },
       { status: 403, headers },
