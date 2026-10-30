@@ -13,6 +13,7 @@ import {
   Video,
 } from "lucide-react";
 import Modal from "./modal";
+import { useSaved } from "./saved-provider";
 import type { Resource } from "@/lib/types";
 import { nextMeeting } from "@/lib/search";
 import { submitCorrection } from "@/app/actions";
@@ -158,6 +159,7 @@ export default function ResourceDetail({
   now: Date | null;
 }) {
   const [correction, setCorrection] = useState(false);
+  const { loading: savesLoading } = useSaved();
   return (
     <Modal
       open
@@ -200,7 +202,12 @@ export default function ResourceDetail({
             Call
           </a>
         ) : null}
-        <button className="secondary" aria-pressed={saved} onClick={onSave}>
+        <button
+          className="secondary"
+          aria-pressed={saved}
+          disabled={savesLoading}
+          onClick={onSave}
+        >
           {saved ? <Check size={16} /> : <Bookmark size={16} />}{" "}
           {saved ? "Saved" : "Save"}
         </button>

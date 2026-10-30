@@ -36,6 +36,9 @@ import ResourceDetail, { CorrectionForm, NextTime } from "./resource-detail";
 import coverage from "../../public/coverage.json";
 import { regionStates, stateNames } from "@/lib/region";
 import { publicSiteUrl } from "@/lib/site";
+import { useSaved } from "./saved-provider";
+import AccountButton from "./account-panel";
+import SavedActions from "./saved-actions";
 const RecoveryMap = dynamic(() => import("./region-map"), {
   ssr: false,
   loading: () => <div className="map-loading">Loading map…</div>,
@@ -130,6 +133,7 @@ function ResourceCard({
   center: Filters["center"];
   now: Date | null;
 }) {
+  const { loading: savesLoading } = useSaved();
   const distance =
     center && r.lat !== null && r.lng !== null
       ? miles(center, { lat: r.lat, lng: r.lng })
@@ -162,6 +166,7 @@ function ResourceCard({
           className={`save-button ${saved ? "saved" : ""}`}
           aria-label={`${saved ? "Unsave" : "Save"} ${r.name}`}
           aria-pressed={saved}
+          disabled={savesLoading}
           onClick={onSave}
         >
           <Bookmark size={18} fill={saved ? "currentColor" : "none"} />
@@ -231,7 +236,6 @@ export default function Directory({
   mode: "database" | "snapshot";
 }) {
   const [filters, setFilters] = useState<Filters>(defaultFilters),
-    [saved, setSaved] = useState<string[]>([]),
     [selected, setSelected] = useState<Resource | null>(null),
     [panel, setPanel] = useState(""),
     [more, setMore] = useState(false),
@@ -243,6 +247,7 @@ export default function Directory({
     [highlight, setHighlight] = useState<string | null>(null),
     [limit, setLimit] = useState(20),
     [now, setNow] = useState<Date | null>(null);
+  const { saved, toggleSave, clearGuest, error: savedError } = useSaved();
   const query = useDeferredValue(filters.query);
   const effectiveFilters = useMemo(
     () => ({ ...filters, query }),
@@ -315,11 +320,6 @@ export default function Directory({
     }
   }
   useEffect(() => {
-    try {
-      const s = JSON.parse(localStorage.getItem("atlas:saved:v1") ?? "[]");
-      if (Array.isArray(s))
-        setSaved(s.filter((x) => typeof x === "string").slice(0, 1000));
-    } catch {}
     setNow(new Date());
     const timer = setInterval(() => setNow(new Date()), 60000);
     return () => clearInterval(timer);
@@ -351,19 +351,6 @@ export default function Directory({
   function update<K extends keyof Filters>(k: K, v: Filters[K]) {
     setFilters((f) => ({ ...f, [k]: v }));
     setLimit(20);
-  }
-  function toggleSave(id: string) {
-    setSaved((current) => {
-      const next = current.includes(id)
-        ? current.filter((x) => x !== id)
-        : [...current, id].slice(-1000);
-      try {
-        localStorage.setItem("atlas:saved:v1", JSON.stringify(next));
-      } catch {
-        setMessage("Your browser could not save this resource.");
-      }
-      return next;
-    });
   }
   async function searchLocation(e?: React.FormEvent) {
     e?.preventDefault();
@@ -483,6 +470,7 @@ export default function Directory({
           <Bookmark size={16} />
           Saved<span>{saved.length}</span>
         </button>
+        <AccountButton />
       </header>
       <main>
         <section className="intro">
@@ -823,6 +811,13 @@ export default function Directory({
                     : "A–Z"}
               </span>
             </div>
+            {filters.savedOnly ? (
+              <SavedActions />
+            ) : savedError ? (
+              <p className="notice" role="alert">
+                {savedError}
+              </p>
+            ) : null}
             <div className="coverage-note">
               <Info size={15} />
               <p>
@@ -1193,8 +1188,12 @@ export default function Directory({
         {panel === "privacy" ? (
           <div className="stack">
             <p>
-              No account is needed to browse. Favorites are stored only in this
-              browser. We do not install advertising trackers or session replay.
+              No account is needed to browse. Signed-out saves stay in this
+              browser. If you create an account, its saved resource IDs are
+              stored privately in our database and can be accessed after signing
+              in on another device. Browser-only saves are copied into an
+              account only when you choose to import them. We do not install
+              advertising trackers or session replay.
             </p>
             <p>
               Search terms, selected filters and location coordinates are sent
@@ -1215,18 +1214,26 @@ export default function Directory({
               limits use a keyed hash of your IP address with an expiration, not
               your raw IP address.
             </p>
+            <p>
+              Accounts use a private username, a hashed password and optional
+              passkeys. We do not request your real name or email. A recovery
+              code can restore access if you forget your password. Account
+              sessions use secure cookies; rate-limit records use keyed hashes
+              and expire. You can download your saved list, sign out, or delete
+              your account and its saved list in the account panel. Keep
+              downloaded files private.
+            </p>
             <button
               className="secondary"
               onClick={() => {
-                setSaved([]);
-                try {
-                  localStorage.removeItem("atlas:saved:v1");
-                } catch {}
-                setMessage("Saved resources cleared from this browser.");
+                clearGuest();
+                setMessage(
+                  "Browser-only saves cleared. Account saves are managed in your account.",
+                );
                 setPanel("");
               }}
             >
-              Clear saved resources
+              Clear browser-only saves
             </button>
           </div>
         ) : null}

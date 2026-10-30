@@ -9,7 +9,7 @@ A mobile-friendly map and directory for people exploring recovery, substance use
 - State, keyword, service, recovery approach, format, payment, language, participation, meeting day and wheelchair-access filters.
 - Recurring meeting calculation in Eastern time with next occurrences displayed in the visitor's time zone. Online-only meetings have no pins or physical radius restrictions.
 - Evidence-labeled payment and insurer records, including McLean's published product restrictions.
-- Device-local bookmarks, crisis/help links, source dates, correction/new-resource submissions.
+- Browser-local bookmarks or private cross-device accounts with optional passkeys, recovery codes, CSV/JSON/PDF/calendar exports, crisis/help links, source dates, correction/new-resource submissions.
 - Protected administrator dashboard: review inbox, listing and meeting edits, insurer/product edits, publication controls, export, validated insert-only JSON import, audit history and source connection status.
 - Daily source-link checks on Vercel. Link checks never claim to verify clinical services or meeting operation.
 
@@ -49,7 +49,7 @@ Production and preview use separate Neon branches. Preview code must never recei
 
 ## Public access
 
-Share [Recovery Atlas](https://recovery-atlas-ma-coding-oafs-projects.vercel.app/). Visitors need no login or Vercel account. The footer’s Copy public link button copies this address without personal search terms. The production alias is public; preview and individual deployment URLs remain protected. Keep the existing project/repository names so current links continue to work. A custom domain is optional.
+Share [Recovery Atlas](https://recoveryatlas.vercel.app/). Visitors need no login or Vercel account. The footer’s Copy public link button copies this address without personal search terms. The production alias is public; preview and individual deployment URLs remain protected. Keep the existing project/repository names so current links continue to work. A custom domain is optional.
 
 ## Deployment
 

@@ -41,6 +41,9 @@ export async function checkSources() {
   }
   await sql.transaction([
     sql`DELETE FROM rate_limits WHERE expires_at<now()-interval '1 day'`,
+    sql`DELETE FROM atlas_auth_rate_limit WHERE "lastRequest" < extract(epoch FROM now()-interval '1 day')*1000`,
+    sql`DELETE FROM atlas_session WHERE "expiresAt"<now()`,
+    sql`DELETE FROM atlas_verification WHERE "expiresAt"<now()`,
     sql`INSERT INTO sync_runs(source,status,details) VALUES('source-link-check','completed',${JSON.stringify({ checked: rows.length, note: "No source review or verification dates changed" })}::jsonb)`,
   ]);
   return rows.length;

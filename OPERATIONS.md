@@ -51,3 +51,19 @@ The initial UI is English. Resource language filtering uses reported fields; it 
 ## Restore and rollback
 
 For a code regression use Vercel's previous tested deployment. For a data issue, compare the audit event and restore the reviewed previous record; do not blindly reseed over live edits. Schema migrations are additive and idempotent. Do not delete or reset production branches as a repair shortcut.
+
+## Private saved accounts and exports
+
+The canonical public address is https://recoveryatlas.vercel.app/. Older production aliases continue serving the directory; their account panel links to the canonical address and offers an explicit browser-save transfer through a URL fragment. The fragment is removed on arrival and is not sent in HTTP requests. Browsing, guest saves and exports do not require sign-in. Never redirect the old root automatically: existing browser-only saves are origin-specific.
+
+Better Auth 1.7.14 handles passwords, cookies, sessions and WebAuthn passkeys in the existing Neon database. Accounts use a pseudonymous username; the framework-required email field contains an opaque random @accounts.invalid identifier and is not a contact address. No email or social provider is enabled. Passwords require at least 15 characters. Rate limits use atomic database updates with HMAC keys; session IP/user-agent fields are cleared before storage. Administrator authentication remains separate.
+
+Apply migrations 004 and 005 to production and preview before deploying. BETTER_AUTH_SECRET is optional when the existing strong SESSION_SECRET is set. Production defaults to the canonical site URL. Local testing must set BETTER_AUTH_URL to its localhost origin. Vercel previews infer their own origin from VERCEL_URL and use the preview database. Do not share production sessions or data with previews. User access is checked on each private endpoint with a database-backed session; no public/private result caching is shared.
+
+Each account owns a list capped at 1,000 resource IDs. Save/remove operations change a single ID and do not overwrite another device’s list. Browser lists stay separate and require an explicit copy. Private saves are never put into localStorage. Account deletion cascades to sessions, credentials, passkeys, saves and recovery-code hashes. Daily maintenance removes expired session/verification/rate-limit records.
+
+Recovery codes contain 192 bits of randomness; only SHA-256 hashes are stored. Generating/replacing a code requires a recent session. Recovery consumes the code once, uses the pinned library’s reset-token flow, revokes all sessions and removes passkeys. Code reset integration uses Better Auth internalAdapter: review this adapter contract whenever upgrading the pinned library. Users must keep a recovery code or usable passkey/password; there is no email reset. No administrator can retrieve passwords or recovery codes.
+
+Export endpoints receive a selected list of public IDs and return CSV, JSON backup, recurring Eastern-time ICS meetings or a printable HTML document for browser PDF saving. These exports intentionally work for guest saves. They do not enumerate account lists. Every export applies published=true, validates a maximum of 1,000 IDs, prevents spreadsheet formula injection and escapes print HTML. Downloads and private responses use no-store headers. Never log recovery codes, passwords, tokens or exported saved lists.
+
+Passkeys are bound to recoveryatlas.vercel.app. If a future custom domain is adopted, retain the existing account origin until users have signed in and enrolled passkeys on the new domain. A passkey cannot be silently moved between unrelated domains.
