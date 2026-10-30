@@ -482,21 +482,6 @@ export default function Directory({
             <h1>
               Your next step starts <em>here.</em>
             </h1>
-            <p>
-              Find meetings, treatment, and people who understand.
-              <br className="desktop-break" />
-              Support for wherever you are in your recovery.
-            </p>
-          </div>
-          <div className="intro-note">
-            <span className="note-drawing">
-              <HandHeart size={38} strokeWidth={1} />
-            </span>
-            <p>
-              Different paths.
-              <br />
-              One way forward: <strong>yours.</strong>
-            </p>
           </div>
         </section>
         <section className="search-section" aria-label="Search resources">
