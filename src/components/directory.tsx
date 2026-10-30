@@ -477,7 +477,7 @@ export default function Directory({
           <div className="intro-text">
             <span className="eyebrow">
               <span className="live-dot" />
-              RECOVERY ACROSS THE NORTHEAST
+              giving recovery a home
             </span>
             <h1>
               Your next step starts <em>here.</em>
