@@ -22,8 +22,13 @@ try {
     ),
     target = nextMeeting(resource, new Date(Date.now() + 45 * 86400000))!,
     date = localDate(target, "UTC");
+  await context.addInitScript(
+    ({ id }) => localStorage.setItem("atlas:saved:v1", JSON.stringify([id])),
+    { id: resource.id },
+  );
   await page.goto("/");
   await page.locator(".resource-card").first().waitFor();
+  await page.getByRole("button", { name: /^Saved/ }).click();
   await page
     .getByRole("textbox", { name: "Search keywords" })
     .fill(resource.name);
