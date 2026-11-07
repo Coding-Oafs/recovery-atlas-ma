@@ -1,6 +1,6 @@
 "use client";
 import dynamic from "next/dynamic";
-import { useEffect, useMemo, useState, useDeferredValue } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Compass,
   Search,
@@ -30,8 +30,9 @@ import {
 } from "lucide-react";
 import type { Resource, Filters, MapResource } from "@/lib/types";
 import { categories } from "@/lib/types";
-import { defaultFilters, filterResources, miles } from "@/lib/search";
+import { defaultFilters, miles } from "@/lib/search";
 import Modal from "./modal";
+import { useDirectoryResults } from "./use-directory-results";
 import ResourceDetail, { CorrectionForm, NextTime } from "./resource-detail";
 import coverage from "../../public/coverage.json";
 import { regionStates, stateNames } from "@/lib/region";
@@ -253,28 +254,33 @@ export default function Directory({
     [now, setNow] = useState<Date | null>(null);
   const { saved, toggleSave, clearGuest, error: savedError } = useSaved();
   const { t, language } = useLanguage();
-  const [offset, setOffset] = useState(0);
+  const pendingScroll = useRef(false);
   const [viewerZone, setViewerZone] = useState("America/New_York");
   useEffect(() => {
     const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     setViewerZone(zone);
     setFilters((f) => ({ ...f, timeZone: zone }));
   }, []);
-  const query = useDeferredValue(filters.query);
+  const effectiveFilters = filters;
+  const {
+    resources: results,
+    total: resultCount,
+    mapped,
+    online_or_unmapped,
+    offset,
+    searching,
+    error: searchError,
+    usingBackup,
+    changePage,
+    retry,
+  } = useDirectoryResults(resources, effectiveFilters, saved, limit, mode);
   useEffect(() => {
-    setOffset(0);
-  }, [filters, query, saved]);
-  const effectiveFilters = useMemo(
-    () => ({ ...filters, query }),
-    [filters, query],
-  );
-  const [remote, setRemote] = useState<{
-    resources: Resource[];
-    mapped: number;
-    total: number;
-    online_or_unmapped: number;
-  } | null>(null);
-  const [searching, setSearching] = useState(false);
+    if (!pendingScroll.current || searching || searchError) return;
+    pendingScroll.current = false;
+    const panel = document.getElementById("results");
+    panel?.scrollTo({ top: 0, behavior: "instant" });
+    panel?.scrollIntoView({ block: "start", behavior: "instant" });
+  }, [results, searching, searchError]);
   const [copied, setCopied] = useState(false);
   const [facets, setFacets] = useState<Record<string, string[]>>({});
   useEffect(() => {
@@ -283,45 +289,9 @@ export default function Directory({
       .then(setFacets)
       .catch(() => {});
   }, []);
-  useEffect(() => {
-    const abort = new AbortController();
-    const timer = setTimeout(async () => {
-      setSearching(true);
-      try {
-        const response = await fetch("/api/search", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            filters: { ...filters, query },
-            saved,
-            limit: Math.min(limit, 500),
-            offset,
-          }),
-          signal: abort.signal,
-        });
-        const data = await response.json();
-        if (!response.ok) throw Error(data.error);
-        setRemote(data);
-      } catch (e) {
-        if (!abort.signal.aborted) {
-          setRemote(null);
-          setMessage(
-            (e instanceof Error ? e.message : "Search unavailable") +
-              ". Showing only the loaded backup listings.",
-          );
-        }
-      } finally {
-        if (!abort.signal.aborted) setSearching(false);
-      }
-    }, 220);
-    return () => {
-      clearTimeout(timer);
-      abort.abort();
-    };
-  }, [filters, query, saved, limit, offset]);
   async function openMapResource(pin: MapResource) {
     const local =
-      remote?.resources.find((r) => r.id === pin.id) ??
+      results.find((r) => r.id === pin.id) ??
       resources.find((r) => r.id === pin.id);
     if (local) {
       setSelected(local);
@@ -340,19 +310,6 @@ export default function Directory({
     const timer = setInterval(() => setNow(new Date()), 60000);
     return () => clearInterval(timer);
   }, []);
-  const localResults = useMemo(
-    () =>
-      filterResources(
-        resources,
-        { ...filters, query },
-        saved,
-        now ?? new Date("2026-10-22T12:00:00Z"),
-      ),
-    [resources, filters, query, saved, now],
-  );
-  const results =
-    remote?.resources ?? localResults.slice(offset, offset + limit);
-  const resultCount = remote?.total ?? localResults.length;
   const activeCount = [
     filters.state ?? "",
     filters.format,
@@ -528,7 +485,6 @@ export default function Directory({
                     category,
                   }));
                   setLimit(20);
-                  setOffset(0);
                 }}
               >
                 {t(label)}
@@ -959,6 +915,7 @@ export default function Directory({
           <div
             className={`results-panel ${mobileView === "map" ? "mobile-hidden" : ""}`}
             id="results"
+            aria-busy={searching}
           >
             <div className="results-heading">
               <div>
@@ -995,11 +952,11 @@ export default function Directory({
                 {searching
                   ? "Searching regional sources…"
                   : "Regional source coverage · published listings and provider registry records."}
-                {remote && remote.online_or_unmapped > 0 ? (
+                {online_or_unmapped > 0 ? (
                   <span>
                     {" "}
-                    {remote.online_or_unmapped.toLocaleString()} online or
-                    without map coordinates; available in search results.
+                    {online_or_unmapped.toLocaleString()} online or without map
+                    coordinates; available in search results.
                   </span>
                 ) : null}
                 <button onClick={() => setPanel("coverage")}>
@@ -1010,6 +967,17 @@ export default function Directory({
                 ) : null}
               </p>
             </div>
+            {searchError ? (
+              <p className="notice" role="alert">
+                {searchError}.{" "}
+                {usingBackup
+                  ? "Showing only the loaded backup listings."
+                  : "Your current results have been kept."}{" "}
+                <button className="secondary" onClick={retry}>
+                  Retry search
+                </button>
+              </p>
+            ) : null}
             {results.length ? (
               <div className="resource-list">
                 {results.slice(0, limit).map((r) => (
@@ -1049,10 +1017,8 @@ export default function Directory({
                   className="secondary"
                   disabled={offset === 0 || searching}
                   onClick={() => {
-                    setOffset((n) => Math.max(0, n - limit));
-                    document
-                      .getElementById("results")
-                      ?.scrollIntoView({ block: "start" });
+                    pendingScroll.current = true;
+                    changePage(Math.max(0, offset - limit));
                   }}
                 >
                   {t("Previous resources")}
@@ -1065,10 +1031,8 @@ export default function Directory({
                   className="secondary"
                   disabled={offset + limit >= resultCount || searching}
                   onClick={() => {
-                    setOffset((n) => n + limit);
-                    document
-                      .getElementById("results")
-                      ?.scrollIntoView({ block: "start" });
+                    pendingScroll.current = true;
+                    changePage(offset + limit);
                   }}
                 >
                   {t("Next resources")}
@@ -1125,9 +1089,7 @@ export default function Directory({
               resources={results}
               filters={effectiveFilters}
               saved={saved}
-              mappedTotal={
-                remote?.mapped ?? results.filter((r) => r.lat !== null).length
-              }
+              mappedTotal={mapped}
               center={filters.center}
               onSelect={openMapResource}
               onBounds={(b) => {

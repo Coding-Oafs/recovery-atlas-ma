@@ -10,6 +10,7 @@ export async function queryDirectory(
     map?: { bounds: number[]; zoom: number };
     selection?: { bounds: number[]; offset: number };
     offset?: number;
+    asOf?: string;
   } = {},
 ) {
   const values: unknown[] = [];
@@ -88,7 +89,10 @@ export async function queryDirectory(
     f.category === "meetings" ||
     f.format === "online" ||
     hasMeetingTimeFilter(f);
-  const bounds = meetingTimeBounds(f),
+  const bounds = meetingTimeBounds(
+      f,
+      options.asOf ? new Date(options.asOf) : new Date(),
+    ),
     start = meetingOrder ? param(bounds.start.toISOString()) : "now()",
     end = bounds.end ? param(bounds.end.toISOString()) : null;
   const zone =
@@ -141,7 +145,7 @@ export async function queryDirectory(
     const [row] = await db().query(query, values);
     return { pins: row.pins, represented: Number(row.represented) };
   }
-  const query = `${base},page AS(SELECT data FROM filtered ORDER BY ${order},id LIMIT ${param(limit)} OFFSET ${param(options.selection?.offset ?? options.offset ?? 0)}),counts AS(SELECT count(*) AS total,count(*) FILTER(WHERE location IS NULL) AS online_or_unmapped,count(location) AS mapped FROM filtered) SELECT counts.*,COALESCE((SELECT jsonb_agg(data) FROM page),'[]') AS resources FROM counts`;
+  const query = `${base},page AS(SELECT data,row_number() OVER(ORDER BY ${order},id) AS position FROM filtered ORDER BY ${order},id LIMIT ${param(limit)} OFFSET ${param(options.selection?.offset ?? options.offset ?? 0)}),counts AS(SELECT count(*) AS total,count(*) FILTER(WHERE location IS NULL) AS online_or_unmapped,count(location) AS mapped FROM filtered) SELECT counts.*,COALESCE((SELECT jsonb_agg(data ORDER BY position) FROM page),'[]') AS resources FROM counts`;
   const rows = await db().query(query, values);
   return {
     ...rows[0],

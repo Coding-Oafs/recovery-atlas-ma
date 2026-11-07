@@ -15,9 +15,10 @@ export async function POST(req: NextRequest) {
           { error: "Invalid selection" },
           { status: 400 },
         );
-      const { filters, saved, bounds, offset } = parsed.data;
+      const { filters, saved, bounds, offset, asOf } = parsed.data;
       const result = await queryDirectory(filters, saved, 100, {
         selection: { bounds, offset },
+        asOf,
       });
       return NextResponse.json(result);
     }

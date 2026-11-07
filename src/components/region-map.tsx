@@ -208,6 +208,12 @@ export default function RegionMap({
           const choices = document.createElement("div");
           choices.className = "pin-choices";
           el.append(title, hint, choices);
+          // Keep this popup's pages on one search and meeting-ordering instant.
+          const selection = {
+            filters: props.current.filters,
+            saved: props.current.saved,
+            asOf: new Date().toISOString(),
+          };
           async function load(offset: number) {
             choices.replaceChildren();
             choices.textContent = "Loading resources…";
@@ -216,8 +222,7 @@ export default function RegionMap({
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                  filters: props.current.filters,
-                  saved: props.current.saved,
+                  ...selection,
                   bounds,
                   offset,
                 }),
