@@ -91,3 +91,11 @@ Meeting details offer Google Calendar, Outlook.com, Microsoft 365 and Yahoo even
 The support hub links to official housing, family, peer, transport, food, employment and harm-reduction resources. Practical listing details distinguish unknown access requirements from sourced facts. Organization representatives can request verified update access and submit changes for administrator review. Spanish covers selected interface controls as a preliminary version; source listings remain in their original language.
 
 Apply migrations 006–008 before release and configure a separate MESSAGE_ENCRYPTION_SECRET in production and preview. Read OPERATIONS.md for retention, monitoring, moderation and recovery responsibilities.
+
+## Directory navigation and browser checks
+
+The directory keeps filters, page, meeting-ordering time, list/map choice and scroll position in the current tab's session storage and browser history. Refresh and Back/Forward restore that state; relative-time searches expire after 12 hours. Search terms and location are not put into share URLs. Listing links use `/?resource=<id>` and open that listing directly, including when it is not on the current result page.
+
+Results prioritize meetings and programs over NPPES registry records by default. **All listings equally** removes that priority; registry results remain searchable in either mode. Cards expose available joining, telephone and directions links and the source-review date. Review-due badges describe source freshness, not current availability or independent clinical verification.
+
+Run browser checks with `npx playwright install --with-deps chromium webkit` followed by `npm run test:browser`. The suite starts a local snapshot-backed app with no database credentials and runs desktop Chromium, mobile Chromium and mobile WebKit. CI runs the same suite on pull requests and main. `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` can select an already-installed Chromium for local testing.

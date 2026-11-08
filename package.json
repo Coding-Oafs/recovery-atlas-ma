@@ -10,7 +10,8 @@
     "test": "tsx --test tests/*.test.ts",
     "db:migrate": "node --env-file-if-exists=.env.local scripts/migrate.mjs",
     "db:seed": "node --env-file-if-exists=.env.local scripts/seed.mjs",
-    "data:check": "node scripts/check-data.mjs"
+    "data:check": "node scripts/check-data.mjs",
+    "test:browser": "playwright test"
   },
   "dependencies": {
     "@better-auth/passkey": "1.7.14",

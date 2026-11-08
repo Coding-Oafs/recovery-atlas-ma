@@ -13,6 +13,7 @@ export const boundsSchema = z
       v[1] < v[3],
   );
 export const filtersSchema = z.object({
+  prioritizeRecovery: z.boolean().default(true),
   state: z.enum(["", ...regionStates]).default(""),
   query: z.string().max(200),
   category: z.enum([

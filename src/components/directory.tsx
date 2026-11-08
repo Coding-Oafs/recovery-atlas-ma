@@ -28,11 +28,15 @@ import {
   Phone,
   RotateCcw,
 } from "lucide-react";
-import type { Resource, Filters, MapResource } from "@/lib/types";
+import type { Resource, Filters } from "@/lib/types";
 import { categories } from "@/lib/types";
 import { defaultFilters, miles } from "@/lib/search";
 import Modal from "./modal";
 import { useDirectoryResults } from "./use-directory-results";
+import { useDirectoryNavigation } from "./use-directory-navigation";
+import { useResourceNavigation } from "./use-resource-navigation";
+import ResourceActions from "./resource-actions";
+import { resourceFreshness } from "@/lib/resource-quality";
 import ResourceDetail, { CorrectionForm, NextTime } from "./resource-detail";
 import coverage from "../../public/coverage.json";
 import { regionStates, stateNames } from "@/lib/region";
@@ -146,6 +150,7 @@ function ResourceCard({
   return (
     <article
       className="resource-card"
+      data-resource-id={r.id}
       onMouseEnter={() => onHover(r.id)}
       onMouseLeave={() => onHover(null)}
     >
@@ -219,6 +224,13 @@ function ResourceCard({
           </>
         )}
       </div>
+      <ResourceActions resource={r} />
+      <p
+        className={`source-review ${now && resourceFreshness(r, now).needsReview ? "review-due" : ""}`}
+      >
+        {now && resourceFreshness(r, now).needsReview ? "Review due · " : ""}
+        Source reviewed {r.sourceCheckedAt}
+      </p>
       <div className="card-bottom">
         <span>
           <ShieldCheck size={13} />
@@ -241,7 +253,6 @@ export default function Directory({
   mode: "database" | "snapshot";
 }) {
   const [filters, setFilters] = useState<Filters>(defaultFilters),
-    [selected, setSelected] = useState<Resource | null>(null),
     [panel, setPanel] = useState(""),
     [more, setMore] = useState(false),
     [location, setLocation] = useState(""),
@@ -261,6 +272,17 @@ export default function Directory({
     setViewerZone(zone);
     setFilters((f) => ({ ...f, timeZone: zone }));
   }, []);
+  const navigation = useDirectoryNavigation(
+    { filters, location, locationLabel, mobileView, more },
+    (s) => {
+      pendingScroll.current = false;
+      setFilters(s.filters);
+      setLocation(s.location);
+      setLocationLabel(s.locationLabel);
+      setMobileView(s.mobileView);
+      setMore(s.more);
+    },
+  );
   const effectiveFilters = filters;
   const {
     resources: results,
@@ -268,19 +290,46 @@ export default function Directory({
     mapped,
     online_or_unmapped,
     offset,
+    asOf,
     searching,
     error: searchError,
     usingBackup,
     changePage,
     retry,
-  } = useDirectoryResults(resources, effectiveFilters, saved, limit, mode);
+  } = useDirectoryResults(resources, effectiveFilters, saved, limit, mode, {
+    enabled: navigation.ready,
+    restore: navigation.restoration,
+  });
+  const {
+    selected,
+    open: openResource,
+    close: closeResource,
+    error: resourceError,
+  } = useResourceNavigation([...results, ...resources]);
   useEffect(() => {
     if (!pendingScroll.current || searching || searchError) return;
     pendingScroll.current = false;
     const panel = document.getElementById("results");
     panel?.scrollTo({ top: 0, behavior: "instant" });
     panel?.scrollIntoView({ block: "start", behavior: "instant" });
+    document.getElementById("results-title")?.focus({ preventScroll: true });
   }, [results, searching, searchError]);
+  useEffect(() => {
+    if (navigation.ready && !searching && !searchError && asOf)
+      navigation.recordPage(offset, asOf);
+  }, [
+    navigation.ready,
+    navigation.recordPage,
+    searching,
+    searchError,
+    offset,
+    asOf,
+    filters,
+    location,
+    locationLabel,
+    mobileView,
+    more,
+  ]);
   const [copied, setCopied] = useState(false);
   const [facets, setFacets] = useState<Record<string, string[]>>({});
   useEffect(() => {
@@ -289,22 +338,6 @@ export default function Directory({
       .then(setFacets)
       .catch(() => {});
   }, []);
-  async function openMapResource(pin: MapResource) {
-    const local =
-      results.find((r) => r.id === pin.id) ??
-      resources.find((r) => r.id === pin.id);
-    if (local) {
-      setSelected(local);
-      return;
-    }
-    try {
-      const res = await fetch("/api/resources/" + encodeURIComponent(pin.id));
-      if (!res.ok) throw Error("Resource details are temporarily unavailable.");
-      setSelected(await res.json());
-    } catch (e) {
-      setMessage(e instanceof Error ? e.message : "Resource unavailable");
-    }
-  }
   useEffect(() => {
     setNow(new Date());
     const timer = setInterval(() => setNow(new Date()), 60000);
@@ -549,9 +582,9 @@ export default function Directory({
               </button>
             </form>
           </div>
-          {message ? (
+          {message || resourceError ? (
             <p className="form-error" role="status">
-              {message}
+              {message || resourceError}
             </p>
           ) : null}
           {locationLabel || filters.bounds ? (
@@ -615,6 +648,21 @@ export default function Directory({
                 <option value="online">Online meetings</option>
                 <option value="hybrid">Hybrid meetings</option>
                 <option value="telehealth">Telehealth care</option>
+              </select>
+              <ChevronDown size={12} />
+            </label>
+            <label className="filter-select">
+              <select
+                aria-label="Result priority"
+                value={
+                  filters.prioritizeRecovery === false ? "all" : "recovery"
+                }
+                onChange={(e) =>
+                  update("prioritizeRecovery", e.target.value === "recovery")
+                }
+              >
+                <option value="recovery">Recovery programs first</option>
+                <option value="all">All listings equally</option>
               </select>
               <ChevronDown size={12} />
             </label>
@@ -920,7 +968,7 @@ export default function Directory({
             <div className="results-heading">
               <div>
                 <span className="eyebrow small">A PLACE TO BEGIN</span>
-                <h2>
+                <h2 id="results-title" tabIndex={-1}>
                   {filters.savedOnly
                     ? "Your saved resources"
                     : filters.category === "meetings"
@@ -930,6 +978,9 @@ export default function Directory({
                 </h2>
               </div>
               <span className="sort-label">
+                {filters.prioritizeRecovery !== false
+                  ? "Programs first · "
+                  : ""}
                 {filters.category === "meetings" ||
                 filters.format === "online" ||
                 filters.soon
@@ -986,7 +1037,7 @@ export default function Directory({
                     r={r}
                     saved={saved.includes(r.id)}
                     onSave={() => toggleSave(r.id)}
-                    onOpen={() => setSelected(r)}
+                    onOpen={() => openResource(r)}
                     onHover={setHighlight}
                     center={filters.center}
                     now={now}
@@ -1091,7 +1142,7 @@ export default function Directory({
               saved={saved}
               mappedTotal={mapped}
               center={filters.center}
-              onSelect={openMapResource}
+              onSelect={openResource}
               onBounds={(b) => {
                 setFilters((f) => ({ ...f, bounds: b, center: null }));
                 setLocationLabel("");
@@ -1149,7 +1200,7 @@ export default function Directory({
           key={selected.id}
           resource={selected}
           timeFilters={filters}
-          onClose={() => setSelected(null)}
+          onClose={closeResource}
           saved={saved.includes(selected.id)}
           onSave={() => toggleSave(selected.id)}
           now={now}

@@ -6,6 +6,7 @@ import { createRoot } from "react-dom/client";
 import { useDirectoryResults } from "../src/components/use-directory-results";
 import { defaultFilters } from "../src/lib/search";
 import { searchInput } from "../src/lib/search-input";
+import type { RestoredPage } from "../src/lib/directory-navigation";
 import type { Filters, Resource } from "../src/lib/types";
 import raw from "../data/resources.json";
 
@@ -32,6 +33,7 @@ test("paging preserves results, ignores irrelevant saves, blocks repeated clicks
     name: `Listing ${String(i).padStart(3, "0")}`,
   })) as Resource[];
   let current!: ReturnType<typeof useDirectoryResults>;
+  let options: { enabled?: boolean; restore?: RestoredPage } = {};
   let filters = { ...defaultFilters };
   let saved: string[] = [];
   let mode: "database" | "snapshot" = "database";
@@ -39,7 +41,7 @@ test("paging preserves results, ignores irrelevant saves, blocks repeated clicks
     window.document.createElement("div") as unknown as HTMLElement,
   );
   function Harness() {
-    current = useDirectoryResults(resources, filters, saved, 20, mode);
+    current = useDirectoryResults(resources, filters, saved, 20, mode, options);
     return null;
   }
   const render = () =>
@@ -185,6 +187,20 @@ test("paging preserves results, ignores irrelevant saves, blocks repeated clicks
       10,
       "snapshot pagination never makes a database request",
     );
+    mode = "database";
+    options = { restore: { offset: 40, asOf: anchor, token: 1 } };
+    await render();
+    await waitForRequest();
+    assert.equal(pending[10].body.offset, 40);
+    assert.equal(pending[10].body.asOf, anchor);
+    await respond(10);
+    assert.equal(current.offset, 40);
+    options = { restore: { offset: 20, asOf: anchor, token: 2 } };
+    await render();
+    await waitForRequest();
+    assert.equal(pending[11].body.offset, 20);
+    await respond(11);
+    assert.equal(current.resources[0].id, "resource-20");
   } finally {
     await act(async () => {
       root.unmount();

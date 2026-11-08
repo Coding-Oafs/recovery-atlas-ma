@@ -15,6 +15,7 @@ import {
 import Modal from "./modal";
 import PracticalDetails from "./practical-details";
 import AddCalendar from "./add-calendar";
+import { ShareResource } from "./resource-actions";
 import { useSaved } from "./saved-provider";
 import type { Resource, Filters } from "@/lib/types";
 import { nextMeeting } from "@/lib/search";
@@ -172,6 +173,12 @@ export default function ResourceDetail({
       open
       onClose={onClose}
       title={r.name}
+      onCloseAutoFocus={(event) => {
+        event.preventDefault();
+        document
+          .querySelector<HTMLElement>(`[data-resource-id="${r.id}"] .card-open`)
+          ?.focus({ preventScroll: true });
+      }}
       description={`${r.fellowship ?? (r.kind === "clinic" ? "Behavioral health services" : r.kind === "hospital" ? "Psychiatric hospital" : r.kind === "provider" ? "Care provider" : "Treatment & support")} · ${r.city}, ${r.state}`}
       wide
     >
@@ -219,6 +226,7 @@ export default function ResourceDetail({
           {saved ? "Saved" : "Save"}
         </button>
       </div>
+      <ShareResource resource={r} />
       <PracticalDetails resource={r} />
       <section className="detail-section">
         <h3>

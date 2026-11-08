@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Filters, Resource } from "@/lib/types";
 import { filterResources } from "@/lib/search";
+import type { RestoredPage } from "@/lib/directory-navigation";
 
 type Page = {
   resources: Resource[];
@@ -16,7 +17,10 @@ export function useDirectoryResults(
   saved: string[],
   limit: number,
   mode: "database" | "snapshot",
+  options: { enabled?: boolean; restore?: RestoredPage } = {},
 ) {
+  const enabled = options.enabled ?? true;
+  const restoreToken = options.restore?.token ?? 0;
   // Bookmark refreshes and saves outside Saved-only do not change the search.
   const criteria = JSON.stringify({
     filters,
@@ -25,15 +29,23 @@ export function useDirectoryResults(
   });
   const [session, setSession] = useState({
     criteria,
-    offset: 0,
-    asOf: null as string | null,
+    restoreToken,
+    offset: options.restore?.offset ?? 0,
+    asOf: options.restore?.asOf ?? (null as string | null),
     attempt: 0,
   });
-  if (session.criteria !== criteria) {
+  if (session.criteria !== criteria || session.restoreToken !== restoreToken) {
     setSession({
       criteria,
-      offset: 0,
-      asOf: new Date().toISOString(),
+      restoreToken,
+      offset:
+        session.restoreToken !== restoreToken
+          ? (options.restore?.offset ?? 0)
+          : 0,
+      asOf:
+        session.restoreToken !== restoreToken
+          ? options.restore!.asOf
+          : new Date().toISOString(),
       attempt: 0,
     });
   }
@@ -49,10 +61,10 @@ export function useDirectoryResults(
   const [error, setError] = useState("");
   const locked = useRef(false);
   const requestKey = JSON.stringify(session);
-  const searching = mode === "database" && requestKey !== settled;
+  const searching = mode === "database" && (!enabled || requestKey !== settled);
 
   useEffect(() => {
-    if (mode !== "database" || !session.asOf) return;
+    if (!enabled || mode !== "database" || !session.asOf) return;
     const abort = new AbortController();
     const timer = setTimeout(async () => {
       try {
@@ -86,7 +98,7 @@ export function useDirectoryResults(
       clearTimeout(timer);
       abort.abort();
     };
-  }, [mode, session, requestKey]);
+  }, [enabled, mode, session, requestKey]);
 
   const local = useMemo(
     () =>
@@ -118,6 +130,7 @@ export function useDirectoryResults(
   return {
     ...data,
     offset,
+    asOf: session.asOf,
     searching,
     error: settled === requestKey ? error : "",
     usingBackup: mode === "database" && !remote,
