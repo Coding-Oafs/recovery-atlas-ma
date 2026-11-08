@@ -96,6 +96,8 @@ Apply migrations 006–008 before release and configure a separate MESSAGE_ENCRY
 
 The directory keeps filters, page, meeting-ordering time, list/map choice and scroll position in the current tab's session storage and browser history. Refresh and Back/Forward restore that state; relative-time searches expire after 12 hours. Search terms and location are not put into share URLs. Listing links use `/?resource=<id>` and open that listing directly, including when it is not on the current result page.
 
+Opening a mapped listing automatically centers and highlights its location, including shared links and map selections. The selection persists after closing details and is independent of card hover and clustered map responses. **Show on map** in the detail dialog reveals the map on mobile; approximate coordinates use an area-level zoom, and online-only or unmapped listings never receive a false physical pin.
+
 Results prioritize meetings and programs over NPPES registry records by default. **All listings equally** removes that priority; registry results remain searchable in either mode. Cards expose available joining, telephone and directions links and the source-review date. Review-due badges describe source freshness, not current availability or independent clinical verification.
 
 Run browser checks with `npx playwright install --with-deps chromium webkit` followed by `npm run test:browser`. The suite starts a local snapshot-backed app with no database credentials and runs desktop Chromium, mobile Chromium and mobile WebKit. CI runs the same suite on pull requests and main. `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` can select an already-installed Chromium for local testing.

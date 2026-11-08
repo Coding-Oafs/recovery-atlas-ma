@@ -2450,3 +2450,38 @@ button:disabled {
     min-height: 44px;
   }
 }
+
+.map-selection {
+  position: absolute;
+  left: 16px;
+  right: 55px;
+  bottom: 88px;
+  max-width: 370px;
+  padding: 12px 14px;
+  border: 2px solid #b57439;
+  border-radius: 10px;
+  background: #fff;
+  color: #173e36;
+  box-shadow: 0 2px 12px #173e3626;
+  font-size: 12px;
+}
+.map-selection strong,
+.map-selection span {
+  display: block;
+}
+.map-selection span {
+  margin-top: 4px;
+}
+.map-selection > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.map-selection button {
+  min-height: 44px;
+  text-decoration: underline;
+  color: #173e36;
+  background: transparent;
+  border: 0;
+  padding: 4px 0;
+}

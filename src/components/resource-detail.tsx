@@ -154,6 +154,7 @@ export function CorrectionForm({
 export default function ResourceDetail({
   resource: r,
   onClose,
+  onShowMap,
   saved,
   onSave,
   now,
@@ -161,6 +162,7 @@ export default function ResourceDetail({
 }: {
   resource: Resource;
   onClose: () => void;
+  onShowMap?: () => void;
   saved: boolean;
   onSave: () => void;
   now: Date | null;
@@ -226,6 +228,11 @@ export default function ResourceDetail({
           {saved ? "Saved" : "Save"}
         </button>
       </div>
+      {onShowMap ? (
+        <button className="secondary" onClick={onShowMap}>
+          <MapPin size={16} /> Show on map
+        </button>
+      ) : null}
       <ShareResource resource={r} />
       <PracticalDetails resource={r} />
       <section className="detail-section">

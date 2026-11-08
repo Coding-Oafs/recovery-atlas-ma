@@ -37,6 +37,7 @@ import { useDirectoryNavigation } from "./use-directory-navigation";
 import { useResourceNavigation } from "./use-resource-navigation";
 import ResourceActions from "./resource-actions";
 import { resourceFreshness } from "@/lib/resource-quality";
+import { resourceMapTarget } from "@/lib/map-selection";
 import ResourceDetail, { CorrectionForm, NextTime } from "./resource-detail";
 import coverage from "../../public/coverage.json";
 import { regionStates, stateNames } from "@/lib/region";
@@ -306,6 +307,25 @@ export default function Directory({
     close: closeResource,
     error: resourceError,
   } = useResourceNavigation([...results, ...resources]);
+  const [mapSelection, setMapSelection] = useState<Resource | null>(null);
+  const [mapFocusRequest, setMapFocusRequest] = useState(0);
+  const showMapAfterClose = useRef(false);
+  useEffect(() => {
+    if (!selected) return;
+    setMapSelection(selected);
+    setMapFocusRequest((n) => n + 1);
+  }, [selected]);
+  useEffect(() => {
+    if (selected || !showMapAfterClose.current) return;
+    showMapAfterClose.current = false;
+    setMobileView("map");
+    const frame = requestAnimationFrame(() => {
+      const panel = document.getElementById("resource-map");
+      panel?.scrollIntoView({ block: "start", behavior: "instant" });
+      panel?.focus({ preventScroll: true });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [selected]);
   useEffect(() => {
     if (!pendingScroll.current || searching || searchError) return;
     pendingScroll.current = false;
@@ -1135,9 +1155,16 @@ export default function Directory({
           </div>
           <div
             className={`map-panel ${mobileView === "list" ? "mobile-hidden" : ""}`}
+            id="resource-map"
+            tabIndex={-1}
+            aria-label="Resource map"
           >
             <RecoveryMap
               resources={results}
+              selectedResource={mapSelection}
+              focusRequest={mapFocusRequest}
+              visible={mobileView === "map"}
+              onClearSelection={() => setMapSelection(null)}
               filters={effectiveFilters}
               saved={saved}
               mappedTotal={mapped}
@@ -1201,6 +1228,14 @@ export default function Directory({
           resource={selected}
           timeFilters={filters}
           onClose={closeResource}
+          onShowMap={
+            resourceMapTarget(selected)
+              ? () => {
+                  showMapAfterClose.current = true;
+                  closeResource();
+                }
+              : undefined
+          }
           saved={saved.includes(selected.id)}
           onSave={() => toggleSave(selected.id)}
           now={now}
