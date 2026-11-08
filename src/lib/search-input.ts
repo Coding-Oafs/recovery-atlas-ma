@@ -70,6 +70,7 @@ export const savedSchema = z
   .array(z.string().regex(/^[a-z0-9-]{1,150}$/))
   .max(1000);
 export const searchInput = z.object({
+  asOf: z.iso.datetime().optional(),
   offset: z.number().int().min(0).max(10000000).default(0),
   filters: filtersSchema,
   saved: savedSchema,
@@ -82,6 +83,7 @@ export const mapInput = z.object({
   zoom: z.number().min(3).max(20),
 });
 export const selectionInput = z.object({
+  asOf: z.iso.datetime().optional(),
   filters: filtersSchema,
   saved: savedSchema,
   bounds: boundsSchema,

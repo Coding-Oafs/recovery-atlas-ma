@@ -37,6 +37,7 @@
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "@types/zipcodes": "latest",
+    "happy-dom": "^21.0.4",
     "prettier": "3.9.10",
     "tsx": "latest",
     "typescript": "latest"

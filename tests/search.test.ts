@@ -121,3 +121,20 @@ test("distance returns reasonable miles", () => {
     miles({ lat: 42.36, lng: -71.06 }, { lat: 42.26, lng: -71.8 }) > 35,
   );
 });
+
+test("equal names, meeting times and distances have an ID tie-breaker independent of input order", () => {
+  const base = resources.find((r) => r.id === "aa-fireside")!;
+  const rows = ["c", "a", "b"].map((id) => ({ ...base, id }));
+  for (const filters of [
+    defaultFilters,
+    { ...defaultFilters, category: "meetings" },
+    { ...defaultFilters, center: { lat: base.lat!, lng: base.lng! } },
+  ]) {
+    const ids = (input: typeof rows) =>
+      filterResources(input, filters, [], new Date("2026-11-07T12:00:00Z")).map(
+        (r) => r.id,
+      );
+    assert.deepEqual(ids(rows), ["a", "b", "c"]);
+    assert.deepEqual(ids([...rows].reverse()), ["a", "b", "c"]);
+  }
+});

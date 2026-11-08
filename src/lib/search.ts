@@ -171,7 +171,8 @@ export function filterResources(
         return (
           (nextMeeting(a, now, f)?.getTime() ?? Infinity) -
             (nextMeeting(b, now, f)?.getTime() ?? Infinity) ||
-          a.name.localeCompare(b.name)
+          a.name.localeCompare(b.name) ||
+          a.id.localeCompare(b.id)
         );
       }
       if (f.center) {
@@ -179,9 +180,13 @@ export function filterResources(
           r.lat !== null && r.lng !== null
             ? miles(f.center!, { lat: r.lat, lng: r.lng })
             : Infinity;
-        return distance(a) - distance(b) || a.name.localeCompare(b.name);
+        return (
+          distance(a) - distance(b) ||
+          a.name.localeCompare(b.name) ||
+          a.id.localeCompare(b.id)
+        );
       }
-      return a.name.localeCompare(b.name);
+      return a.name.localeCompare(b.name) || a.id.localeCompare(b.id);
     });
 }
 export const defaultFilters: Filters = {

@@ -18,9 +18,11 @@ export async function POST(request: NextRequest) {
         { error: "Please pause before searching again." },
         { status: 429 },
       );
-    const { filters, saved, limit, offset } = parsed.data;
+    const { filters, saved, limit, offset, asOf } = parsed.data;
     const body = gzipSync(
-      JSON.stringify(await queryDirectory(filters, saved, limit, { offset })),
+      JSON.stringify(
+        await queryDirectory(filters, saved, limit, { offset, asOf }),
+      ),
     );
     return new Response(new Uint8Array(body), {
       headers: {
