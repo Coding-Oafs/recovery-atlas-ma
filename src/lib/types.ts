@@ -170,6 +170,7 @@ export const categories = [
   { id: "support", label: "Recovery support" },
 ] as const;
 export type Filters = {
+  prioritizeRecovery?: boolean;
   state?: string;
   query: string;
   category: string;

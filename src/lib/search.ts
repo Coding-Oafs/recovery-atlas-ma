@@ -163,6 +163,12 @@ export function filterResources(
       return words.every((w) => hay.includes(w));
     })
     .sort((a, b) => {
+      if (f.prioritizeRecovery !== false) {
+        const tier =
+          Number(a.sourceName.startsWith("NPPES")) -
+          Number(b.sourceName.startsWith("NPPES"));
+        if (tier) return tier;
+      }
       if (
         f.category === "meetings" ||
         f.format === "online" ||
@@ -190,6 +196,7 @@ export function filterResources(
     });
 }
 export const defaultFilters: Filters = {
+  prioritizeRecovery: true,
   state: "",
   query: "",
   category: "all",

@@ -131,12 +131,14 @@ export async function queryDirectory(
   const nextColumn = meetingOrder
     ? `CASE WHEN data->'meeting' IS NOT NULL AND data->'meeting' <> 'null'::jsonb THEN ${next} ELSE NULL END`
     : "NULL::timestamptz";
-  const order = meetingOrder
+  const baseOrder = meetingOrder
     ? "next_meeting NULLS LAST, name"
     : f.center
       ? "distance NULLS LAST, name"
       : "name";
-  const base = `WITH matched AS NOT MATERIALIZED(SELECT id,data,location,resource_name AS name,resource_kind AS kind,${distance} AS distance,${nextColumn} AS next_meeting FROM resources WHERE ${where.join(" AND ")}),filtered AS NOT MATERIALIZED(SELECT * FROM matched ${hasMeetingTimeFilter(f) ? "WHERE next_meeting IS NOT NULL" : ""})`;
+  const order =
+    (f.prioritizeRecovery !== false ? "registry_rank," : "") + baseOrder;
+  const base = `WITH matched AS NOT MATERIALIZED(SELECT id,data,location,CASE WHEN data->>'sourceName' LIKE 'NPPES%' THEN 1 ELSE 0 END AS registry_rank,resource_name AS name,resource_kind AS kind,${distance} AS distance,${nextColumn} AS next_meeting FROM resources WHERE ${where.join(" AND ")}),filtered AS NOT MATERIALIZED(SELECT * FROM matched ${hasMeetingTimeFilter(f) ? "WHERE next_meeting IS NOT NULL" : ""})`;
   if (options.map) {
     const zoom = Math.floor(options.map.zoom),
       size = ((40075016.68557849 / 2 ** zoom) * (zoom >= 14 ? 12 : 55)) / 512,

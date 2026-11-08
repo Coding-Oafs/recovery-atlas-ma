@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import seed from "../../../../../data/resources.json";
 export async function GET(
   _: Request,
   { params }: { params: Promise<{ id: string }> },
@@ -8,6 +9,12 @@ export async function GET(
   if (!/^[a-z0-9-]{1,150}$/.test(id))
     return NextResponse.json({ error: "Invalid resource" }, { status: 400 });
   try {
+    if (!process.env.DATABASE_URL) {
+      const resource = seed.find((r) => r.id === id);
+      return resource
+        ? NextResponse.json(resource)
+        : NextResponse.json({ error: "Resource not found" }, { status: 404 });
+    }
     const rows =
       await db()`SELECT data FROM resources WHERE id=${id} AND published=true`;
     if (!rows.length)

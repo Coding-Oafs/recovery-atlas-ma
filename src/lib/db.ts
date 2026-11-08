@@ -19,7 +19,7 @@ export const getResources = unstable_cache(
       };
     try {
       const rows =
-        await db()`SELECT data FROM resources WHERE published = true ORDER BY data->>'name' LIMIT 50`;
+        await db()`SELECT data FROM resources WHERE published = true ORDER BY CASE WHEN data->>'sourceName' LIKE 'NPPES%' THEN 1 ELSE 0 END, data->>'name', id LIMIT 50`;
       return {
         resources: rows.map((r) => resourceSchema.parse(r.data)),
         mode: "database",
@@ -32,6 +32,6 @@ export const getResources = unstable_cache(
       };
     }
   },
-  ["public-directory-v3-northeast"],
+  ["public-directory-v4-recovery-first"],
   { revalidate: 300, tags: ["resources"] },
 );
