@@ -1,11 +1,12 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import * as maplibregl from "maplibre-gl";
 import type { GeoJSONSource } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { MapPin, Maximize, Search } from "lucide-react";
 import type { Filters, MapResource, MapPoint, Resource } from "@/lib/types";
 import { regionBounds } from "@/lib/region";
+import { resourceMapTarget } from "@/lib/map-selection";
 maplibregl.setWorkerUrl(
   new URL(
     "maplibre-gl/dist/maplibre-gl-worker.mjs",
@@ -14,6 +15,10 @@ maplibregl.setWorkerUrl(
 );
 type Props = {
   resources: MapResource[];
+  selectedResource: Resource | null;
+  focusRequest: number;
+  visible: boolean;
+  onClearSelection: () => void;
   filters: Filters;
   saved: string[];
   mappedTotal: number;
@@ -24,6 +29,10 @@ type Props = {
 };
 export default function RegionMap({
   resources,
+  selectedResource,
+  focusRequest,
+  visible,
+  onClearSelection,
   filters,
   saved,
   mappedTotal,
@@ -36,6 +45,10 @@ export default function RegionMap({
     map = useRef<maplibregl.Map | null>(null),
     props = useRef({ filters, saved, onSelect });
   props.current = { filters, saved, onSelect };
+  const target = useMemo(
+    () => resourceMapTarget(selectedResource),
+    [selectedResource],
+  );
   const [ready, setReady] = useState(false),
     [failed, setFailed] = useState(false),
     [moved, setMoved] = useState(false),
@@ -45,6 +58,7 @@ export default function RegionMap({
     [viewport, setViewport] = useState<{
       bounds: number[];
       zoom: number;
+      center: [number, number];
     } | null>(null);
   useEffect(() => {
     if (!container.current) return;
@@ -81,10 +95,15 @@ export default function RegionMap({
             Math.min(85, b.getNorth()),
           ],
           zoom: m.getZoom(),
+          center: [m.getCenter().lng, m.getCenter().lat],
         });
       };
       m.on("load", () => {
         m.addSource("resources", {
+          type: "geojson",
+          data: { type: "FeatureCollection", features: [] },
+        });
+        m.addSource("hovered", {
           type: "geojson",
           data: { type: "FeatureCollection", features: [] },
         });
@@ -170,12 +189,35 @@ export default function RegionMap({
         m.addLayer({
           id: "highlight",
           type: "circle",
-          source: "selected",
+          source: "hovered",
           paint: {
             "circle-radius": 16,
             "circle-color": "transparent",
             "circle-stroke-color": "#174c42",
             "circle-stroke-width": 3,
+          },
+        });
+        m.addLayer({
+          id: "selection-halo",
+          type: "circle",
+          source: "selected",
+          paint: {
+            "circle-radius": 20,
+            "circle-color": "#fff",
+            "circle-opacity": 0.85,
+            "circle-stroke-color": "#b57439",
+            "circle-stroke-width": 4,
+          },
+        });
+        m.addLayer({
+          id: "selection-point",
+          type: "circle",
+          source: "selected",
+          paint: {
+            "circle-radius": 8,
+            "circle-color": "#174c42",
+            "circle-stroke-color": "#fff",
+            "circle-stroke-width": 2,
           },
         });
         const choose = (e: maplibregl.MapLayerMouseEvent) => {
@@ -300,7 +342,12 @@ export default function RegionMap({
         const response = await fetch("/api/map", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ filters, saved, ...viewport }),
+          body: JSON.stringify({
+            filters,
+            saved,
+            bounds: viewport.bounds,
+            zoom: viewport.zoom,
+          }),
           signal: abort.signal,
         });
         const data = await response.json();
@@ -350,7 +397,7 @@ export default function RegionMap({
   useEffect(() => {
     if (!ready) return;
     const r = resources.find((r) => r.id === highlight);
-    (map.current?.getSource("selected") as GeoJSONSource | undefined)?.setData({
+    (map.current?.getSource("hovered") as GeoJSONSource | undefined)?.setData({
       type: "FeatureCollection",
       features:
         r && r.lat !== null && r.lng !== null
@@ -364,6 +411,35 @@ export default function RegionMap({
           : [],
     });
   }, [highlight, resources, ready]);
+  useEffect(() => {
+    const m = map.current;
+    if (!ready || !m) return;
+    // This source stays independent of hovered cards, paging and clustered pins.
+    (m.getSource("selected") as GeoJSONSource | undefined)?.setData({
+      type: "FeatureCollection",
+      features: target
+        ? [
+            {
+              type: "Feature",
+              properties: { id: target.id },
+              geometry: { type: "Point", coordinates: target.center },
+            },
+          ]
+        : [],
+    });
+    if (!target) return;
+    m.resize();
+    m.flyTo({
+      center: target.center,
+      zoom: target.approximate
+        ? target.zoom
+        : Math.max(target.zoom, m.getZoom()),
+      duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? 0
+        : 700,
+    });
+    setMoved(false);
+  }, [target, focusRequest, visible, ready]);
   useEffect(() => {
     const observer = new ResizeObserver(() => map.current?.resize());
     if (container.current) observer.observe(container.current);
@@ -385,6 +461,10 @@ export default function RegionMap({
       data-ready={ready}
       data-represented={represented}
       data-loading={busy}
+      data-selected-resource={target?.id ?? ""}
+      data-center-lng={viewport?.center[0]}
+      data-center-lat={viewport?.center[1]}
+      data-zoom={viewport?.zoom}
     >
       <div
         ref={container}
@@ -430,6 +510,33 @@ export default function RegionMap({
           <Search size={16} />
           Search this area
         </button>
+      ) : null}
+      {selectedResource ? (
+        <div className="map-selection" role="status">
+          <strong>{selectedResource.name}</strong>
+          <span>
+            {target
+              ? target.approximate
+                ? "Selected · approximate location"
+                : "Selected location"
+              : selectedResource.kind === "meeting" &&
+                  selectedResource.formats.includes("online") &&
+                  !selectedResource.formats.includes("hybrid")
+                ? "Online meeting · no physical map location"
+                : "No map coordinates are available for this resource."}
+          </span>
+          <div>
+            <button onClick={() => onSelect(selectedResource)}>
+              View details
+            </button>
+            <button
+              onClick={onClearSelection}
+              aria-label="Clear selected map resource"
+            >
+              Clear selection
+            </button>
+          </div>
+        </div>
       ) : null}
       <div className="map-legend">
         <span>
