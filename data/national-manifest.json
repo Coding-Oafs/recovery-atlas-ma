@@ -1,10 +1,486 @@
 {
-  "generatedAt": null,
-  "total": 0,
-  "mapped": 0,
-  "jurisdictions": [],
-  "sources": [],
+  "generatedAt": "2026-11-16",
+  "surveyYear": 2024,
+  "directoryYear": 2025,
+  "total": 20344,
+  "mapped": 20340,
+  "sources": [
+    {
+      "kind": "su",
+      "url": "https://www.samhsa.gov/data/sites/default/files/reports/rpt57009/2025_SU_Facilities_for_All_City_All.xlsx",
+      "sha256": "2ea20861c89dca299f8ee6b19f4dc9831ac2c3d8b67055cd69f71896a3f32a3e",
+      "rows": 13460
+    },
+    {
+      "kind": "mh",
+      "url": "https://www.samhsa.gov/data/sites/default/files/reports/rpt57010/2025_MH_Facilities_for_All_City_All.xlsx",
+      "sha256": "f3c9d821db8d531b51b26cf63518c693013fa4daeaac91b3598adc96060fe03a",
+      "rows": 14103
+    }
+  ],
+  "excludedJurisdictions": {},
+  "jurisdictions": [
+    {
+      "state": "AL",
+      "name": "Alabama",
+      "listings": 203,
+      "mapped": 203,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "AK",
+      "name": "Alaska",
+      "listings": 115,
+      "mapped": 115,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "AZ",
+      "name": "Arizona",
+      "listings": 597,
+      "mapped": 597,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "AR",
+      "name": "Arkansas",
+      "listings": 257,
+      "mapped": 257,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "CA",
+      "name": "California",
+      "listings": 1903,
+      "mapped": 1903,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "CO",
+      "name": "Colorado",
+      "listings": 347,
+      "mapped": 347,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "CT",
+      "name": "Connecticut",
+      "listings": 264,
+      "mapped": 264,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "DE",
+      "name": "Delaware",
+      "listings": 65,
+      "mapped": 65,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "DC",
+      "name": "District of Columbia",
+      "listings": 36,
+      "mapped": 36,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "FL",
+      "name": "Florida",
+      "listings": 875,
+      "mapped": 875,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "GA",
+      "name": "Georgia",
+      "listings": 373,
+      "mapped": 373,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "HI",
+      "name": "Hawaii",
+      "listings": 98,
+      "mapped": 98,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "ID",
+      "name": "Idaho",
+      "listings": 250,
+      "mapped": 250,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "IL",
+      "name": "Illinois",
+      "listings": 826,
+      "mapped": 826,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "IN",
+      "name": "Indiana",
+      "listings": 539,
+      "mapped": 539,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "IA",
+      "name": "Iowa",
+      "listings": 273,
+      "mapped": 273,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "KS",
+      "name": "Kansas",
+      "listings": 203,
+      "mapped": 203,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "KY",
+      "name": "Kentucky",
+      "listings": 592,
+      "mapped": 592,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "LA",
+      "name": "Louisiana",
+      "listings": 254,
+      "mapped": 254,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "ME",
+      "name": "Maine",
+      "listings": 205,
+      "mapped": 205,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "MD",
+      "name": "Maryland",
+      "listings": 698,
+      "mapped": 698,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "MA",
+      "name": "Massachusetts",
+      "listings": 490,
+      "mapped": 490,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "MI",
+      "name": "Michigan",
+      "listings": 595,
+      "mapped": 595,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "MN",
+      "name": "Minnesota",
+      "listings": 559,
+      "mapped": 559,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "MS",
+      "name": "Mississippi",
+      "listings": 157,
+      "mapped": 157,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "MO",
+      "name": "Missouri",
+      "listings": 376,
+      "mapped": 376,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "MT",
+      "name": "Montana",
+      "listings": 118,
+      "mapped": 118,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "NE",
+      "name": "Nebraska",
+      "listings": 162,
+      "mapped": 162,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "NV",
+      "name": "Nevada",
+      "listings": 186,
+      "mapped": 186,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "NH",
+      "name": "New Hampshire",
+      "listings": 119,
+      "mapped": 119,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "NJ",
+      "name": "New Jersey",
+      "listings": 538,
+      "mapped": 538,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "NM",
+      "name": "New Mexico",
+      "listings": 163,
+      "mapped": 163,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "NY",
+      "name": "New York",
+      "listings": 1336,
+      "mapped": 1336,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "NC",
+      "name": "North Carolina",
+      "listings": 603,
+      "mapped": 603,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "ND",
+      "name": "North Dakota",
+      "listings": 85,
+      "mapped": 85,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "OH",
+      "name": "Ohio",
+      "listings": 927,
+      "mapped": 927,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "OK",
+      "name": "Oklahoma",
+      "listings": 205,
+      "mapped": 205,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "OR",
+      "name": "Oregon",
+      "listings": 294,
+      "mapped": 294,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "PA",
+      "name": "Pennsylvania",
+      "listings": 842,
+      "mapped": 842,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "RI",
+      "name": "Rhode Island",
+      "listings": 69,
+      "mapped": 69,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "SC",
+      "name": "South Carolina",
+      "listings": 176,
+      "mapped": 176,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "SD",
+      "name": "South Dakota",
+      "listings": 69,
+      "mapped": 69,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "TN",
+      "name": "Tennessee",
+      "listings": 438,
+      "mapped": 438,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "TX",
+      "name": "Texas",
+      "listings": 741,
+      "mapped": 738,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "UT",
+      "name": "Utah",
+      "listings": 456,
+      "mapped": 456,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "VT",
+      "name": "Vermont",
+      "listings": 86,
+      "mapped": 85,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "VA",
+      "name": "Virginia",
+      "listings": 440,
+      "mapped": 440,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "WA",
+      "name": "Washington",
+      "listings": 434,
+      "mapped": 434,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "WV",
+      "name": "West Virginia",
+      "listings": 178,
+      "mapped": 178,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "WI",
+      "name": "Wisconsin",
+      "listings": 379,
+      "mapped": 379,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "WY",
+      "name": "Wyoming",
+      "listings": 56,
+      "mapped": 56,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "AS",
+      "name": "American Samoa",
+      "listings": 0,
+      "mapped": 0,
+      "meetings": 0,
+      "status": "no-imported-facility-data"
+    },
+    {
+      "state": "GU",
+      "name": "Guam",
+      "listings": 3,
+      "mapped": 3,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "MP",
+      "name": "Northern Mariana Islands",
+      "listings": 1,
+      "mapped": 1,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "PR",
+      "name": "Puerto Rico",
+      "listings": 87,
+      "mapped": 87,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "VI",
+      "name": "U.S. Virgin Islands",
+      "listings": 3,
+      "mapped": 3,
+      "meetings": 0,
+      "status": "annual-facility-data"
+    },
+    {
+      "state": "UM",
+      "name": "U.S. Minor Outlying Islands",
+      "listings": 0,
+      "mapped": 0,
+      "meetings": 0,
+      "status": "no-imported-facility-data"
+    }
+  ],
   "limitations": [
-    "National catalog has not yet been generated."
+    "Annual facility survey, not current openings or network verification.",
+    "Meeting coverage remains source-dependent; national official meeting directories are linked.",
+    "ZIP centroids are approximate; facilities without supported postal coordinates remain searchable without pins.",
+    "Selecting a jurisdiction does not imply complete coverage."
   ]
 }
