@@ -61,10 +61,10 @@ export function useDirectoryResults(
   const [error, setError] = useState("");
   const locked = useRef(false);
   const requestKey = JSON.stringify(session);
-  const searching = mode === "database" && (!enabled || requestKey !== settled);
+  const searching = (!enabled || requestKey !== settled);
 
   useEffect(() => {
-    if (!enabled || mode !== "database" || !session.asOf) return;
+    if (!enabled || !session.asOf) return;
     const abort = new AbortController();
     const timer = setTimeout(async () => {
       try {
@@ -133,7 +133,7 @@ export function useDirectoryResults(
     asOf: session.asOf,
     searching,
     error: settled === requestKey ? error : "",
-    usingBackup: mode === "database" && !remote,
+    usingBackup: !remote,
     changePage,
     retry: () => setSession((s) => ({ ...s, attempt: s.attempt + 1 })),
   };

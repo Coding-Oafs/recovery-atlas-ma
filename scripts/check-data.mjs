@@ -1,42 +1,17 @@
-import { readFile } from "node:fs/promises";
-const resources = JSON.parse(
-  await readFile(new URL("../data/resources.json", import.meta.url), "utf8"),
-);
-const dup = resources.filter(
-  (r, i) => resources.findIndex((x) => x.id === r.id) !== i,
-);
-if (dup.length) throw Error("Duplicate IDs");
-for (const r of resources) {
-  if (!r.sourceUrl.startsWith("https://"))
-    throw Error("Missing secure source " + r.id);
-  if (
-    r.lat !== null &&
-    (r.lat < 41 || r.lat > 43 || r.lng < -74 || r.lng > -69)
-  )
-    throw Error("Coordinates outside MA " + r.id);
-  if (
-    r.kind === "meeting" &&
-    r.formats.includes("online") &&
-    !r.formats.includes("hybrid") &&
-    r.lat !== null
-  )
-    throw Error("Online map pin " + r.id);
+import {readFile} from "node:fs/promises";
+import {gunzipSync} from "node:zlib";
+const curated=JSON.parse(await readFile("data/resources.json","utf8"));
+let national=[];try{national=JSON.parse(gunzipSync(await readFile("data/national-catalog.json.gz")).toString("utf8"));}catch(e){if(e.code!=="ENOENT")throw e;}
+const manifest=JSON.parse(await readFile("data/national-manifest.json","utf8"));
+if(manifest.total!==national.length)throw Error("National manifest mismatch");
+for(const group of [curated,national]){
+ const ids=new Set();
+ for(const r of group){
+  if(ids.has(r.id))throw Error("Duplicate ID "+r.id);ids.add(r.id);
+  if(!r.sourceUrl.startsWith("https://"))throw Error("Missing source "+r.id);
+  if((r.lat===null)!==(r.lng===null))throw Error("Coordinate pair "+r.id);
+  if(r.lat!==null&&(!Number.isFinite(r.lat)||!Number.isFinite(r.lng)||Math.abs(r.lat)>85||Math.abs(r.lng)>180))throw Error("Invalid coordinates "+r.id);
+  if(r.kind==="meeting"&&r.formats.includes("online")&&!r.formats.includes("hybrid")&&r.lat!==null)throw Error("Online pin "+r.id);
+ }
 }
-console.log(
-  JSON.stringify(
-    {
-      total: resources.length,
-      cbhc: resources.filter((r) => r.sourceName === "Mass.gov CBHC directory")
-        .length,
-      meetings: resources.filter((r) => r.meeting).length,
-      approximatePins: resources
-        .filter((r) => r.coordinateAccuracy === "approximate")
-        .map((r) => r.id),
-      missingPins: resources
-        .filter((r) => r.lat === null && !r.formats.includes("online"))
-        .map((r) => r.id),
-    },
-    null,
-    2,
-  ),
-);
+console.log(JSON.stringify({curated:curated.length,national:national.length,jurisdictions:manifest.jurisdictions},null,2));

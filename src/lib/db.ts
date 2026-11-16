@@ -1,7 +1,7 @@
 import "server-only";
 import { neon } from "@neondatabase/serverless";
 import { unstable_cache } from "next/cache";
-import seed from "../../data/resources.json";
+import { bundledResources } from "./catalog";
 import { resourceSchema, type Resource } from "./types";
 export function db() {
   if (!process.env.DATABASE_URL) throw new Error("Database not configured");
@@ -14,7 +14,7 @@ export const getResources = unstable_cache(
   }> => {
     if (!process.env.DATABASE_URL)
       return {
-        resources: seed.map((r) => resourceSchema.parse(r)),
+        resources: bundledResources().slice(0,50).map((r) => resourceSchema.parse(r)),
         mode: "snapshot",
       };
     try {
@@ -27,11 +27,11 @@ export const getResources = unstable_cache(
     } catch {
       console.error("Directory read failed; serving dated public snapshot");
       return {
-        resources: seed.map((r) => resourceSchema.parse(r)),
+        resources: bundledResources().slice(0,50).map((r) => resourceSchema.parse(r)),
         mode: "snapshot",
       };
     }
   },
-  ["public-directory-v4-recovery-first"],
+  ["public-directory-v5-national"],
   { revalidate: 300, tags: ["resources"] },
 );

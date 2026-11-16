@@ -1,4 +1,5 @@
 import type { Resource, Filters } from "./types";
+import { matchesEvidence } from "./match-evidence";
 import {
   meetingTimeBounds,
   matchingStartTime,
@@ -111,17 +112,9 @@ export function filterResources(
       )
         return false;
       if (f.fellowship && r.fellowship !== f.fellowship) return false;
-      if (
-        f.payment &&
-        !r.payment.includes(f.payment) &&
-        !r.insurance.some((x) => x.name === f.payment)
-      )
-        return false;
+      if (!matchesEvidence(r,f)) return false;
       if (f.service && !r.services.includes(f.service)) return false;
-      if (f.language && !r.languages.includes(f.language)) return false;
       if (f.population && !r.populations.includes(f.population)) return false;
-      if (f.accessibility && !r.accessibility.includes("Wheelchair access"))
-        return false;
       if (f.savedOnly && !saved.includes(r.id)) return false;
       if (
         f.day !== "" &&

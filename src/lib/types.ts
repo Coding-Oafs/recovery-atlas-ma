@@ -171,6 +171,7 @@ export const categories = [
 ] as const;
 export type Filters = {
   prioritizeRecovery?: boolean;
+  uncertainOnly?: boolean;
   state?: string;
   query: string;
   category: string;

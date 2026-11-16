@@ -1,8 +1,10 @@
 import "server-only";
+import { bundledResources } from "./catalog";
+import { catalogQuery } from "./catalog-query";
 import { db } from "./db";
 import type { Filters } from "./types";
 import { meetingTimeBounds, hasMeetingTimeFilter } from "./meeting-time";
-export async function queryDirectory(
+async function queryDatabaseDirectory(
   f: Filters,
   saved: string[],
   limit: number,
@@ -35,20 +37,22 @@ export async function queryDirectory(
     );
   }
   if (f.fellowship) where.push(`data->>'fellowship'=${param(f.fellowship)}`);
-  if (f.payment) {
-    const p = param(f.payment);
-    where.push(
-      `(data->'payment' ? ${p} OR EXISTS(SELECT 1 FROM jsonb_array_elements(data->'insurance') i WHERE i->>'name'=${p}))`,
-    );
+  const evidence:string[] = [], unknowns:string[] = [];
+  function evidenceFilter(match:string, unknown:string) {
+    evidence.push(f.uncertainOnly ? "(" + match + " OR " + unknown + ")" : match);
+    unknowns.push(unknown);
   }
-  for (const [field, value] of [
-    ["services", f.service],
-    ["languages", f.language],
-    ["populations", f.population],
-  ] as const)
-    if (value) where.push(has(`data->'${field}'`, value));
-  if (f.accessibility)
-    where.push(has("data->'accessibility'", "Wheelchair access"));
+  if (f.payment) {
+    const p=param(f.payment);
+    evidenceFilter("(data->'payment' ? "+p+" OR EXISTS(SELECT 1 FROM jsonb_array_elements(data->'insurance') i WHERE i->>'name'="+p+"))",
+      "(jsonb_array_length(COALESCE(data->'payment','[]'))=0 AND jsonb_array_length(COALESCE(data->'insurance','[]'))=0)");
+  }
+  if(f.language) evidenceFilter(has("data->'languages'",f.language), "jsonb_array_length(COALESCE(data->'languages','[]'))=0");
+  if(f.accessibility) evidenceFilter(has("data->'accessibility'","Wheelchair access"), "jsonb_array_length(COALESCE(data->'accessibility','[]'))=0");
+  where.push(...evidence);
+  if(f.uncertainOnly) where.push(unknowns.length ? "("+unknowns.join(" OR ")+")" : "false");
+  if(f.service) where.push(has("data->'services'",f.service));
+  if(f.population) where.push(has("data->'populations'",f.population));
   if (f.day !== "")
     where.push(
       `data->'meeting'->'days' @> ${param(JSON.stringify([Number(f.day)]))}::jsonb`,
@@ -155,4 +159,9 @@ export async function queryDirectory(
     mapped: Number(rows[0].mapped),
     online_or_unmapped: Number(rows[0].online_or_unmapped),
   };
+}
+
+export async function queryDirectory(f:Filters,saved:string[],limit:number,options:Parameters<typeof queryDatabaseDirectory>[3]={}) {
+ if(!process.env.DATABASE_URL) return catalogQuery(bundledResources(),f,saved,limit,options);
+ return queryDatabaseDirectory(f,saved,limit,options);
 }

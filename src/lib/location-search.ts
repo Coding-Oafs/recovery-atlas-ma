@@ -1,5 +1,6 @@
 import zipcodes from "zipcodes";
 import {
+  territoryPlaces,
   regionStates,
   stateNames,
   isRegionState,
@@ -24,7 +25,14 @@ export function parseLocationQuery(query: string, preferred = "") {
   const city = match ? query.slice(0, match.index).trim() : query;
   const matches = (state ? [state] : regionStates)
     .flatMap((s) => zipcodes.lookupByName(city, s))
-    .filter((z) => z.country === "US" && isRegionState(z.state));
+    .filter((z) => isRegionState(z.state));
+  if (!matches.length) {
+    for (const place of territoryPlaces) {
+      if ((!state || place.state === state) && place.city.toLowerCase() === city.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")) {
+        matches.push({ ...place, country: "US" } as (typeof matches)[number]);
+      }
+    }
+  }
   return {
     state: state as RegionState | undefined,
     city,
