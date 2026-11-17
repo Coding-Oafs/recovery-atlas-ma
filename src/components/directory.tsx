@@ -65,6 +65,12 @@ const RecoveryMap = dynamic(() => import("./region-map"), {
 });
 const directoryLinks = [
   {
+    name: "Online AA · Online Intergroup",
+    detail: "Online AA meetings available from every location",
+    url: "https://aa-intergroup.org/meetings/",
+    type: "meetings",
+  },
+  {
     name: "Alcoholics Anonymous",
     detail: "Find local AA offices and meeting directories",
     url: "https://www.aa.org/find-aa",
@@ -1258,7 +1264,7 @@ export default function Directory({
                 {searching
                   ? t("Searching national and regional sources.")
                   : t(
-                      "National facility sources and regional meetings. Coverage varies by location.",
+                      "Public meeting and facility directories. Local coverage varies by source.",
                     )}
                 {online_or_unmapped > 0 ? (
                   <span>
@@ -1283,6 +1289,46 @@ export default function Directory({
                 ) : null}
               </p>
             </div>
+            {(filters.category === "meetings" ||
+              filters.fellowship === "AA") && (
+              <p className="notice">
+                <T>
+                  Local AA lists may be incomplete. An empty search does not
+                  mean no meetings exist.
+                </T>{" "}
+                <a
+                  href={
+                    filters.center
+                      ? "https://www.aa.org/find-aa/north-america?" +
+                        new URLSearchParams({
+                          "dist_center[coordinates][lat]": String(
+                            filters.center.lat,
+                          ),
+                          "dist_center[coordinates][lng]": String(
+                            filters.center.lng,
+                          ),
+                          "dist_center[geocoder][geolocation_geocoder_address]":
+                            locationLabel || filters.state || "",
+                          dist: "100",
+                        }).toString()
+                      : "https://www.aa.org/find-aa" +
+                        (filters.state ? "?state=" + filters.state : "")
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <T>Find local AA offices</T>
+                </a>
+                {" · "}
+                <a
+                  href="https://aa-intergroup.org/meetings/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <T>Online AA meetings</T>
+                </a>
+              </p>
+            )}
             {filters.uncertainOnly && (
               <p className="notice" role="status">
                 {t(
@@ -1796,6 +1842,13 @@ export default function Directory({
                 {""} {coverage.mapped.toLocaleString()}{" "}
                 <T>mapped resources</T>{" "}
               </strong>
+              <span>
+                {coverage.nationalOnline.toLocaleString()}{" "}
+                <T>
+                  online meetings available from every state and territory;
+                  counted separately from local listings.
+                </T>
+              </span>
               <br />
               {coverage.approaches
                 .map((a) => `${a.listings.toLocaleString()} ${a.name}`)
@@ -1845,6 +1898,21 @@ export default function Directory({
                     <T>Meetings</T>
                     {""}
                   </th>
+                  <th scope="col">
+                    <T>In-person AA</T>
+                  </th>
+                  <th scope="col">
+                    <T>Providers</T>
+                  </th>
+                  <th scope="col">
+                    <T>Treatment & detox</T>
+                  </th>
+                  <th scope="col">
+                    <T>Mental health</T>
+                  </th>
+                  <th scope="col">
+                    <T>Recovery support</T>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -1856,6 +1924,11 @@ export default function Directory({
                     <td>{s.listings.toLocaleString()}</td>
                     <td>{s.mapped.toLocaleString()}</td>
                     <td>{s.meetings.toLocaleString()}</td>
+                    <td>{s.aaPhysical.toLocaleString()}</td>
+                    <td>{s.providers.toLocaleString()}</td>
+                    <td>{s.treatment.toLocaleString()}</td>
+                    <td>{s.mentalHealth.toLocaleString()}</td>
+                    <td>{s.support.toLocaleString()}</td>
                   </tr>
                 ))}
               </tbody>

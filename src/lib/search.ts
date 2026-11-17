@@ -90,7 +90,17 @@ export function filterResources(
   const words = f.query.toLowerCase().trim().split(/\s+/).filter(Boolean);
   return resources
     .filter((r) => {
-      if (f.state && r.state !== f.state) return false;
+      if (
+        f.state &&
+        r.state !== f.state &&
+        !(
+          r.state === "US" &&
+          r.kind === "meeting" &&
+          r.formats.includes("online") &&
+          !r.formats.includes("hybrid")
+        )
+      )
+        return false;
       if (
         f.category !== "all" &&
         !r.categories.includes(f.category as Resource["categories"][number])
@@ -112,7 +122,7 @@ export function filterResources(
       )
         return false;
       if (f.fellowship && r.fellowship !== f.fellowship) return false;
-      if (!matchesEvidence(r,f)) return false;
+      if (!matchesEvidence(r, f)) return false;
       if (f.service && !r.services.includes(f.service)) return false;
       if (f.population && !r.populations.includes(f.population)) return false;
       if (f.savedOnly && !saved.includes(r.id)) return false;

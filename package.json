@@ -28,7 +28,8 @@
     "react-dom": "19.3.1",
     "server-only": "latest",
     "zipcodes": "latest",
-    "zod": "latest"
+    "zod": "latest",
+    "tz-lookup": "6.1.25"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",

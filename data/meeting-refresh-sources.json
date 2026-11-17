@@ -1,0 +1,464 @@
+[
+  {
+    "id": "aa-santa-clara",
+    "state": "CA",
+    "page": "https://aasanjose.org/meetings",
+    "feed": "https://sheets.code4recovery.org/storage/12Ga8uwMG4WJ8pZ_SEU7vNETp_aQZ-2yNVsYDFqIwHyE.json",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "refuge-national",
+    "page": "https://refugerecoverymeetings.org/meetings/",
+    "feed": "https://refugerecoverymeetings.org/wp-admin/admin-ajax.php?action=meetings",
+    "fellowship": "Refuge Recovery",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "dharma-national",
+    "page": "https://recoverydharma.org/meetings/",
+    "feed": "https://recoverydharma.org/wp-admin/admin-ajax.php?action=meetings",
+    "fellowship": "Recovery Dharma",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-616f97138cb2",
+    "state": "AK",
+    "page": "https://area02alaska.org/meetings/",
+    "feed": "https://area02alaska.org/wp-admin/admin-ajax.php?action=meetings",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-6a724a5e669d",
+    "state": "AZ",
+    "page": "https://aatucson.org/meetings/",
+    "feed": "https://aatucson.org/wp-admin/admin-ajax.php?action=meetings",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-bef77bd4109a",
+    "state": "CA",
+    "page": "https://aasfmarin.org/meetings",
+    "feed": "https://sheets.code4recovery.org/storage/aasfmarin.json",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-938fc50730bc",
+    "state": "CA",
+    "page": "https://oc-aa.org/meetings/",
+    "feed": "https://www.oc-aa.org/wp-content/tsml-cache-429dbf3661.json?1794685716",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-d5d1d8ce4ebd",
+    "state": "CA",
+    "page": "https://aasandiego.org/meetings/",
+    "feed": "https://aasandiego.org/wp-admin/admin-ajax.php?action=meetings",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-57438e7b97f4",
+    "state": "DE",
+    "page": "https://ndiaa.org/meetings/",
+    "feed": "https://ndiaa.org/wp-content/tsml-cache-4e0c5158b2.json?1793828725",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-05637e15a204",
+    "state": "CT",
+    "page": "https://ct-aa.org/meetings/",
+    "feed": "https://ct-aa.org/wp-admin/admin-ajax.php?action=meetings",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-ab61e0c56c3d",
+    "state": "DC",
+    "page": "https://aa-dc.org/meetings/",
+    "feed": "https://aa-dc.org/wp-content/tsml-cache-2eb6267ed0.json?1794334238",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-8dde914305a9",
+    "state": "HI",
+    "page": "https://oahuaa.org/meetings/",
+    "feed": "https://www.oahuaa.org/wp-content/tsml-cache-377e7c134f.json?1793910334",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-f26fbb4f4af2",
+    "state": "IN",
+    "page": "https://indyaa.org/meetings/",
+    "feed": "https://indyaa.org/wp-admin/admin-ajax.php?action=meetings",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-5bf1bf94283c",
+    "state": "IN",
+    "page": "https://area23aa.org/meetings/",
+    "feed": "https://area23aa.org/wp-content/tsml-cache-d6b805e1dc.json?1794253457",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-9d5b5e60bb45",
+    "state": "KS",
+    "page": "https://ks-aa.org/meetings/",
+    "feed": "https://ks-aa.org/wp-admin/admin-ajax.php?action=meetings",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-c63c7770f16e",
+    "state": "MI",
+    "page": "https://aa-semi.org/meetings/",
+    "feed": "https://aa-semi.org/wp-content/tsml-cache-71b3196c3f.json?1794893720",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-a25c0f43a6e5",
+    "state": "IA",
+    "page": "https://aa-iowa.org/meetings/",
+    "feed": "https://www.aa-iowa.org/wp-admin/admin-ajax.php?action=meetings",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-c311a3c2ac6c",
+    "state": "MN",
+    "page": "https://aaminneapolis.org/meetings/",
+    "feed": "https://aaminneapolis.org/wp-admin/admin-ajax.php?action=meetings",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-e783b2783bf3",
+    "state": "MO",
+    "page": "https://aastl.org/meetings/",
+    "feed": "https://aastl.org/wp-content/tsml-cache-ede7791a57.json?1794888364",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-4bc7f6b75143",
+    "state": "MS",
+    "page": "https://aa-mississippi.org/meetings/",
+    "feed": "https://aa-mississippi.org/wp-admin/admin-ajax.php?action=meetings",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-bcce0ba945ee",
+    "state": "NE",
+    "page": "https://www.omahaaa.org/meetings/",
+    "feed": "https://www.omahaaa.org/wp-admin/admin-ajax.php?action=meetings",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-4ab99037a3fe",
+    "state": "NH",
+    "page": "https://nhaa.net/meetings/",
+    "feed": "https://nhaa.net/wp-content/tsml-cache-b8de952a7e.json?1794869456",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-150efcfe435c",
+    "state": "NV",
+    "page": "https://lvcentraloffice.org/meetings/",
+    "feed": "https://www.lvcentraloffice.org/wp-content/tsml-cache-a8b658cb4a.json?1794599432",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-ccf36d1e719f",
+    "state": "NJ",
+    "page": "https://aasj.org/meetings/",
+    "feed": "https://aasj.org/wp-content/tsml-cache-f39852333f.json?1793712172",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-b3991bc35625",
+    "state": "NM",
+    "page": "https://albuquerqueaa.org/meetings/",
+    "feed": "https://albuquerqueaa.org/wp-content/tsml-cache-5b6e8714c9.json?1794582281",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-99e6a3623d88",
+    "state": "NY",
+    "page": "https://buffaloaany.org/meetings/",
+    "feed": "https://buffaloaany.org/wp-content/tsml-cache-9295947df1.json?1794585204",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-8b8227485bc6",
+    "state": "OH",
+    "page": "https://aacentralohio.org/meetings/",
+    "feed": "https://aacentralohio.org/wp-content/tsml-cache-517f9cf800.json?1794516050",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-ffa8e342fcdc",
+    "state": "NY",
+    "page": "https://www.nyintergroup.org/meetings/",
+    "feed": "https://www.nyintergroup.org/wp-content/tsml-cache-7fd5dcc047.json?1794851075",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-5e6d155025ae",
+    "state": "OH",
+    "page": "https://aacincinnati.org/meetings/",
+    "feed": "https://aacincinnati.org/wp-content/tsml-cache-9edf5fb09f.json?1794857345",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-95d36f9fe3d4",
+    "state": "OK",
+    "page": "https://aaneok.org/meetings/",
+    "feed": "https://aaneok.org/wp-content/tsml-cache-1da6dd1efb.json?1794254602",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-7543135cc036",
+    "state": "OK",
+    "page": "https://aaoklahoma.org/meetings/",
+    "feed": "https://aaoklahoma.org/wp-content/tsml-cache-2946a029f8.json?1794452397",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-159554923425",
+    "state": "TN",
+    "page": "https://www.etiaa.org/meetings/",
+    "feed": "https://www.etiaa.org/wp-content/tsml-cache-b8dfa1fd10.json?1794871599",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-c4a03573aae6",
+    "state": "PA",
+    "page": "https://area59aa.org/meetings/",
+    "feed": "https://area59aa.org/wp-content/tsml-cache-a496871e05.json?1794913572",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-360040e97a24",
+    "state": "TX",
+    "page": "https://austinaa.org/meetings/",
+    "feed": "https://austinaa.org/wp-content/tsml-cache-65d589c8a4.json?1794872174",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-f8047b003cdc",
+    "state": "TN",
+    "page": "https://www.aanashville.org/meetings/",
+    "feed": "https://aanashville.org/wp-content/tsml-cache-facbb92dba.json?1794668866",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-839fa9ab22bf",
+    "state": "TX",
+    "page": "https://aasanantonio.org/meetings/",
+    "feed": "https://aasanantonio.org/wp-admin/admin-ajax.php?action=meetings",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-396fcc4a9352",
+    "state": "VT",
+    "page": "https://aavt.org/meetings/",
+    "feed": "https://aavt.org/wp-admin/admin-ajax.php?action=meetings",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-5dc42a35a899",
+    "state": "VA",
+    "page": "https://aarichmond.org/meetings/",
+    "feed": "https://aarichmond.org/wp-content/tsml-cache-11f418ca6c.json?1794868775",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-8c062d79c127",
+    "state": "TX",
+    "page": "https://aahouston.org/meetings/",
+    "feed": "https://aahouston.org/wp-admin/admin-ajax.php?action=meetings",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-854daea3e63d",
+    "state": "WA",
+    "page": "https://eastsideaa.org/meetings/",
+    "feed": "https://www.eastsideaa.org/wp-admin/admin-ajax.php?action=meetings",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-8626a8833c89",
+    "state": "VA",
+    "page": "https://aavirginia.org/meetings/",
+    "feed": "https://aavirginia.org/wp-content/tsml-cache-0b312f1744.json?1794920125",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-f3ba44e0711d",
+    "state": "WA",
+    "page": "https://www.seattleaa.org/meetings/",
+    "feed": "https://www.seattleaa.org/wp-content/tsml-cache-cbdb25180b.json?1794853539",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-f311f1d9d16a",
+    "state": "WI",
+    "page": "https://aamadisonwi.org/meetings/",
+    "feed": "https://aamadisonwi.org/wp-content/tsml-cache-782448d291.json?1794506089",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-e04dcae094af",
+    "state": "AR",
+    "page": "https://arkansascentraloffice.org/meetings/",
+    "feed": "https://arkansascentraloffice.org/wp-admin/admin-ajax.php?action=meetings",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-1de64e295f24",
+    "state": "KY",
+    "page": "https://loukyaa.org/meetings/",
+    "feed": "https://loukyaa.org/wp-content/tsml-cache-ee13c774fb.json?1794585081",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-0ed2064b9d91",
+    "state": "SC",
+    "page": "https://area62.org/",
+    "feed": "https://area62.org/feed/meetingguide.php",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-7f7005a19f2b",
+    "state": "WY",
+    "page": "https://wyomingaa.org/12step/index.php/meetings/",
+    "feed": "https://wyomingaa.org/12step/wp-admin/admin-ajax.php?action=meetings",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-7dbb58373060",
+    "state": "AL",
+    "page": "https://birminghamaa.org/wp/index.php/meetings/",
+    "feed": "https://birminghamaa.org/wp/wp-admin/admin-ajax.php?action=meetings",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-b39e4daf51bd",
+    "state": "FL",
+    "page": "https://cflintergroup.org/meetings/",
+    "feed": "https://cflintergroup.org/wp-content/tsml-cache-f0d4529a36.json?1794364213",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-b877df133ca4",
+    "state": "OR",
+    "page": "https://coigaa.org/meetings/",
+    "feed": "https://coigaa.org/wp-content/tsml-cache-1cbdafe89a.json?1794863651",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-dde7f292827c",
+    "state": "ME",
+    "page": "https://csoaamaine.org/meetings/",
+    "feed": "https://csoaamaine.org/wp-admin/admin-ajax.php?action=meetings",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-co-public",
+    "state": "CO",
+    "page": "https://daccaa.org/meetings/",
+    "feed": "https://daccaa.org/wp-content/tsml-cache-edb5005522.json?1794438735",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-id-public",
+    "state": "ID",
+    "page": "https://idahoarea18aa.org/meetings/",
+    "feed": "https://idahoarea18aa.org/wp-content/tsml-cache-d461d080a0.json?1794866223",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-nd-public",
+    "state": "ND",
+    "page": "https://aanorthdakota.org/locations/",
+    "feed": "https://aanorthdakota.org/locations/",
+    "fellowship": "AA",
+    "adapter": "crawler-index"
+  },
+  {
+    "id": "aa-ut-public",
+    "state": "UT",
+    "page": "https://www.saltlakeaa.org/locations/",
+    "feed": "https://www.saltlakeaa.org/locations/",
+    "fellowship": "AA",
+    "adapter": "crawler-index"
+  },
+  {
+    "id": "aa-2d451ceb2c7b",
+    "state": "LA",
+    "page": "https://aa-swla.org/meetings/",
+    "feed": "https://aa-swla.org/wp-content/tsml-cache-123a59bffd.json?1790729798",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-6852e2ae8351",
+    "state": "LA",
+    "page": "https://district12.org/meetings/",
+    "feed": "https://district12.org/wp-admin/admin-ajax.php?action=meetings",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-sioux-falls",
+    "state": "SD",
+    "page": "https://siouxfallsaa.org/meeting-times/",
+    "feed": "https://siouxfallsaa.org/meeting-times/",
+    "fellowship": "AA",
+    "adapter": "sioux-falls"
+  }
+]

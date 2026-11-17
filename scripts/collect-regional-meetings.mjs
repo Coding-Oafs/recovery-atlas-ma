@@ -99,8 +99,4 @@ await writeFile(
   ".local/northeast/meetings/manifest.json",
   JSON.stringify(manifest, null, 2),
 );
-const r = await fetch(
-  "https://nerna.org/main_server/client_interface/json/?switcher=GetSearchResults&get_used_formats=1&lang_enum=en",
-  { signal: AbortSignal.timeout(30000) },
-);
-if (r.ok) await writeFile(".local/northeast/nerna.json", await r.text());
+// NA bulk capture has moved to collect-national-na.mjs (approved daily static export).
