@@ -8,6 +8,7 @@ import Modal from "./modal";
 import Link from "next/link";
 import OrganizationUpdates from "./organization-updates";
 import { UserRound, KeyRound } from "lucide-react";
+import { useLanguage } from "./language-provider";
 type Mode = "sign-in" | "create" | "recover";
 export function AccountPanel() {
   const { user, guestSaved, loading, importGuest, refresh, syncing } =
@@ -506,18 +507,19 @@ export function AccountPanel() {
   );
 }
 export default function AccountButton() {
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const { user } = useSaved();
   return (
     <>
       <button className="account-nav" onClick={() => setOpen(true)}>
         <UserRound size={16} />
-        {user ? "Your account" : "Sign in"}
+        {t(user ? "Your account" : "Sign in")}
       </button>
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        title="Your Recovery Atlas account"
+        title={t("Your Recovery Atlas account")}
       >
         <AccountPanel />
       </Modal>

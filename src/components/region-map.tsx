@@ -8,6 +8,7 @@ import type { Filters, MapResource, MapPoint, Resource } from "@/lib/types";
 import stateBounds from "../../data/jurisdiction-bounds.json";
 import { regionBounds } from "@/lib/region";
 import { resourceMapTarget } from "@/lib/map-selection";
+import { useLanguage } from "./language-provider";
 maplibregl.setWorkerUrl(
   new URL(
     "maplibre-gl/dist/maplibre-gl-worker.mjs",
@@ -42,6 +43,7 @@ export default function RegionMap({
   onBounds,
   highlight,
 }: Props) {
+  const { t, language } = useLanguage();
   const container = useRef<HTMLDivElement>(null),
     map = useRef<maplibregl.Map | null>(null),
     props = useRef({ filters, saved, onSelect });
@@ -494,19 +496,19 @@ export default function RegionMap({
       ) : null}
       {failed ? (
         <div className="map-failure">
-          <strong>Map temporarily unavailable</strong>
-          <p>Resources and directions remain available in the list.</p>
+          <strong>{t("Map temporarily unavailable")}</strong>
+          <p>{t("Resources and directions remain available in the list.")}</p>
         </div>
       ) : null}
       <div className="map-top">
         <span className="map-label">
           <span className="live-dot" />
-          {mappedTotal.toLocaleString()} MAPPED RESOURCES · GROUPED
+          {mappedTotal.toLocaleString(language === "es" ? "es-US" : "en-US")} {t("MAPPED RESOURCES · GROUPED")}
         </span>
         <button
           className="map-button"
           onClick={reset}
-          aria-label="Show all Northeast states"
+          aria-label={t("Show United States overview")}
         >
           <Maximize size={16} />
         </button>
@@ -522,7 +524,7 @@ export default function RegionMap({
           }}
         >
           <Search size={16} />
-          Search this area
+          {t("Search this area")}
         </button>
       ) : null}
       {selectedResource ? (
@@ -531,23 +533,23 @@ export default function RegionMap({
           <span>
             {target
               ? target.approximate
-                ? "Selected · approximate location"
-                : "Selected location"
+                ? t("Selected · approximate location")
+                : t("Selected location")
               : selectedResource.kind === "meeting" &&
                   selectedResource.formats.includes("online") &&
                   !selectedResource.formats.includes("hybrid")
-                ? "Online meeting · no physical map location"
-                : "No map coordinates are available for this resource."}
+                ? t("Online meeting · no physical map location")
+                : t("No map coordinates are available for this resource.")}
           </span>
           <div>
             <button onClick={() => onSelect(selectedResource)}>
-              View details
+              {t("View details")}
             </button>
             <button
               onClick={onClearSelection}
-              aria-label="Clear selected map resource"
+              aria-label={t("Clear selected map resource")}
             >
-              Clear selection
+              {t("Clear selection")}
             </button>
           </div>
         </div>
@@ -555,22 +557,22 @@ export default function RegionMap({
       <div className="map-legend">
         <span>
           <i className="legend-dot care" />
-          Care & support
+          {t("Care & support")}
         </span>
         <span>
           <i className="legend-dot meeting" />
-          Meetings
+          {t("Meetings")}
         </span>
         <span>
           <i className="legend-dot hospital" />
-          Hospitals
+          {t("Hospitals")}
         </span>
       </div>
       <div className="map-caption" role="status">
-        {error ||
+        {t(error) ||
           (busy
-            ? "Updating map…"
-            : `${represented.toLocaleString()} resources in this view. Select a group to explore.`)}
+            ? t("Updating map…")
+            : `${represented.toLocaleString(language === "es" ? "es-US" : "en-US")} ${t("resources in this view. Select a group to explore.")}`)}
       </div>
     </div>
   );
