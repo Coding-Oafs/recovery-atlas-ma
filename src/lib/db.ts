@@ -14,7 +14,9 @@ export const getResources = unstable_cache(
   }> => {
     if (!process.env.DATABASE_URL)
       return {
-        resources: bundledResources().slice(0,50).map((r) => resourceSchema.parse(r)),
+        resources: bundledResources()
+          .slice(0, 50)
+          .map((r) => resourceSchema.parse(r)),
         mode: "snapshot",
       };
     try {
@@ -27,11 +29,13 @@ export const getResources = unstable_cache(
     } catch {
       console.error("Directory read failed; serving dated public snapshot");
       return {
-        resources: bundledResources().slice(0,50).map((r) => resourceSchema.parse(r)),
+        resources: bundledResources()
+          .slice(0, 50)
+          .map((r) => resourceSchema.parse(r)),
         mode: "snapshot",
       };
     }
   },
-  ["public-directory-v5-national"],
+  ["public-directory-v6-meetings"],
   { revalidate: 300, tags: ["resources"] },
 );

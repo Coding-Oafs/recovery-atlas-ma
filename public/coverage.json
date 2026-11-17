@@ -1,9 +1,9 @@
 {
   "reviewedAt": "2026-11-17",
   "total": 400765,
-  "mapped": 383756,
-  "approximate": 41864,
-  "online_or_unmapped": 17009,
+  "mapped": 383397,
+  "approximate": 41682,
+  "online_or_unmapped": 17368,
   "nationalOnline": 7913,
   "states": [
     {
@@ -61,10 +61,10 @@
     {
       "state": "CA",
       "listings": 9216,
-      "mapped": 8277,
-      "approximate": 2134,
+      "mapped": 7930,
+      "approximate": 1964,
       "meetings": 7313,
-      "aaPhysical": 3975,
+      "aaPhysical": 3628,
       "providers": 0,
       "treatment": 1518,
       "mentalHealth": 1407,
@@ -529,10 +529,10 @@
     {
       "state": "SC",
       "listings": 1550,
-      "mapped": 1525,
-      "approximate": 1204,
+      "mapped": 1513,
+      "approximate": 1192,
       "meetings": 1374,
-      "aaPhysical": 1028,
+      "aaPhysical": 1016,
       "providers": 0,
       "treatment": 109,
       "mentalHealth": 115,

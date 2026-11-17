@@ -88,6 +88,6 @@ export const getCoverage = unstable_cache(
       approaches,
     };
   },
-  ["national-coverage-v2-meetings"],
+  ["national-coverage-v3-attendance"],
   { revalidate: 300, tags: ["resources"] },
 );
