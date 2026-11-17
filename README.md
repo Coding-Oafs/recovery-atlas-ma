@@ -1,17 +1,19 @@
-# Recovery Atlas · Northeast
+# Recovery Atlas — United States and territories
 
-A mobile-friendly map and directory for people exploring recovery, substance use treatment and mental health support across Connecticut, Massachusetts, Maine, New Hampshire, New Jersey, New York, Pennsylvania, Rhode Island and Vermont.
+A mobile-friendly directory for recovery meetings, treatment and mental health support across all 50 US states, DC and US territories, to the extent supported by published sources. Coverage gaps and source dates are shown explicitly.
 
 ## What is included
 
-- Regional public listings from NPPES, SAMHSA, New York OASAS, Massachusetts BSAS and MassGIS, AA, NA, SMART Recovery, Recovery Dharma and Refuge Recovery, alongside the original 49 curated listings. See `public/coverage.json` for source counts and limitations.
+- National SAMHSA facility listings and regional public listings from NPPES, SAMHSA, New York OASAS, Massachusetts BSAS and MassGIS, AA, NA, SMART Recovery, Recovery Dharma and Refuge Recovery, alongside the original 49 curated listings. See `public/coverage.json` for source counts and limitations.
 - Every mapped search match is represented, independent of list pagination. A viewport endpoint groups pins when zoomed out; zooming reveals individuals. Shared locations have paginated resource choices. City/ZIP/address search, browser location and mileage radius.
 - State, keyword, service, recovery approach, format, payment, language, participation, meeting day and wheelchair-access filters.
-- Recurring meeting calculation in Eastern time with next occurrences displayed in the visitor's time zone. Online-only meetings have no pins or physical radius restrictions.
+- Recurring meeting calculation in each source IANA time zone with next occurrences displayed in the visitor's time zone. Online-only meetings have no pins or physical radius restrictions.
 - Evidence-labeled payment and insurer records, including McLean's published product restrictions.
 - Browser-local bookmarks or private cross-device accounts with optional passkeys, recovery codes, CSV/JSON/PDF/calendar exports, crisis/help links, source dates, correction/new-resource submissions.
 - Protected administrator dashboard: review inbox, listing and meeting edits, insurer/product edits, publication controls, export, validated insert-only JSON import, audit history and source connection status.
 - Daily source-link checks on Vercel. Link checks never claim to verify clinical services or meeting operation.
+
+The national release adds guided discovery, counted search alternatives, state and territory help, separate unreported-detail results, resource-specific summaries, Spanish search-to-contact guidance, a three-resource comparison and page-memory checklists. See `OPERATIONS.md` for insert-only staging and activation.
 
 ## Run locally
 

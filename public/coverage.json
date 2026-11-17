@@ -1,16 +1,130 @@
 {
-  "reviewedAt": "2026-10-26",
-  "total": 318382,
-  "mapped": 314950,
-  "approximate": 20954,
-  "online_or_unmapped": 3432,
-  "unmapped_physical": 1,
+  "reviewedAt": "2026-11-17",
+  "total": 334777,
+  "mapped": 331342,
+  "approximate": 37346,
+  "online_or_unmapped": 3435,
+  "unmapped_physical": 4,
   "states": [
+    {
+      "state": "AK",
+      "listings": 115,
+      "mapped": 115,
+      "meetings": 0
+    },
+    {
+      "state": "AL",
+      "listings": 203,
+      "mapped": 203,
+      "meetings": 0
+    },
+    {
+      "state": "AR",
+      "listings": 257,
+      "mapped": 257,
+      "meetings": 0
+    },
+    {
+      "state": "AZ",
+      "listings": 597,
+      "mapped": 597,
+      "meetings": 0
+    },
+    {
+      "state": "CA",
+      "listings": 1903,
+      "mapped": 1903,
+      "meetings": 0
+    },
+    {
+      "state": "CO",
+      "listings": 347,
+      "mapped": 347,
+      "meetings": 0
+    },
     {
       "state": "CT",
       "listings": 25893,
       "mapped": 25573,
       "meetings": 2176
+    },
+    {
+      "state": "DC",
+      "listings": 36,
+      "mapped": 36,
+      "meetings": 0
+    },
+    {
+      "state": "DE",
+      "listings": 65,
+      "mapped": 65,
+      "meetings": 0
+    },
+    {
+      "state": "FL",
+      "listings": 875,
+      "mapped": 875,
+      "meetings": 0
+    },
+    {
+      "state": "GA",
+      "listings": 373,
+      "mapped": 373,
+      "meetings": 0
+    },
+    {
+      "state": "GU",
+      "listings": 3,
+      "mapped": 3,
+      "meetings": 0
+    },
+    {
+      "state": "HI",
+      "listings": 98,
+      "mapped": 98,
+      "meetings": 0
+    },
+    {
+      "state": "IA",
+      "listings": 273,
+      "mapped": 273,
+      "meetings": 0
+    },
+    {
+      "state": "ID",
+      "listings": 250,
+      "mapped": 250,
+      "meetings": 0
+    },
+    {
+      "state": "IL",
+      "listings": 826,
+      "mapped": 826,
+      "meetings": 0
+    },
+    {
+      "state": "IN",
+      "listings": 539,
+      "mapped": 539,
+      "meetings": 0
+    },
+    {
+      "state": "KS",
+      "listings": 203,
+      "mapped": 203,
+      "meetings": 0
+    },
+    {
+      "state": "KY",
+      "listings": 592,
+      "mapped": 592,
+      "meetings": 0
+    },
+    {
+      "state": "LA",
+      "listings": 254,
+      "mapped": 254,
+      "meetings": 0
     },
     {
       "state": "MA",
@@ -19,10 +133,70 @@
       "meetings": 3341
     },
     {
+      "state": "MD",
+      "listings": 698,
+      "mapped": 698,
+      "meetings": 0
+    },
+    {
       "state": "ME",
       "listings": 10801,
       "mapped": 10638,
       "meetings": 1107
+    },
+    {
+      "state": "MI",
+      "listings": 595,
+      "mapped": 595,
+      "meetings": 0
+    },
+    {
+      "state": "MN",
+      "listings": 559,
+      "mapped": 559,
+      "meetings": 0
+    },
+    {
+      "state": "MO",
+      "listings": 376,
+      "mapped": 376,
+      "meetings": 0
+    },
+    {
+      "state": "MP",
+      "listings": 1,
+      "mapped": 1,
+      "meetings": 0
+    },
+    {
+      "state": "MS",
+      "listings": 157,
+      "mapped": 157,
+      "meetings": 0
+    },
+    {
+      "state": "MT",
+      "listings": 118,
+      "mapped": 118,
+      "meetings": 0
+    },
+    {
+      "state": "NC",
+      "listings": 603,
+      "mapped": 603,
+      "meetings": 0
+    },
+    {
+      "state": "ND",
+      "listings": 85,
+      "mapped": 85,
+      "meetings": 0
+    },
+    {
+      "state": "NE",
+      "listings": 162,
+      "mapped": 162,
+      "meetings": 0
     },
     {
       "state": "NH",
@@ -37,10 +211,40 @@
       "meetings": 1040
     },
     {
+      "state": "NM",
+      "listings": 163,
+      "mapped": 163,
+      "meetings": 0
+    },
+    {
+      "state": "NV",
+      "listings": 186,
+      "mapped": 186,
+      "meetings": 0
+    },
+    {
       "state": "NY",
       "listings": 100795,
       "mapped": 99378,
       "meetings": 4964
+    },
+    {
+      "state": "OH",
+      "listings": 927,
+      "mapped": 927,
+      "meetings": 0
+    },
+    {
+      "state": "OK",
+      "listings": 205,
+      "mapped": 205,
+      "meetings": 0
+    },
+    {
+      "state": "OR",
+      "listings": 294,
+      "mapped": 294,
+      "meetings": 0
     },
     {
       "state": "PA",
@@ -49,16 +253,100 @@
       "meetings": 4734
     },
     {
+      "state": "PR",
+      "listings": 87,
+      "mapped": 87,
+      "meetings": 0
+    },
+    {
       "state": "RI",
       "listings": 8013,
       "mapped": 7909,
       "meetings": 603
     },
     {
+      "state": "SC",
+      "listings": 176,
+      "mapped": 176,
+      "meetings": 0
+    },
+    {
+      "state": "SD",
+      "listings": 69,
+      "mapped": 69,
+      "meetings": 0
+    },
+    {
+      "state": "TN",
+      "listings": 438,
+      "mapped": 438,
+      "meetings": 0
+    },
+    {
+      "state": "TX",
+      "listings": 741,
+      "mapped": 738,
+      "meetings": 0
+    },
+    {
+      "state": "UT",
+      "listings": 456,
+      "mapped": 456,
+      "meetings": 0
+    },
+    {
+      "state": "VA",
+      "listings": 440,
+      "mapped": 440,
+      "meetings": 0
+    },
+    {
+      "state": "VI",
+      "listings": 3,
+      "mapped": 3,
+      "meetings": 0
+    },
+    {
       "state": "VT",
       "listings": 5531,
       "mapped": 5411,
       "meetings": 572
+    },
+    {
+      "state": "WA",
+      "listings": 434,
+      "mapped": 434,
+      "meetings": 0
+    },
+    {
+      "state": "WI",
+      "listings": 379,
+      "mapped": 379,
+      "meetings": 0
+    },
+    {
+      "state": "WV",
+      "listings": 178,
+      "mapped": 178,
+      "meetings": 0
+    },
+    {
+      "state": "WY",
+      "listings": 56,
+      "mapped": 56,
+      "meetings": 0
+    },
+    {
+      "state": "AS",
+      "listings": 0,
+      "mapped": 0,
+      "meetings": 0
+    },
+    {
+      "state": "UM",
+      "listings": 0,
+      "mapped": 0,
+      "meetings": 0
     }
   ],
   "sources": [
@@ -67,12 +355,12 @@
       "listings": 281000
     },
     {
-      "name": "NPPES public facility registry",
-      "listings": 12261
+      "name": "SAMHSA 2025 national facility directories",
+      "listings": 20344
     },
     {
-      "name": "SAMHSA 2025 national facility directories",
-      "listings": 3949
+      "name": "NPPES public facility registry",
+      "listings": 12261
     },
     {
       "name": "NA USA / public BMLT regional meeting aggregate",
@@ -242,6 +530,7 @@
     "Thirteen meeting records were held for review because their schedule, timezone or coordinates could not be represented reliably.",
     "The NPPES Counselor search for New Jersey ZIP 08060 reached the API limit of 1,200 results; that partition may omit additional providers.",
     "Approximate pins use a source-supported ZIP or city area. Street geocoding does not verify the building entrance. Source review is not direct verification.",
-    "Coverage varies by state and fellowship and is not exhaustive. This directory does not establish live beds, admissions or personalized insurance eligibility."
+    "Coverage varies by state and fellowship and is not exhaustive. This directory does not establish live beds, admissions or personalized insurance eligibility.",
+    "National facility records cover all 50 states, DC, Guam, Northern Mariana Islands, Puerto Rico and US Virgin Islands. American Samoa and Minor Outlying Islands have no facilities in this annual import. National meeting imports are incomplete; consult official fellowship directories."
   ]
 }
