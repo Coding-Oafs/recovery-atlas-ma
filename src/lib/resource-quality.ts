@@ -27,3 +27,28 @@ export const intakeQuestions = [
   "What should I bring, where is the entrance, and what accessibility or language support is available?",
   "What transportation, family or follow-up support can you help arrange?",
 ];
+export function resourceQuestions(r: Resource) {
+  if (r.meeting) return [
+    "Is the meeting still held at this time and location, or online?",
+    "Is this meeting open to visitors, and are there participant restrictions?",
+    "How do I join, where is the entrance, and can a newcomer listen first?",
+    "What accessibility, language, transportation or childcare support is available?",
+    "Are there any costs or voluntary contributions?",
+  ];
+  if (r.kind === "provider") return [
+    "Are you accepting new patients, and what is the earliest appointment?",
+    "What services, ages and concerns does this practice work with?",
+    "Is a referral required, and do you offer telehealth in my state?",
+    ...intakeQuestions.slice(2),
+  ];
+  return intakeQuestions;
+}
+export function missingPracticalFields(r: Resource) {
+  const p = r.practical, missing: string[] = [];
+  if (!p?.entrance) missing.push("Entrance");
+  if (!p?.transit) missing.push("Transportation");
+  if (!p?.childcare || p.childcare === "unknown") missing.push("Childcare");
+  if (r.meeting && !p?.newcomers) missing.push("Newcomer guidance");
+  if (!r.accessibility.length) missing.push("Accessibility");
+  return missing;
+}

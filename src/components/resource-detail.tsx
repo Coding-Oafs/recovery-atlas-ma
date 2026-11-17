@@ -1,5 +1,8 @@
 "use client";
 import { useState } from "react";
+import { useLanguage, T } from "./language-provider";
+import { CompareButton, NextStepChecklist } from "./shortlist-tools";
+import { ListingSummary, MeetingSchedule } from "./listing-content";
 import {
   MapPin,
   Phone,
@@ -20,45 +23,8 @@ import { useSaved } from "./saved-provider";
 import type { Resource, Filters } from "@/lib/types";
 import { nextMeeting } from "@/lib/search";
 import { submitCorrection } from "@/app/actions";
-export function SourceDate({ value }: { value: string | null }) {
-  return (
-    <>
-      {value
-        ? new Date(value + "T12:00:00Z").toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-            timeZone: "UTC",
-          })
-        : "Not reported"}
-    </>
-  );
-}
-export function NextTime({
-  resource,
-  now,
-  timeFilters,
-}: {
-  resource: Resource;
-  now: Date | null;
-  timeFilters?: Filters;
-}) {
-  if (!resource.meeting) return null;
-  const next = now ? nextMeeting(resource, now, timeFilters) : null;
-  return (
-    <>
-      {next
-        ? new Intl.DateTimeFormat("en-US", {
-            weekday: "short",
-            hour: "numeric",
-            minute: "2-digit",
-            timeZoneName: "short",
-            timeZone: timeFilters?.timeZone,
-          }).format(next)
-        : "See meeting schedule"}
-    </>
-  );
-}
+export { SourceDate, NextTime } from "./resource-time";
+import { SourceDate } from "./resource-time";
 export function CorrectionForm({
   resource,
   onDone,
@@ -66,20 +32,30 @@ export function CorrectionForm({
   resource?: Resource;
   onDone?: () => void;
 }) {
+  const { t } = useLanguage();
+
   const [busy, setBusy] = useState(false),
     [result, setResult] = useState(""),
     [success, setSuccess] = useState(false);
   return success ? (
     <div className="success-box">
       <Check />
-      <h3>Thank you for helping.</h3>
+      <h3>
+        {""}
+        <T>Thank you for helping.</T>
+        {""}
+      </h3>
       <p>
-        Your submission is in the review inbox. It will be checked before
-        anything is published.
+        {" "}
+        <T>
+          Your submission is in the review inbox. It will be checked before
+          anything is published.
+        </T>{" "}
       </p>
       {onDone ? (
         <button className="secondary" onClick={onDone}>
-          Done
+          {" "}
+          <T>Done</T>{" "}
         </button>
       ) : null}
     </div>
@@ -103,34 +79,44 @@ export function CorrectionForm({
       }}
     >
       <p className="notice">
-        Include public listing details only. Please don’t submit medical
-        histories, insurance member numbers, or other private information.
+        {" "}
+        <T>
+          Include public listing details only. Please don’t submit medical
+          histories, insurance member numbers, or other private information.
+        </T>{" "}
       </p>
       <label>
         {resource
-          ? "What needs to change?"
-          : "Resource name, address and details"}
+          ? t("What needs to change?")
+          : t("Resource name, address and details")}
         <textarea
           name="message"
           minLength={15}
           maxLength={2500}
           rows={5}
           required
-          placeholder="Tell us what should be added or corrected…"
+          placeholder={t("Tell us what should be added or corrected…")}
         />
       </label>
       <label>
-        Official source link <span className="muted">(optional)</span>
+        {" "}
+        <T>Official source link</T>{" "}
+        <span className="muted">
+          {""}
+          <T>(optional)</T>
+          {""}
+        </span>
         <input
           name="sourceUrl"
           type="url"
-          placeholder="https://"
+          placeholder={"https://"}
           maxLength={600}
         />
       </label>
       <div className="honeypot" aria-hidden="true">
         <label>
-          Website
+          {" "}
+          <T>Website</T>{" "}
           <input
             name="website"
             tabIndex={-1}
@@ -141,11 +127,11 @@ export function CorrectionForm({
       </div>
       {result ? (
         <p role="alert" className="form-error">
-          {result}
+          {t(result)}
         </p>
       ) : null}
       <button className="primary" disabled={busy}>
-        {busy ? "Sending…" : "Submit for review"}
+        {busy ? t("Sending…") : t("Submit for review")}
         <ArrowUpRight size={17} />
       </button>
     </form>
@@ -168,35 +154,35 @@ export default function ResourceDetail({
   now: Date | null;
   timeFilters?: Filters;
 }) {
-  const [correction, setCorrection] = useState(false);
-  const { loading: savesLoading } = useSaved();
+  const [correction, setCorrection] = useState(false),
+    { loading: savesLoading } = useSaved(),
+    { t, language } = useLanguage();
   return (
     <Modal
       open
       onClose={onClose}
       title={r.name}
+      description={[
+        r.fellowship ||
+          t(
+            r.meeting
+              ? "Meeting"
+              : r.kind === "provider"
+                ? "Care provider"
+                : "Treatment & support",
+          ),
+        r.city,
+        r.state,
+      ].join(" · ")}
+      wide
       onCloseAutoFocus={(event) => {
         event.preventDefault();
         document
           .querySelector<HTMLElement>(`[data-resource-id="${r.id}"] .card-open`)
           ?.focus({ preventScroll: true });
       }}
-      description={`${r.fellowship ?? (r.kind === "clinic" ? "Behavioral health services" : r.kind === "hospital" ? "Psychiatric hospital" : r.kind === "provider" ? "Care provider" : "Treatment & support")} · ${r.city}, ${r.state}`}
-      wide
     >
-      <div className="detail-tags">
-        {r.formats.map((f) => (
-          <span className="tag" key={f}>
-            {f}
-          </span>
-        ))}
-        {r.populations.map((p) => (
-          <span className="tag neutral" key={p}>
-            {p}
-          </span>
-        ))}
-      </div>
-      <p className="detail-description">{r.description}</p>
+      <ListingSummary resource={r} now={now} timeFilters={timeFilters} />
       <div className="detail-actions">
         <a
           href={r.website}
@@ -204,20 +190,18 @@ export default function ResourceDetail({
           rel="noopener noreferrer"
           className="primary"
         >
-          {r.meeting && r.formats.some((f) => f === "online" || f === "hybrid")
-            ? "Joining details"
-            : "Official website"}
+          {t(r.meeting ? "Joining details" : "Official website")}{" "}
           <ArrowUpRight size={17} />
         </a>
-        {r.phone ? (
+        {r.phone && (
           <a
             className="secondary"
             href={"tel:" + r.phone.replace(/[^+\d]/g, "")}
           >
             <Phone size={16} />
-            Call
+            {t("Call")}
           </a>
-        ) : null}
+        )}
         <button
           className="secondary"
           aria-pressed={saved}
@@ -225,21 +209,34 @@ export default function ResourceDetail({
           onClick={onSave}
         >
           {saved ? <Check size={16} /> : <Bookmark size={16} />}{" "}
-          {saved ? "Saved" : "Save"}
+          {t(saved ? "Saved" : "Save")}
         </button>
+        {onShowMap && (
+          <button className="secondary" onClick={onShowMap}>
+            <MapPin size={16} />
+            {t("Show on map")}
+          </button>
+        )}
+        <CompareButton resource={r} />
       </div>
-      {onShowMap ? (
-        <button className="secondary" onClick={onShowMap}>
-          <MapPin size={16} /> Show on map
-        </button>
-      ) : null}
       <ShareResource resource={r} />
+      {language === "es" && (
+        <p lang="es" className="notice">
+          {""}
+          <T>
+            Los nombres, descripciones y datos publicados conservan el idioma de
+            la fuente. No se han traducido automáticamente.
+          </T>
+          {""}
+        </p>
+      )}
+      {r.meeting && (
+        <MeetingSchedule resource={r} now={now} timeFilters={timeFilters} />
+      )}
       <PracticalDetails resource={r} />
+      <NextStepChecklist resource={r} />
       <section className="detail-section">
-        <h3>
-          <MapPin size={18} />
-          Location & access
-        </h3>
+        <h3>{t("Location & access")}</h3>
         {r.address ? (
           <>
             <p>{r.address}</p>
@@ -252,142 +249,116 @@ export default function ResourceDetail({
               target="_blank"
               rel="noopener noreferrer"
             >
-              Get directions <ArrowUpRight size={14} />
+              {t("Get directions")}
             </a>
-            {r.coordinateAccuracy === "approximate" ? (
+            {r.coordinateAccuracy === "approximate" && (
               <p className="notice">
-                Map pin is approximate (ZIP area), not a verified entrance. Use
-                the street address for directions.
+                {t(
+                  "Map pin is approximate (ZIP area), not a verified entrance. Use the street address for directions.",
+                )}
               </p>
-            ) : null}
+            )}
           </>
         ) : (
           <p>
-            <Video size={16} /> Online only — no physical meeting location.
+            {t(
+              r.meeting
+                ? "Online only - no physical meeting location."
+                : "Street address is not reported. Confirm the service location directly.",
+            )}
           </p>
         )}
-        <p>{r.intake}</p>
-        <p className="muted">
-          New-patient / bed availability: {r.availability}. Call to confirm.
-        </p>
+        {!r.meeting && (
+          <>
+            <h4>
+              {t(
+                r.kind === "provider"
+                  ? "Appointments & eligibility"
+                  : "Intake & eligibility",
+              )}
+            </h4>
+            <p lang="en">{r.intake}</p>
+            <p>
+              {t(
+                r.kind === "provider"
+                  ? "New-patient appointments"
+                  : "Program availability",
+              )}
+              : {r.availability || t("Not reported")}. {t("Call to confirm.")}
+            </p>
+            {r.hours && (
+              <>
+                <h4>{t("Published hours")}</h4>
+                <p lang="en">{r.hours}</p>
+              </>
+            )}
+          </>
+        )}
       </section>
-      {r.meeting ? (
-        <section className="detail-section">
-          <h3>
-            <Clock size={18} />
-            Meeting schedule
-          </h3>
-          <p className="schedule-next">
-            Next matching schedule:{" "}
-            <NextTime resource={r} now={now} timeFilters={timeFilters} />
-          </p>
-          <p>
-            {r.meeting.days
-              .map(
-                (d) =>
-                  [
-                    "Sunday",
-                    "Monday",
-                    "Tuesday",
-                    "Wednesday",
-                    "Thursday",
-                    "Friday",
-                    "Saturday",
-                  ][d],
-              )
-              .join(", ")}{" "}
-            · {r.meeting.time} · {r.meeting.timezone} ·{" "}
-            {r.meeting.duration === null
-              ? "Duration not reported"
-              : `${r.meeting.duration} minutes`}
-          </p>
-          <p className="muted">
-            The next occurrence above is shown in your device’s time zone.
-            Recurring schedules can change; confirm on the source page.
-          </p>
-          <p>{r.meeting.notes}</p>
-          {r.meeting.exceptions?.length ? (
-            <div>
-              {r.meeting.exceptions
-                .filter((e) => e.cancelled)
-                .map((e) => (
-                  <p className="notice" key={e.date}>
-                    Cancelled {e.date}: {e.note}
-                  </p>
-                ))}
-            </div>
-          ) : null}
-          <AddCalendar resource={r} timeFilters={timeFilters} />
-        </section>
-      ) : r.hours ? (
-        <section className="detail-section">
-          <h3>
-            <Clock size={18} />
-            Published hours
-          </h3>
-          <p>{r.hours}</p>
-          <p className="muted">
-            Hours are service-specific; confirm before traveling.
-          </p>
-        </section>
-      ) : null}
-      <section className="detail-section">
-        <h3>Services & preferences</h3>
+      <details className="detail-section">
+        <summary>{t("Services & preferences")}</summary>
+        <p lang="en">{r.description}</p>
         <div className="detail-tags">
-          {r.services.map((s) => (
-            <span className="tag neutral" key={s}>
-              {s}
+          {r.services.map((x) => (
+            <span className="tag neutral" key={x}>
+              {x}
             </span>
           ))}
         </div>
         <p>
-          <strong>Languages:</strong> {r.languages.join(", ") || "Not reported"}
+          <strong>{t("Languages")}: </strong>
+          {r.languages.join(", ") || t("Not reported")}
         </p>
         <p>
-          <strong>Accessibility:</strong>{" "}
-          {r.accessibility.join(", ") || "Not reported"}
+          <strong>{t("Accessibility")}: </strong>
+          {r.accessibility.join(", ") || t("Not reported")}
         </p>
-      </section>
-      <section className="detail-section">
-        <h3>
-          <ShieldCheck size={18} />
-          Insurance & payment
-        </h3>
-        <p>{r.paymentNote}</p>
+        <p>
+          <strong>{t("Participants")}: </strong>
+          {r.populations.join(", ") || t("Not reported")}
+        </p>
+      </details>
+      <details className="detail-section">
+        <summary>
+          {t(
+            r.meeting ? "Meeting costs & contributions" : "Insurance & payment",
+          )}
+        </summary>
+        <p lang="en">{r.paymentNote || t("Not reported")}</p>
         {r.insurance.map((i, index) => (
           <div className="insurance-row" key={index}>
-            <div>
-              <strong>{i.name}</strong>
-              <span className="tag neutral">
-                {i.status === "confirmed"
+            <strong>{i.name}</strong>
+            <span className="tag neutral">
+              {t(
+                i.status === "confirmed"
                   ? "Confirmed on date"
                   : i.status === "published"
                     ? "Published policy"
-                    : "Facility-reported"}
-              </span>
-            </div>
+                    : "Facility-reported",
+              )}
+            </span>
             <p>{i.plan}</p>
-            <p className="muted">{i.note}</p>
+            <p>{i.note}</p>
             <a
               className="text-link"
               href={i.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
             >
-              Source checked <SourceDate value={i.checkedAt} />
-              <ArrowUpRight size={13} />
+              {t("Source reviewed")}: <SourceDate value={i.checkedAt} />
             </a>
           </div>
         ))}
-        <p className="notice">
-          <Info size={16} />
-          Acceptance of an insurer does not guarantee your plan’s network
-          participation or coverage. Confirm the service, location, benefits and
-          prior authorization with the provider and your insurer.
-        </p>
-      </section>
-      <section className="detail-section source-section">
-        <h3>Where this information comes from</h3>
+        {!r.meeting && (
+          <p className="notice">
+            {t(
+              "Acceptance of an insurer does not guarantee your plan's network participation or coverage. Confirm the service, location, benefits and prior authorization with the provider and your insurer.",
+            )}
+          </p>
+        )}
+      </details>
+      <details className="detail-section source-section">
+        <summary>{t("Where this information comes from")}</summary>
         <a
           className="text-link"
           href={r.sourceUrl}
@@ -395,26 +366,27 @@ export default function ResourceDetail({
           rel="noopener noreferrer"
         >
           {r.sourceName}
-          <ArrowUpRight size={14} />
         </a>
         <p>
-          Source reviewed: <SourceDate value={r.sourceCheckedAt} />
+          {t("Source reviewed")}: <SourceDate value={r.sourceCheckedAt} />
           <br />
-          Source’s own update date: <SourceDate value={r.sourceUpdatedAt} />
+          {t("Source's own update date")}:{" "}
+          <SourceDate value={r.sourceUpdatedAt} />
           <br />
-          Directly verified with provider/group:{" "}
+          {t("Directly verified with provider/group")}:{" "}
           <SourceDate value={r.verifiedAt} />
         </p>
         <p className="muted">
-          A source review checks published information. It does not confirm that
-          a service or meeting is operating today.
+          {t(
+            "A source review checks published information. It does not confirm that a service or meeting is operating today.",
+          )}
         </p>
-      </section>
+      </details>
       <button className="text-link" onClick={() => setCorrection(!correction)}>
         <Flag size={15} />
-        {correction ? "Hide correction form" : "Suggest a correction"}
+        {t(correction ? "Hide correction form" : "Suggest a correction")}
       </button>
-      {correction ? <CorrectionForm resource={r} /> : null}
+      {correction && <CorrectionForm resource={r} />}
     </Modal>
   );
 }

@@ -1,4 +1,5 @@
 "use client";
+import { T, useLanguage } from "./language-provider";
 import { useState } from "react";
 import { Download, Printer, CalendarDays } from "lucide-react";
 import { OfflineSave } from "./offline-tools";
@@ -6,6 +7,8 @@ import { useSaved } from "./saved-provider";
 export default function SavedActions({
   resourceIds,
 }: { resourceIds?: string[] } = {}) {
+  const { t } = useLanguage();
+
   const {
       saved: allSaved,
       user,
@@ -45,15 +48,17 @@ export default function SavedActions({
   }
   const disabled = loading || syncing || !saved.length || !!busy;
   return (
-    <section className="saved-tools" aria-label="Saved resource options">
+    <section className="saved-tools" aria-label={t("Saved resource options")}>
       <p>
         {user
           ? syncing
-            ? "Saving changes…"
+            ? t("Saving changes…")
             : loading
-              ? "Loading your account saves…"
-              : "Your private list is saved to your account."
-          : "Saved in this browser. Sign in to keep a private copy across devices."}
+              ? t("Loading your account saves…")
+              : t("Your private list is saved to your account.")
+          : t(
+              "Saved in this browser. Sign in to keep a private copy across devices.",
+            )}
       </p>
       <div className="saved-tool-buttons">
         <button
@@ -61,24 +66,21 @@ export default function SavedActions({
           disabled={disabled}
           onClick={() => download("csv")}
         >
-          <Download size={14} />
-          Spreadsheet (CSV)
+          <Download size={14} /> <T>Spreadsheet (CSV)</T>{" "}
         </button>
         <button
           className="secondary"
           disabled={disabled}
           onClick={() => download("json")}
         >
-          <Download size={14} />
-          Backup (JSON)
+          <Download size={14} /> <T>Backup (JSON)</T>{" "}
         </button>
         <button
           className="secondary"
           disabled={disabled}
           onClick={() => download("ics")}
         >
-          <CalendarDays size={14} />
-          Meeting calendar
+          <CalendarDays size={14} /> <T>Meeting calendar</T>{" "}
         </button>
         <form
           method="post"
@@ -87,17 +89,20 @@ export default function SavedActions({
         >
           <input type="hidden" name="ids" value={JSON.stringify(saved)} />
           <button className="secondary" disabled={disabled}>
-            <Printer size={14} />
-            Print / Save PDF
+            <Printer size={14} /> <T>Print / Save PDF</T>{" "}
           </button>
         </form>
       </div>
       <p className="small muted">
         {resourceIds
-          ? "Exports include the selected saved list."
-          : "Exports include all saved listings, even when search is filtered."}{" "}
-        Calendar files include meetings only. Confirm current schedules with the
-        source.
+          ? t("Exports include the selected saved list.")
+          : t(
+              "Exports include all saved listings, even when search is filtered.",
+            )}{" "}
+        <T>
+          Calendar files include meetings only. Confirm current schedules with
+          the source.
+        </T>{" "}
       </p>
       {error ? (
         <p className="notice" role="alert">
@@ -106,23 +111,27 @@ export default function SavedActions({
             className="text-link"
             onClick={() => refresh().catch(() => {})}
           >
-            Try again
+            {" "}
+            <T>Try again</T>{" "}
           </button>
         </p>
       ) : null}
-      {notice ? <p role="status">{notice}</p> : null}
+      {notice ? <p role="status">{t(notice)}</p> : null}
       <label className="check-row">
         <input
           type="checkbox"
           checked={reminder}
           onChange={(e) => setReminder(e.target.checked)}
-        />
-        Include a 10-minute calendar reminder (meeting names may appear on your
-        calendar’s notifications)
+        />{" "}
+        <T>
+          Include a 10-minute calendar reminder (meeting names may appear on
+          your calendar’s notifications)
+        </T>{" "}
       </label>
       {user ? (
         <a className="text-link" href="/saved">
-          Organize private saved lists
+          {" "}
+          <T>Organize private saved lists</T>{" "}
         </a>
       ) : null}
       <OfflineSave resourceIds={saved} />

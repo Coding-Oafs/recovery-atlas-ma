@@ -1,10 +1,13 @@
 "use client";
+import { T, useLanguage } from "./language-provider";
 import { useState } from "react";
 import { resourceLink } from "@/lib/directory-navigation";
 import { resourceActions } from "@/lib/resource-links";
 import { publicSiteUrl } from "@/lib/site";
 import type { Resource } from "@/lib/types";
 export function ShareResource({ resource }: { resource: Resource }) {
+  const { t } = useLanguage();
+
   const [status, setStatus] = useState("");
   return (
     <div className="share-resource">
@@ -20,9 +23,10 @@ export function ShareResource({ resource }: { resource: Resource }) {
           }
         }}
       >
-        Copy listing link
+        {" "}
+        <T>Copy listing link</T>{" "}
       </button>
-      <span role="status">{status}</span>
+      <span role="status">{t(status)}</span>
       {status === "Copy this listing link:" ? (
         <a href={resourceLink(resource.id)}>
           {publicSiteUrl + resourceLink(resource.id)}
@@ -32,6 +36,8 @@ export function ShareResource({ resource }: { resource: Resource }) {
   );
 }
 export default function ResourceActions({ resource }: { resource: Resource }) {
+  const { t } = useLanguage();
+
   return (
     <div
       className="resource-quick-actions"
@@ -39,7 +45,7 @@ export default function ResourceActions({ resource }: { resource: Resource }) {
     >
       {resourceActions(resource).map((a) => (
         <a
-          key={a.label}
+          key={t(a.label)}
           href={a.href}
           target={a.external ? "_blank" : undefined}
           rel={a.external ? "noopener noreferrer" : undefined}

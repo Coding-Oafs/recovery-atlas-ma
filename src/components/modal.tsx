@@ -1,4 +1,5 @@
 "use client";
+import { T, useLanguage } from "./language-provider";
 import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 export default function Modal({
@@ -18,6 +19,8 @@ export default function Modal({
   wide?: boolean;
   onCloseAutoFocus?: (event: Event) => void;
 }) {
+  const { t } = useLanguage();
+
   return (
     <Dialog.Root
       open={open}
@@ -34,7 +37,10 @@ export default function Modal({
         >
           <div className="modal-head">
             <Dialog.Title>{title}</Dialog.Title>
-            <Dialog.Close className="icon-button" aria-label="Close dialog">
+            <Dialog.Close
+              className="icon-button"
+              aria-label={t("Close dialog")}
+            >
               <X size={21} />
             </Dialog.Close>
           </div>

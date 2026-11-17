@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useLanguage } from "./language-provider";
+import { useLanguage, T } from "./language-provider";
 const resources = [
   {
     id: "housing",
@@ -80,24 +80,28 @@ const resources = [
   },
 ];
 export default function SupportHub() {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   return (
     <div className="stack">
       <h1>
         {language === "es"
-          ? "Apoyo para la vida diaria"
-          : "Support for daily life"}
+          ? t("Apoyo para la vida diaria")
+          : t("Support for daily life")}
       </h1>
       <p>
         {language === "es"
-          ? "La recuperación puede incluir salud, vivienda, propósito y comunidad. Estos enlaces abren las fuentes originales; compruebe los detalles y los requisitos."
-          : "Recovery can include health, home, purpose and community. These links take you to original sources; confirm current services and eligibility directly."}
+          ? t(
+              "La recuperación puede incluir salud, vivienda, propósito y comunidad. Estos enlaces abren las fuentes originales; compruebe los detalles y los requisitos.",
+            )
+          : t(
+              "Recovery can include health, home, purpose and community. These links take you to original sources; confirm current services and eligibility directly.",
+            )}
       </p>
       <div className="support-grid">
         {resources.map((r) => (
           <section id={r.id} className="peer-card stack" key={r.id}>
             <h2>{language === "es" ? r.es : r.title}</h2>
-            <p lang="en">{r.text}</p>
+            <p lang="en">{t(r.text)}</p>
             {r.links.map(([name, url]) => (
               <a
                 key={url}
@@ -113,32 +117,46 @@ export default function SupportHub() {
         ))}
       </div>
       <section className="peer-card stack">
-        <h2>Help shape Recovery Atlas</h2>
+        <h2>
+          {""}
+          <T>Help shape Recovery Atlas</T>
+          {""}
+        </h2>
         <p>
-          We welcome practical feedback from people in recovery, families, peer
-          workers and service organizations. Tell us where a search became
-          confusing, which access detail was missing, or which resource category
-          would help. Keep personal medical information out of feedback.
+          {" "}
+          <T>
+            We welcome practical feedback from people in recovery, families,
+            peer workers and service organizations. Tell us where a search
+            became confusing, which access detail was missing, or which resource
+            category would help. Keep personal medical information out of
+            feedback.
+          </T>{" "}
         </p>
         <Link className="secondary" href="/#feedback">
-          Suggest an improvement
+          {" "}
+          <T>Suggest an improvement</T>{" "}
         </Link>
         <Link className="text-link" href="/community">
-          Your community profile & messages
+          {" "}
+          <T>Your community profile & messages</T>{" "}
         </Link>
         <a
           href="https://www.samhsa.gov/substance-use/recovery/about"
           target="_blank"
           rel="noopener noreferrer"
         >
-          About recovery · SAMHSA
+          {" "}
+          <T>About recovery · SAMHSA</T>{" "}
         </a>
       </section>
       <p className="small muted">
-        External support directories are separate from our mapped listings. A
-        linked service is not a guarantee of availability, accreditation or
-        eligibility. Sources reviewed October 30, 2026; some sites limit
-        automated access.
+        {" "}
+        <T>
+          External support directories are separate from our mapped listings. A
+          linked service is not a guarantee of availability, accreditation or
+          eligibility. Sources reviewed October 30, 2026; some sites limit
+          automated access.
+        </T>{" "}
       </p>
     </div>
   );

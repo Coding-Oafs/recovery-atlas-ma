@@ -4,6 +4,7 @@ const config: NextConfig = {
   poweredByHeader: false,
   serverExternalPackages: ["@touch4it/ical-timezones"],
   outputFileTracingIncludes: {
+    "/*": ["./data/national-catalog.json.gz"],
     "/api/saved/export": ["./node_modules/@touch4it/ical-timezones/zones/**/*"],
   },
   async headers() {

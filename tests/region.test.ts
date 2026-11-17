@@ -36,7 +36,7 @@ test("all regional states validate, including southern New Jersey, and state fil
       lng: -74.92,
     }),
   );
-  assert.equal(rows.length, 9);
+  assert.equal(rows.length, 57);
   assert.deepEqual(
     filterResources(rows, { ...defaultFilters, state: "NJ" }).map(
       (r) => r.state,

@@ -1,37 +1,6 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
-const es: Record<string, string> = {
-  "Explore resources": "Explorar recursos",
-  "Finding your next step": "Tu próximo paso",
-  "About the project": "Sobre el proyecto",
-  Saved: "Guardados",
-  "Sign in": "Entrar",
-  "Your account": "Tu cuenta",
-  Community: "Comunidad",
-  "giving recovery a home": "un hogar para la recuperación",
-  "Find support": "Buscar ayuda",
-  "Meeting, service, or keyword…": "Reunión, servicio o palabra clave…",
-  "City, state, ZIP or street address":
-    "Ciudad, estado, código postal o dirección",
-  "All resources": "Todos los recursos",
-  Meetings: "Reuniones",
-  "Treatment & detox": "Tratamiento y desintoxicación",
-  "Mental health": "Salud mental",
-  "Therapy & counseling": "Terapia",
-  "Recovery support": "Apoyo para la recuperación",
-  "More filters": "Más filtros",
-  "Find a meeting": "Buscar una reunión",
-  "Explore treatment": "Explorar tratamiento",
-  "Find a therapist": "Buscar terapeuta",
-  "Support for daily life": "Apoyo para la vida diaria",
-  "Previous resources": "Resultados anteriores",
-  "Next resources": "Más resultados",
-  Username: "Nombre de usuario",
-  Password: "Contraseña",
-  "Create account": "Crear cuenta",
-  "Recover account": "Recuperar cuenta",
-  "Sign in with a passkey": "Entrar con una clave de acceso",
-};
+import { translate } from "@/lib/i18n";
 const Context = createContext({ language: "en", t: (s: string) => s });
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = useState("en");
@@ -45,9 +14,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     document.documentElement.lang = language;
   }, [language]);
   return (
-    <Context.Provider
-      value={{ language, t: (s) => (language === "es" ? (es[s] ?? s) : s) }}
-    >
+    <Context.Provider value={{ language, t: (s) => translate(s, language) }}>
       <div className="language-switch">
         <label>
           Language / Idioma{" "}
@@ -78,4 +45,9 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 }
 export function useLanguage() {
   return useContext(Context);
+}
+
+export function T({ children }: { children: string }) {
+  const { t } = useLanguage();
+  return <>{t(children)}</>;
 }

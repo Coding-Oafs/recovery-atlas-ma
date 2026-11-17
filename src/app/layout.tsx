@@ -3,6 +3,7 @@ import "./globals.css";
 import { publicSiteUrl } from "@/lib/site";
 import { LanguageProvider } from "@/components/language-provider";
 import { OfflineSetup } from "@/components/offline-tools";
+import { ShortlistProvider } from "@/components/shortlist-tools";
 import { SavedProvider } from "@/components/saved-provider";
 export const metadata: Metadata = {
   metadataBase: new URL(publicSiteUrl),
@@ -11,11 +12,11 @@ export const metadata: Metadata = {
     type: "website",
     url: "/",
     siteName: "Recovery Atlas",
-    title: "Recovery Atlas · Recovery support across the Northeast",
+    title: "Recovery Atlas · Recovery support across the United States",
   },
-  title: "Recovery Atlas · Find your way forward in the Northeast",
+  title: "Recovery Atlas · Find your way forward across the United States",
   description:
-    "Find recovery meetings, treatment, mental health care and support across CT, MA, ME, NH, NJ, NY, PA, RI and VT. Explore sourced listings, payment information and ways to connect.",
+    "Find recovery meetings, treatment, mental health care and support across all 50 US states, DC and US territories where data is available. Explore sourced listings, payment information and ways to connect.",
   applicationName: "Recovery Atlas",
   manifest: "/manifest.webmanifest",
   robots: { index: true, follow: true },
@@ -38,7 +39,7 @@ export default function RootLayout({
       <body>
         <LanguageProvider>
           <OfflineSetup />
-          <SavedProvider>{children}</SavedProvider>
+          <SavedProvider><ShortlistProvider>{children}</ShortlistProvider></SavedProvider>
         </LanguageProvider>
       </body>
     </html>
