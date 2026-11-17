@@ -51,6 +51,7 @@ export async function installMeetingCapture(
       )
     ).map((r) => [r.external_id, r]),
   );
+  const reviewed: { id: string; before: Resource }[] = [];
   const added: Resource[] = [],
     seen: {
       external: string;
@@ -100,6 +101,7 @@ export async function installMeetingCapture(
     const before = sourceFacts(old.data);
     if (sameFacts(before, sourceFacts(fresh))) {
       counts.unchanged++;
+      reviewed.push({ id: old.id, before: old.data });
     } else {
       const proposed = resourceSchema.parse(mergeSourceFacts(old.data, fresh));
       if (
@@ -169,6 +171,15 @@ export async function installMeetingCapture(
       [JSON.stringify(chunk)],
     );
   }
+  for (let i = 0; i < reviewed.length; i += 250)
+    await sql.query(
+      `UPDATE resources r SET data=jsonb_set(data,'{sourceCheckedAt}',to_jsonb($2::text)) FROM jsonb_array_elements($1::jsonb)s WHERE r.id=s->>'id' AND r.data=s->'before' AND COALESCE(r.data->>'sourceCheckedAt','')<$3 AND r.published`,
+      [
+        JSON.stringify(reviewed.slice(i, i + 250)),
+        new Date().toISOString().slice(0, 10),
+        new Date(Date.now() - 7 * 86400000).toISOString().slice(0, 10),
+      ],
+    );
   if (options.complete)
     await sql.query(
       "UPDATE atlas_source_member SET missing_since=COALESCE(missing_since,now()) WHERE source_id=$1 AND NOT(external_id=ANY($2::text[]))",

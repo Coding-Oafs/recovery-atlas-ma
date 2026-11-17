@@ -31,8 +31,8 @@ export async function GET(request: NextRequest) {
     const seeded = await seedAddressQueue(sql, job.config.cursor || ""),
       cached = await applyGeocodedAddresses(sql),
       geocoding = await runGeocodingBatch(sql, 10000),
-      county = await refreshCountyCoverage(sql);
-    await refreshCityCoverage(sql);
+      county = await refreshCountyCoverage(sql, 50000, false);
+
     const result = { seeded, cached, geocoding, county };
     await sql.query(
       "UPDATE atlas_source_job SET config=jsonb_set(config,'{cursor}',to_jsonb($1::text)),status='healthy',attempts=0,lease_until=NULL,last_success_at=now(),last_error=NULL,next_run_at=now()+interval '8 hours' WHERE id='public-location-enrichment'",

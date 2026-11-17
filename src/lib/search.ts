@@ -3,6 +3,7 @@ import { matchesEvidence } from "./match-evidence";
 import {
   meetingTimeBounds,
   matchingStartTime,
+  localDate,
   hasMeetingTimeFilter,
   type MeetingTimeFilters,
 } from "./meeting-time";
@@ -96,6 +97,11 @@ export function filterResources(
   const words = f.query.toLowerCase().trim().split(/\s+/).filter(Boolean);
   return resources
     .filter((r) => {
+      if (
+        r.meeting?.endsOn &&
+        r.meeting.endsOn < localDate(now, r.meeting.timezone)
+      )
+        return false;
       if (
         f.state &&
         r.state !== f.state &&

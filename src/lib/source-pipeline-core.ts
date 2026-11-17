@@ -10,6 +10,9 @@ export function sourceFacts(r: Resource) {
     state: r.state,
     zip: r.zip,
     formats: [...r.formats].sort(),
+    languages: [...r.languages].sort(),
+    accessibility: [...r.accessibility].sort(),
+    populations: [...r.populations].sort(),
     meeting: r.meeting
       ? {
           days: [...r.meeting.days].sort(),

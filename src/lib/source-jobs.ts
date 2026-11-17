@@ -161,7 +161,7 @@ async function capture(job: Job) {
       modified: job.last_modified,
     });
     if (!result.text) return { notModified: true };
-    metadata = result;
+    metadata = { etag: result.etag, modified: result.modified };
     const text = result.text.toString(),
       raw =
         job.adapter === "publisher-csv"

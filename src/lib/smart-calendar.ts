@@ -151,6 +151,31 @@ export function normalizeSmartCalendar(
     today,
   );
   if (!result) return null;
+  const field = (label: string) => {
+    const node = $("strong")
+      .toArray()
+      .find((e) => $(e).text().trim() === label)?.nextSibling;
+    return node?.type === "text" ? node.data.replace(/\s+/g, " ").trim() : "";
+  };
+  const program = field("Program:");
+  if (program && program.length <= 60)
+    result.name = (
+      "SMART Recovery · " +
+      program +
+      " — " +
+      (city || "Online") +
+      " #" +
+      id
+    ).slice(0, 220);
+  const languages = field("Languages spoken:");
+  if (languages)
+    result.languages = languages
+      .split(/,|\s+and\s+/i)
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0 && s.length <= 80)
+      .slice(0, 10);
+  const audiences = field("Specific audiences:");
+  if (audiences && audiences.length <= 100) result.populations = [audiences];
   result.id = "smart-" + id;
   result.sourceName =
     "SMART Recovery official meeting page and published calendar";

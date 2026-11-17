@@ -156,7 +156,7 @@ export async function runProviderJob(
   const result = await installProviderChunk(sql, rows);
   if (deactivated.length)
     await sql.query(
-      `WITH inactive AS(SELECT r.id,r.data FROM resources r WHERE r.published AND r.data->>'sourceName' LIKE 'NPPES%' AND split_part(r.id,'-',2)=ANY($1::text[]) AND r.data->>'sourceRecordHash'=${providerHashSql("r.data")}),changed AS(UPDATE resources r SET published=false,updated_at=now() FROM inactive i WHERE r.id=i.id AND r.data=i.data RETURNING r.id,r.data) INSERT INTO audit_events(action,resource_id,before_data,after_data) SELECT 'nppes-explicit-deactivation',id,data,jsonb_build_object('published',false,'reason','Official NPPES deactivation record') FROM changed`,
+      `WITH inactive AS(SELECT r.id,r.data FROM resources r WHERE r.published AND r.data->>'sourceName' LIKE 'NPPES%' AND split_part(r.id,'-',2)=ANY($1::text[]) AND COALESCE(r.data->>'sourceRecordHash',r.provider_baseline_hash)=${providerHashSql("r.data")}),changed AS(UPDATE resources r SET published=false,updated_at=now() FROM inactive i WHERE r.id=i.id AND r.data=i.data RETURNING r.id,r.data) INSERT INTO audit_events(action,resource_id,before_data,after_data) SELECT 'nppes-explicit-deactivation',id,data,jsonb_build_object('published',false,'reason','Official NPPES deactivation record') FROM changed`,
       [deactivated],
     );
   return { ...result, scanned, deactivationRecords: deactivated.length };

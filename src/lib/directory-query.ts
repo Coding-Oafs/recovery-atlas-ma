@@ -20,7 +20,10 @@ async function queryDatabaseDirectory(
     values.push(v);
     return "$" + values.length;
   };
-  const where = ["published=true"];
+  const where = [
+    "published=true",
+    "(resource_kind<>'meeting' OR NULLIF(data->'meeting'->>'endsOn','') IS NULL OR (data->'meeting'->>'endsOn')::date >= (now() AT TIME ZONE COALESCE(data->'meeting'->>'timezone','UTC'))::date)",
+  ];
   if (f.city)
     where.push(
       `(lower(trim(data->>'city'))=lower(trim(${param(f.city)})) OR (resource_kind='meeting' AND data->'formats' ? 'online' AND NOT(data->'formats' ? 'hybrid')))`,
@@ -178,7 +181,7 @@ async function queryDatabaseDirectory(
       : "name";
   const order =
     (f.prioritizeRecovery !== false ? "registry_rank," : "") + baseOrder;
-  const base = `WITH matched AS NOT MATERIALIZED(SELECT id,data,location,CASE WHEN data->>'sourceName' LIKE 'NPPES%' THEN 1 ELSE 0 END AS registry_rank,resource_name AS name,resource_kind AS kind,${distance} AS distance,${nextColumn} AS next_meeting FROM resources WHERE ${where.join(" AND ")}),filtered AS NOT MATERIALIZED(SELECT * FROM matched ${hasMeetingTimeFilter(f) ? "WHERE next_meeting IS NOT NULL" : ""})`;
+  const base = `WITH matched AS NOT MATERIALIZED(SELECT id,data,location,CASE WHEN resource_source LIKE 'NPPES%' THEN 1 ELSE 0 END AS registry_rank,resource_name AS name,resource_kind AS kind,${distance} AS distance,${nextColumn} AS next_meeting FROM resources WHERE ${where.join(" AND ")}),filtered AS NOT MATERIALIZED(SELECT * FROM matched ${hasMeetingTimeFilter(f) ? "WHERE next_meeting IS NOT NULL" : ""})`;
   if (options.map) {
     const zoom = Math.floor(options.map.zoom),
       size = ((40075016.68557849 / 2 ** zoom) * (zoom >= 14 ? 12 : 55)) / 512,

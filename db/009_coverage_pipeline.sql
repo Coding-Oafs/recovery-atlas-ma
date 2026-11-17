@@ -2,6 +2,10 @@ CREATE TABLE IF NOT EXISTS atlas_import_release (
  id text PRIMARY KEY, source text NOT NULL, status text NOT NULL DEFAULT 'staging',
  details jsonb NOT NULL DEFAULT '{}', created_at timestamptz NOT NULL DEFAULT now(), activated_at timestamptz
 );
+ALTER TABLE resources ADD COLUMN IF NOT EXISTS provider_baseline_hash text;
+CREATE INDEX IF NOT EXISTS resources_priority_name_idx ON resources((CASE WHEN resource_source LIKE 'NPPES%' THEN 1 ELSE 0 END),resource_name,id) WHERE published;
+CREATE INDEX IF NOT EXISTS audit_events_resource_idx ON audit_events(resource_id,created_at);
+CREATE TABLE IF NOT EXISTS atlas_directory_stats(id text PRIMARY KEY,data jsonb NOT NULL,generated_at timestamptz NOT NULL DEFAULT now());
 CREATE TABLE IF NOT EXISTS atlas_import_release_member (
  release_id text NOT NULL REFERENCES atlas_import_release(id), resource_id text NOT NULL REFERENCES resources(id),
  PRIMARY KEY(release_id,resource_id)
