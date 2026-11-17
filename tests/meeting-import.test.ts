@@ -34,6 +34,33 @@ const meeting = {
   coordinates: "37.42333,-122.11525",
   types: ["O", "X"],
 };
+test("Meeting Guide conferencing fields distinguish online city entries from hybrid venues", () => {
+  const online = normalizeMeetingGuide(
+    {
+      name: "Example Group",
+      slug: "online-sheet",
+      day: 2,
+      time: "19:00",
+      city: "San Francisco",
+      state: "CA",
+      timezone: "America/Los_Angeles",
+      conference_url: "https://example.test/join?pwd=private",
+    },
+    source,
+    date,
+  )!;
+  assert.deepEqual(online.formats, ["online"]);
+  assert.equal(online.lat, null);
+  assert.equal(online.address, "");
+  assert.ok(!JSON.stringify(online).includes("pwd=private"));
+  const hybrid = normalizeMeetingGuide(
+    { ...meeting, conference_url: "https://example.test/join" },
+    source,
+    date,
+  )!;
+  assert.ok(hybrid.formats.includes("hybrid"));
+  assert.equal(hybrid.lat, 37.42333);
+});
 test("Palo Alto feed rows retain distinct identities, mapped addresses and Pacific schedules", () => {
   const a = normalizeMeetingGuide(meeting, source, date)!,
     b = normalizeMeetingGuide(

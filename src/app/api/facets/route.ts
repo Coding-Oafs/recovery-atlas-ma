@@ -4,7 +4,20 @@ import { db } from "@/lib/db";
 import { bundledResources } from "@/lib/catalog";
 const facets = unstable_cache(
   async () => {
-    if (!process.env.DATABASE_URL) return Object.fromEntries(["services","languages","populations","payment"].map(k=>[k,[...new Set(bundledResources().flatMap(r=>r[k as "services"|"languages"|"populations"|"payment"]))].sort()]));
+    if (!process.env.DATABASE_URL)
+      return Object.fromEntries(
+        ["services", "languages", "populations", "payment"].map((k) => [
+          k,
+          [
+            ...new Set(
+              bundledResources().flatMap(
+                (r) =>
+                  r[k as "services" | "languages" | "populations" | "payment"],
+              ),
+            ),
+          ].sort(),
+        ]),
+      );
     const rows =
       await db()`SELECT k.field,jsonb_agg(DISTINCT v.value ORDER BY v.value) AS values FROM resources r CROSS JOIN LATERAL(VALUES('services',r.data->'services'),('languages',r.data->'languages'),('populations',r.data->'populations'),('payment',r.data->'payment')) k(field,items) CROSS JOIN LATERAL jsonb_array_elements_text(k.items) v(value) WHERE r.published=true GROUP BY k.field`;
     const result = Object.fromEntries(rows.map((r) => [r.field, r.values]));
@@ -15,7 +28,7 @@ const facets = unstable_cache(
     ].sort();
     return result;
   },
-  ["directory-facets-v1"],
+  ["directory-facets-v2-national-meetings"],
   { revalidate: 3600, tags: ["resources"] },
 );
 export async function GET() {

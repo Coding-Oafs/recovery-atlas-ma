@@ -114,10 +114,25 @@ export function normalizeMeetingGuide(
   today: string,
 ): Resource | null {
   const types = Array.isArray(m.types) ? m.types : [];
+  // Meeting Guide sheets can publish conferencing fields without attendance_option/ONL.
+  // City-only entries are online availability, not physical venue addresses.
+  const conference = !!clean(m.conference_url || m.conference_phone);
+  const street = clean(m.address || m.formatted_address).split(",")[0];
+  const physicalVenue =
+    !/^(?:online|zoom|virtual|telephone)\b/i.test(street) &&
+    /\d|\b(?:street|st|avenue|ave|road|rd|way|blvd|drive|dr|lane|ln|highway|hwy|court|ct|plaza|boulevard|place)\b/i.test(
+      street,
+    );
+  const hybrid =
+    m.attendance_option === "hybrid" ||
+    types.includes("HY") ||
+    (!m.attendance_option &&
+      !types.includes("ONL") &&
+      conference &&
+      physicalVenue);
   const online =
-      m.attendance_option === "online" ||
-      (types.includes("ONL") && !types.includes("HY")),
-    hybrid = m.attendance_option === "hybrid" || types.includes("HY");
+    m.attendance_option === "online" ||
+    (!m.attendance_option && !hybrid && (types.includes("ONL") || conference));
   if (types.includes("TC")) return null;
   if (
     /\bmonthly\b|once a month|\b(?:1st|2nd|3rd|4th|first|second|third|fourth|last)\s+(?:sunday|monday|tuesday|wednesday|thursday|friday|saturday)\b/i.test(
