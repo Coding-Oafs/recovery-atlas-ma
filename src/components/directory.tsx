@@ -39,35 +39,41 @@ import ResourceActions from "./resource-actions";
 import { resourceFreshness } from "@/lib/resource-quality";
 import { resourceMapTarget } from "@/lib/map-selection";
 import ResourceDetail, { CorrectionForm, NextTime } from "./resource-detail";
-import coverage from "../../public/coverage.json";
-import { regionStates, stateNames } from "@/lib/region";
+import initialCoverage from "../../public/coverage.json";
+import nationalManifest from "../../data/national-manifest.json";
+import GuidedFinder from "./guided-finder";
+import SearchAlternatives from "./search-alternatives";
+import JurisdictionHelp from "./jurisdiction-help";
+import { CompareButton, ComparisonTray } from "./shortlist-tools";
+import { unreportedFields } from "@/lib/match-evidence";
+import { regionStates, stateNames, usTimeZones } from "@/lib/region";
 import { publicSiteUrl } from "@/lib/site";
 import { useSaved } from "./saved-provider";
 import AccountButton from "./account-panel";
 import SavedActions from "./saved-actions";
 import Link from "next/link";
-import { useLanguage } from "./language-provider";
+import { useLanguage, T } from "./language-provider";
 const RecoveryMap = dynamic(() => import("./region-map"), {
   ssr: false,
-  loading: () => <div className="map-loading">Loading map…</div>,
+  loading: () => (
+    <div className="map-loading">
+      {""}
+      <T>Loading map…</T>
+      {""}
+    </div>
+  ),
 });
 const directoryLinks = [
   {
-    name: "AA · Western Massachusetts",
-    detail: "Western Mass Intergroup",
-    url: "https://westernmassaa.org/",
+    name: "Alcoholics Anonymous",
+    detail: "Find local AA offices and meeting directories",
+    url: "https://www.aa.org/find-aa",
     type: "meetings",
   },
   {
-    name: "AA · Eastern Massachusetts",
-    detail: "Local meetings & online options",
-    url: "https://aaboston.org/meetings",
-    type: "meetings",
-  },
-  {
-    name: "AA · Central Massachusetts",
-    detail: "Worcester & MetroWest",
-    url: "https://aaworcester.org/meetinglist.aspx?grp=wai",
+    name: "Narcotics Anonymous",
+    detail: "Official meeting search",
+    url: "https://www.na.org/meetingsearch/",
     type: "meetings",
   },
   {
@@ -83,37 +89,27 @@ const directoryLinks = [
     type: "meetings",
   },
   {
-    name: "Narcotics Anonymous",
-    detail: "Official meeting search",
-    url: "https://www.na.org/meetingsearch/",
-    type: "meetings",
-  },
-  {
     name: "Refuge Recovery",
     detail: "Meditation-based peer support",
     url: "https://refugerecoverymeetings.org/meetings",
     type: "meetings",
   },
   {
-    name: "Massachusetts Substance Use Helpline",
-    detail: "Treatment, recovery & harm reduction",
-    url: "https://hub.helplinema.org/spa_result",
-    type: "treatment",
-  },
-  {
     name: "FindTreatment.gov",
-    detail: "National treatment facility directory",
+    detail: "Official national treatment finder",
     url: "https://findtreatment.gov/",
     type: "treatment",
   },
   {
-    name: "MassHealth provider directory",
-    detail: "Search providers for your MassHealth plan",
-    url: "https://www.mass.gov/info-details/find-a-provider",
-    type: "provider",
+    name: "Al-Anon",
+    detail: "Support for family and friends",
+    url: "https://al-anon.org/al-anon-meetings/find-an-al-anon-meeting/",
+    type: "support",
   },
 ];
 function TypeIcon({ r }: { r: Resource }) {
+  const { t } = useLanguage();
+
   return r.kind === "meeting" ? (
     <Users size={20} />
   ) : r.kind === "hospital" ? (
@@ -144,6 +140,7 @@ function ResourceCard({
   timeFilters: Filters;
 }) {
   const { loading: savesLoading } = useSaved();
+  const { t, language } = useLanguage();
   const distance =
     center && r.lat !== null && r.lng !== null
       ? miles(center, { lat: r.lat, lng: r.lng })
@@ -161,21 +158,21 @@ function ResourceCard({
         </span>
         <span className="card-type">
           {r.sourceName === "NPPES public facility registry"
-            ? "Facility registry"
+            ? t("Facility registry")
             : (r.fellowship ??
               (r.kind === "clinic"
-                ? "Community care"
+                ? t("Community care")
                 : r.kind === "hospital"
-                  ? "Hospital services"
+                  ? t("Hospital services")
                   : r.kind === "provider"
                     ? r.sourceName.startsWith("NPPES")
-                      ? "Provider registry"
-                      : "Care provider"
-                    : "Treatment center"))}
+                      ? t("Provider registry")
+                      : t("Care provider")
+                    : t("Treatment center")))}
         </span>
         <button
           className={`save-button ${saved ? "saved" : ""}`}
-          aria-label={`${saved ? "Unsave" : "Save"} ${r.name}`}
+          aria-label={`${t(saved ? "Unsave" : "Save")} ${r.name}`}
           aria-pressed={saved}
           disabled={savesLoading}
           onClick={onSave}
@@ -192,8 +189,8 @@ function ResourceCard({
             : `Online · based in ${r.city}, ${r.state}`}
           {distance !== null ? (
             <span>
-              · {distance.toFixed(1)} mi
-              {r.coordinateAccuracy === "approximate" ? " (approx.)" : ""}
+              · {distance.toFixed(1)} <T>mi</T>{" "}
+              {r.coordinateAccuracy === "approximate" ? t(" (approx.)") : ""}
             </span>
           ) : null}
         </p>
@@ -208,19 +205,27 @@ function ResourceCard({
             </span>
             <span className="tag neutral">
               {r.formats.includes("hybrid")
-                ? "Hybrid"
+                ? t("Hybrid")
                 : r.formats.includes("online")
-                  ? "Online"
-                  : "In person"}
+                  ? t("Online")
+                  : t("In person")}
             </span>
           </>
         ) : (
           <>
             <span className="tag">{r.services[0]}</span>
             {r.payment.includes("MassHealth") ? (
-              <span className="tag neutral">MassHealth · confirm benefits</span>
+              <span className="tag neutral">
+                {""}
+                <T>MassHealth · confirm benefits</T>
+                {""}
+              </span>
             ) : (
-              <span className="tag neutral">Payment: ask provider</span>
+              <span className="tag neutral">
+                {""}
+                <T>Payment: ask provider</T>
+                {""}
+              </span>
             )}
           </>
         )}
@@ -229,20 +234,28 @@ function ResourceCard({
       <p
         className={`source-review ${now && resourceFreshness(r, now).needsReview ? "review-due" : ""}`}
       >
-        {now && resourceFreshness(r, now).needsReview ? "Review due · " : ""}
-        Source reviewed {r.sourceCheckedAt}
+        {now && resourceFreshness(r, now).needsReview ? t("Review due · ") : ""}{" "}
+        <T>Source reviewed</T> {r.sourceCheckedAt}
       </p>
       <div className="card-bottom">
         <span>
           <ShieldCheck size={13} />
           {r.sourceName.startsWith("NPPES")
-            ? "Registry · license not checked"
-            : "Sourced listing"}
+            ? t("Registry · license not checked")
+            : t("Sourced listing")}
         </span>
         <button onClick={onOpen}>
-          View details <ArrowUpRight size={15} />
+          {" "}
+          <T>View details</T> <ArrowUpRight size={15} />
         </button>
       </div>
+      {timeFilters.uncertainOnly && (
+        <p className="notice">
+          {t("Details need confirmation")}:{" "}
+          {unreportedFields(r, timeFilters).map(t).join(", ")}
+        </p>
+      )}
+      <CompareButton resource={r} />
     </article>
   );
 }
@@ -284,7 +297,29 @@ export default function Directory({
       setMore(s.more);
     },
   );
+  const [coverage, setCoverage] = useState(initialCoverage);
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/coverage", { signal: controller.signal })
+      .then((r) => {
+        if (!r.ok) throw Error();
+        return r.json();
+      })
+      .then(setCoverage)
+      .catch(() => {});
+    return () => controller.abort();
+  }, []);
   const effectiveFilters = filters;
+  function applyDiscovery(f: Filters) {
+    setFilters(f);
+    setMore(true);
+    setLimit(20);
+    if (!f.center) {
+      setLocation("");
+      setLocationLabel("");
+    }
+  }
+
   const {
     resources: results,
     total: resultCount,
@@ -299,6 +334,7 @@ export default function Directory({
     retry,
   } = useDirectoryResults(resources, effectiveFilters, saved, limit, mode, {
     enabled: navigation.ready,
+    serverSnapshot: true,
     restore: navigation.restoration,
   });
   const {
@@ -379,7 +415,12 @@ export default function Directory({
     filters.startBefore ?? "",
   ].filter((v) => v !== "" && v !== false).length;
   function update<K extends keyof Filters>(k: K, v: Filters[K]) {
-    setFilters((f) => ({ ...f, [k]: v }));
+    setFilters((f) => {
+      const next = { ...f, [k]: v };
+      if (!next.payment && !next.language && !next.accessibility)
+        next.uncertainOnly = false;
+      return next;
+    });
     setLimit(20);
   }
   async function searchLocation(e?: React.FormEvent) {
@@ -402,6 +443,7 @@ export default function Directory({
       setFilters((f) => ({
         ...f,
         center: { lat: data.lat, lng: data.lng },
+        state: data.state || f.state,
         bounds: null,
       }));
       setLocationLabel(
@@ -455,15 +497,16 @@ export default function Directory({
   return (
     <>
       <a className="skip-link" href="#results">
-        Skip to results
+        {" "}
+        <T>Skip to results</T>{" "}
       </a>
       <div className="help-strip">
         <span>
-          <Heart size={13} />
-          You don’t have to figure it out alone.
+          <Heart size={13} /> <T>You don’t have to figure it out alone.</T>{" "}
         </span>
         <button onClick={() => setPanel("help")}>
-          Talk to someone who can help <ArrowUpRight size={13} />
+          {" "}
+          <T>Talk to someone who can help</T> <ArrowUpRight size={13} />
         </button>
       </div>
       <header className="site-header">
@@ -472,11 +515,22 @@ export default function Directory({
             <Compass size={26} strokeWidth={1.5} />
           </span>
           <span>
-            recovery<span className="brand-light">atlas</span>
-            <small>A LITTLE DIRECTION. A WAY FORWARD.</small>
+            {" "}
+            <T>recovery</T>
+            {""}
+            <span className="brand-light">
+              {""}
+              <T>atlas</T>
+              {""}
+            </span>
+            <small>
+              {""}
+              <T>A LITTLE DIRECTION. A WAY FORWARD.</T>
+              {""}
+            </small>
           </span>
         </a>
-        <nav aria-label="Main navigation">
+        <nav aria-label={t("Main navigation")}>
           <button
             className="nav-active"
             onClick={() => {
@@ -514,12 +568,21 @@ export default function Directory({
               {t("giving recovery a home")}
             </span>
             <h1>
-              Your next step starts <em>here.</em>
+              {" "}
+              <T>Your next step starts</T>{" "}
+              <em>
+                {""}
+                <T>here.</T>
+                {""}
+              </em>
             </h1>
           </div>
         </section>
-        <section className="search-section" aria-label="Search resources">
-          <div className="guided-paths" aria-label="Choose a starting point">
+        <section className="search-section" aria-label={t("Search resources")}>
+          <div
+            className="guided-paths"
+            aria-label={t("Choose a starting point")}
+          >
             {[
               ["Find a meeting", "meetings"],
               ["Explore treatment", "treatment"],
@@ -543,14 +606,27 @@ export default function Directory({
                 {t(label)}
               </button>
             ))}
-            <Link className="secondary" href="/support">
+            <Link
+              className="secondary"
+              href={
+                "/support" +
+                (filters.state
+                  ? "?state=" + encodeURIComponent(filters.state)
+                  : "")
+              }
+            >
               {t("Support for daily life")}
             </Link>
           </div>
+          <GuidedFinder filters={filters} onApply={applyDiscovery} />
           <div className="search-bar">
             <label className="keyword-field">
               <Search size={19} />
-              <span className="sr-only">Search keywords</span>
+              <span className="sr-only">
+                {""}
+                <T>Search keywords</T>
+                {""}
+              </span>
               <input
                 value={filters.query}
                 onChange={(e) => update("query", e.target.value)}
@@ -561,7 +637,8 @@ export default function Directory({
               <label className="location-field">
                 <MapPin size={19} />
                 <span className="sr-only">
-                  Northeast city, state, ZIP or address
+                  {" "}
+                  <T>US city, state, ZIP or address</T>{" "}
                 </span>
                 <input
                   value={location}
@@ -572,21 +649,25 @@ export default function Directory({
               <button
                 type="button"
                 className="icon-button locate-button"
-                aria-label="Use my current location"
+                aria-label={t("Use my current location")}
                 disabled={locating}
                 onClick={locate}
               >
                 <Navigation size={17} />
               </button>
               <label className="radius-field">
-                <span className="sr-only">Search radius</span>
+                <span className="sr-only">
+                  {""}
+                  <T>Search radius</T>
+                  {""}
+                </span>
                 <select
                   value={filters.radius}
                   onChange={(e) => update("radius", Number(e.target.value))}
                 >
                   {[5, 10, 25, 50, 100, 200].map((n) => (
                     <option key={n} value={n}>
-                      {n} miles
+                      {n} <T>miles</T>{" "}
                     </option>
                   ))}
                 </select>
@@ -604,14 +685,14 @@ export default function Directory({
           </div>
           {message || resourceError ? (
             <p className="form-error" role="status">
-              {message || resourceError}
+              {t(message || resourceError)}
             </p>
           ) : null}
           {locationLabel || filters.bounds ? (
             <div className="location-status">
               <MapPin size={13} />
               {filters.bounds
-                ? "Searching the visible map area"
+                ? t("Searching the visible map area")
                 : locationLabel}
               <button
                 aria-label="Clear location restriction"
@@ -626,7 +707,7 @@ export default function Directory({
             </div>
           ) : null}
         </section>
-        <section className="filter-section" aria-label="Filter resources">
+        <section className="filter-section" aria-label={t("Filter resources")}>
           <div className="category-tabs">
             {categories.map((c, i) => {
               const Icon = [Compass, Users, Heart, Brain, HandHeart, Building2][
@@ -644,6 +725,8 @@ export default function Directory({
                       radius: f.radius,
                       bounds: f.bounds,
                       savedOnly: f.savedOnly,
+                      state: f.state,
+                      timeZone: f.timeZone,
                       category: c.id,
                     }));
                     setLimit(20);
@@ -659,21 +742,41 @@ export default function Directory({
             <label className="filter-select">
               <Video size={14} />
               <select
-                aria-label="Attendance format"
+                aria-label={t("Attendance format")}
                 value={filters.format}
                 onChange={(e) => update("format", e.target.value)}
               >
-                <option value="">Any format</option>
-                <option value="in-person">In person</option>
-                <option value="online">Online meetings</option>
-                <option value="hybrid">Hybrid meetings</option>
-                <option value="telehealth">Telehealth care</option>
+                <option value="">
+                  {""}
+                  <T>Any format</T>
+                  {""}
+                </option>
+                <option value="in-person">
+                  {""}
+                  <T>In person</T>
+                  {""}
+                </option>
+                <option value="online">
+                  {""}
+                  <T>Online meetings</T>
+                  {""}
+                </option>
+                <option value="hybrid">
+                  {""}
+                  <T>Hybrid meetings</T>
+                  {""}
+                </option>
+                <option value="telehealth">
+                  {""}
+                  <T>Telehealth care</T>
+                  {""}
+                </option>
               </select>
               <ChevronDown size={12} />
             </label>
             <label className="filter-select">
               <select
-                aria-label="Result priority"
+                aria-label={t("Result priority")}
                 value={
                   filters.prioritizeRecovery === false ? "all" : "recovery"
                 }
@@ -681,19 +784,31 @@ export default function Directory({
                   update("prioritizeRecovery", e.target.value === "recovery")
                 }
               >
-                <option value="recovery">Recovery programs first</option>
-                <option value="all">All listings equally</option>
+                <option value="recovery">
+                  {""}
+                  <T>Recovery programs first</T>
+                  {""}
+                </option>
+                <option value="all">
+                  {""}
+                  <T>All listings equally</T>
+                  {""}
+                </option>
               </select>
               <ChevronDown size={12} />
             </label>
             <label className="filter-select">
               <ShieldCheck size={14} />
               <select
-                aria-label="Insurance or payment"
+                aria-label={t("Insurance or payment")}
                 value={filters.payment}
                 onChange={(e) => update("payment", e.target.value)}
               >
-                <option value="">Insurance & payment</option>
+                <option value="">
+                  {""}
+                  <T>Insurance & payment</T>
+                  {""}
+                </option>
                 {(
                   facets.payment ?? [
                     ...new Set(
@@ -725,21 +840,34 @@ export default function Directory({
             filters.center ||
             filters.bounds ? (
               <button className="reset-button" onClick={reset}>
-                <RotateCcw size={13} />
-                Reset
+                <RotateCcw size={13} /> <T>Reset</T>{" "}
               </button>
             ) : null}
           </div>
           {more ? (
             <div className="expanded-filters">
               <label>
-                State
+                {" "}
+                <T>State</T>{" "}
                 <select
                   aria-label="State"
                   value={filters.state ?? ""}
-                  onChange={(e) => update("state", e.target.value)}
+                  onChange={(e) => {
+                    setFilters((f) => ({
+                      ...f,
+                      state: e.target.value,
+                      center: null,
+                      bounds: null,
+                    }));
+                    setLocation("");
+                    setLocationLabel("");
+                  }}
                 >
-                  <option value="">All Northeast states</option>
+                  <option value="">
+                    {""}
+                    <T>All states & territories</T>
+                    {""}
+                  </option>
                   {regionStates.map((s) => (
                     <option key={s} value={s}>
                       {stateNames[s]}
@@ -748,12 +876,17 @@ export default function Directory({
                 </select>
               </label>
               <label>
-                Recovery approach
+                {" "}
+                <T>Recovery approach</T>{" "}
                 <select
                   value={filters.fellowship}
                   onChange={(e) => update("fellowship", e.target.value)}
                 >
-                  <option value="">Any approach</option>
+                  <option value="">
+                    {""}
+                    <T>Any approach</T>
+                    {""}
+                  </option>
                   {[
                     "AA",
                     "NA",
@@ -766,36 +899,51 @@ export default function Directory({
                 </select>
               </label>
               <label>
-                Service
+                {" "}
+                <T>Service</T>{" "}
                 <select
                   value={filters.service}
                   onChange={(e) => update("service", e.target.value)}
                 >
-                  <option value="">Any service</option>
+                  <option value="">
+                    {""}
+                    <T>Any service</T>
+                    {""}
+                  </option>
                   {options("services").map((s) => (
                     <option key={s}>{s}</option>
                   ))}
                 </select>
               </label>
               <label>
-                Language
+                {" "}
+                <T>Language</T>{" "}
                 <select
                   value={filters.language}
                   onChange={(e) => update("language", e.target.value)}
                 >
-                  <option value="">Any / not reported</option>
+                  <option value="">
+                    {""}
+                    <T>Any / not reported</T>
+                    {""}
+                  </option>
                   {options("languages").map((s) => (
                     <option key={s}>{s}</option>
                   ))}
                 </select>
               </label>
               <label>
-                Meeting day
+                {" "}
+                <T>Meeting day</T>{" "}
                 <select
                   value={filters.day}
                   onChange={(e) => update("day", e.target.value)}
                 >
-                  <option value="">Any day</option>
+                  <option value="">
+                    {""}
+                    <T>Any day</T>
+                    {""}
+                  </option>
                   {[
                     "Sunday",
                     "Monday",
@@ -806,15 +954,20 @@ export default function Directory({
                     "Saturday",
                   ].map((d, i) => (
                     <option key={d} value={i}>
-                      {d}
+                      {t(d)}
                     </option>
                   ))}
                 </select>
               </label>
               <fieldset className="meeting-time-filters stack">
-                <legend>Meeting date &amp; time</legend>
+                <legend>
+                  {""}
+                  <T>Meeting date &amp; time</T>
+                  {""}
+                </legend>
                 <label>
-                  When
+                  {" "}
+                  <T>When</T>{" "}
                   <select
                     aria-label="Meeting date window"
                     value={filters.meetingWindow ?? ""}
@@ -825,18 +978,47 @@ export default function Directory({
                       )
                     }
                   >
-                    <option value="">Any upcoming date</option>
-                    <option value="today">Today</option>
-                    <option value="tomorrow">Tomorrow</option>
-                    <option value="24h">Next 24 hours</option>
-                    <option value="weekend">This weekend</option>
-                    <option value="7days">Next 7 days</option>
-                    <option value="date">Choose a date</option>
+                    <option value="">
+                      {""}
+                      <T>Any upcoming date</T>
+                      {""}
+                    </option>
+                    <option value="today">
+                      {""}
+                      <T>Today</T>
+                      {""}
+                    </option>
+                    <option value="tomorrow">
+                      {""}
+                      <T>Tomorrow</T>
+                      {""}
+                    </option>
+                    <option value="24h">
+                      {""}
+                      <T>Next 24 hours</T>
+                      {""}
+                    </option>
+                    <option value="weekend">
+                      {""}
+                      <T>This weekend</T>
+                      {""}
+                    </option>
+                    <option value="7days">
+                      {""}
+                      <T>Next 7 days</T>
+                      {""}
+                    </option>
+                    <option value="date">
+                      {""}
+                      <T>Choose a date</T>
+                      {""}
+                    </option>
                   </select>
                 </label>
                 {filters.meetingWindow === "date" ? (
                   <label>
-                    Meeting date
+                    {" "}
+                    <T>Meeting date</T>{" "}
                     <input
                       type="date"
                       value={filters.meetingDate ?? ""}
@@ -845,7 +1027,8 @@ export default function Directory({
                   </label>
                 ) : null}
                 <label>
-                  Time of day
+                  {" "}
+                  <T>Time of day</T>{" "}
                   <select
                     aria-label="Time of day preset"
                     value={
@@ -892,17 +1075,42 @@ export default function Directory({
                         }));
                     }}
                   >
-                    <option value="any">Any start time</option>
-                    <option value="morning">Morning (5am–noon)</option>
-                    <option value="afternoon">Afternoon (noon–5pm)</option>
-                    <option value="evening">Evening (5pm–10pm)</option>
-                    <option value="overnight">Overnight (10pm–5am)</option>
-                    <option value="custom">Custom hours</option>
+                    <option value="any">
+                      {""}
+                      <T>Any start time</T>
+                      {""}
+                    </option>
+                    <option value="morning">
+                      {""}
+                      <T>Morning (5am–noon)</T>
+                      {""}
+                    </option>
+                    <option value="afternoon">
+                      {""}
+                      <T>Afternoon (noon–5pm)</T>
+                      {""}
+                    </option>
+                    <option value="evening">
+                      {""}
+                      <T>Evening (5pm–10pm)</T>
+                      {""}
+                    </option>
+                    <option value="overnight">
+                      {""}
+                      <T>Overnight (10pm–5am)</T>
+                      {""}
+                    </option>
+                    <option value="custom">
+                      {""}
+                      <T>Custom hours</T>
+                      {""}
+                    </option>
                   </select>
                 </label>
                 <div className="time-range">
                   <label>
-                    Starts at or after
+                    {" "}
+                    <T>Starts at or after</T>{" "}
                     <input
                       type="time"
                       value={filters.startAfter ?? ""}
@@ -910,7 +1118,8 @@ export default function Directory({
                     />
                   </label>
                   <label>
-                    Starts before
+                    {" "}
+                    <T>Starts before</T>{" "}
                     <input
                       type="time"
                       value={filters.startBefore ?? ""}
@@ -919,37 +1128,44 @@ export default function Directory({
                   </label>
                 </div>
                 <label>
-                  Filter time zone
+                  {" "}
+                  <T>Filter time zone</T>{" "}
                   <select
                     aria-label="Filter time zone"
                     value={filters.timeZone ?? "America/New_York"}
                     onChange={(e) => update("timeZone", e.target.value)}
                   >
-                    {[...new Set([viewerZone, "America/New_York", "UTC"])].map(
-                      (zone) => (
-                        <option value={zone} key={zone}>
-                          {zone === viewerZone ? "Your local time: " : ""}
-                          {zone}
-                        </option>
-                      ),
-                    )}
+                    {[...new Set([viewerZone, ...usTimeZones])].map((zone) => (
+                      <option value={zone} key={zone}>
+                        {zone === viewerZone ? t("Your local time: ") : ""}
+                        {zone}
+                      </option>
+                    ))}
                   </select>
                 </label>
                 <p className="small muted">
-                  Date and clock filters use the selected zone. The meeting-day
-                  filter uses the group’s source time zone. Overnight ranges can
-                  cross midnight. These filters use scheduled start times;
-                  cancellations shown in our data are excluded. They do not show
-                  provider opening hours.
+                  {" "}
+                  <T>
+                    Date and clock filters use the selected zone. The
+                    meeting-day filter uses the group’s source time zone.
+                    Overnight ranges can cross midnight. These filters use
+                    scheduled start times; cancellations shown in our data are
+                    excluded. They do not show provider opening hours.
+                  </T>{" "}
                 </p>
               </fieldset>
               <label>
-                Participants
+                {" "}
+                <T>Participants</T>{" "}
                 <select
                   value={filters.population}
                   onChange={(e) => update("population", e.target.value)}
                 >
-                  <option value="">Any / not reported</option>
+                  <option value="">
+                    {""}
+                    <T>Any / not reported</T>
+                    {""}
+                  </option>
                   {options("populations").map((s) => (
                     <option key={s}>{s}</option>
                   ))}
@@ -960,21 +1176,36 @@ export default function Directory({
                   type="checkbox"
                   checked={filters.accessibility}
                   onChange={(e) => update("accessibility", e.target.checked)}
-                />
-                Reported wheelchair access
+                />{" "}
+                <T>Reported wheelchair access</T>{" "}
               </label>
               <label className="checkbox-label">
                 <input
                   type="checkbox"
                   checked={filters.soon}
                   onChange={(e) => update("soon", e.target.checked)}
-                />
-                Meetings starting in 3 hours
+                />{" "}
+                <T>Meetings starting in 3 hours</T>{" "}
               </label>
+              {(filters.payment ||
+                filters.language ||
+                filters.accessibility) && (
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={!!filters.uncertainOnly}
+                    onChange={(e) => update("uncertainOnly", e.target.checked)}
+                  />
+                  {t("Show only listings with unreported matching details")}
+                </label>
+              )}
               <p className="filter-footnote">
-                Filters match reported information. Missing information means
-                “not reported.” Some approaches currently have
-                official-directory links only.
+                {" "}
+                <T>
+                  Filters match reported information. Missing information means
+                  “not reported.” Some approaches currently have
+                  official-directory links only.
+                </T>{" "}
               </p>
             </div>
           ) : null}
@@ -987,27 +1218,31 @@ export default function Directory({
           >
             <div className="results-heading">
               <div>
-                <span className="eyebrow small">A PLACE TO BEGIN</span>
+                <span className="eyebrow small">
+                  {""}
+                  <T>A PLACE TO BEGIN</T>
+                  {""}
+                </span>
                 <h2 id="results-title" tabIndex={-1}>
                   {filters.savedOnly
-                    ? "Your saved resources"
+                    ? t("Your saved resources")
                     : filters.category === "meetings"
-                      ? "Find your people"
-                      : "Explore your options"}
+                      ? t("Find your people")
+                      : t("Explore your options")}
                   <span>{resultCount.toLocaleString()}</span>
                 </h2>
               </div>
               <span className="sort-label">
                 {filters.prioritizeRecovery !== false
-                  ? "Programs first · "
+                  ? t("Programs first · ")
                   : ""}
                 {filters.category === "meetings" ||
                 filters.format === "online" ||
                 filters.soon
-                  ? "Next meeting first"
+                  ? t("Next meeting first")
                   : filters.center
-                    ? "Nearest first"
-                    : "A–Z"}
+                    ? t("Nearest first")
+                    : t("A–Z")}
               </span>
             </div>
             {filters.savedOnly ? (
@@ -1021,31 +1256,49 @@ export default function Directory({
               <Info size={15} />
               <p>
                 {searching
-                  ? "Searching regional sources…"
-                  : "Regional source coverage · published listings and provider registry records."}
+                  ? t("Searching national and regional sources.")
+                  : t(
+                      "National facility sources and regional meetings. Coverage varies by location.",
+                    )}
                 {online_or_unmapped > 0 ? (
                   <span>
                     {" "}
-                    {online_or_unmapped.toLocaleString()} online or without map
-                    coordinates; available in search results.
+                    {online_or_unmapped.toLocaleString()}{" "}
+                    <T>
+                      online or without map coordinates; available in search
+                      results.
+                    </T>{" "}
                   </span>
                 ) : null}
                 <button onClick={() => setPanel("coverage")}>
-                  About our coverage <ArrowUpRight size={12} />
+                  {" "}
+                  <T>About our coverage</T> <ArrowUpRight size={12} />
                 </button>
                 {mode === "snapshot" ? (
-                  <strong> Serving a dated backup snapshot.</strong>
+                  <strong>
+                    {" "}
+                    <T>Serving a dated backup snapshot.</T>
+                    {""}
+                  </strong>
                 ) : null}
               </p>
             </div>
+            {filters.uncertainOnly && (
+              <p className="notice" role="status">
+                {t(
+                  "Details need confirmation. These listings have unreported payment, language or accessibility information. They are separate from documented matches.",
+                )}
+              </p>
+            )}
             {searchError ? (
               <p className="notice" role="alert">
-                {searchError}.{" "}
+                {t(searchError)}.{" "}
                 {usingBackup
-                  ? "Showing only the loaded backup listings."
-                  : "Your current results have been kept."}{" "}
+                  ? t("Showing only the loaded backup listings.")
+                  : t("Your current results have been kept.")}{" "}
                 <button className="secondary" onClick={retry}>
-                  Retry search
+                  {" "}
+                  <T>Retry search</T>{" "}
                 </button>
               </p>
             ) : null}
@@ -1068,21 +1321,38 @@ export default function Directory({
             ) : (
               <div className="empty-state">
                 <Compass size={35} strokeWidth={1} />
-                <h3>There are more paths to explore.</h3>
+                <h3>
+                  {""}
+                  <T>There are more paths to explore.</T>
+                  {""}
+                </h3>
                 <p>
                   {filters.savedOnly
-                    ? "Save a resource using its bookmark button. Sign in to keep a private list across devices."
-                    : "No published listings match these filters. Try a wider radius, fewer filters, or an official directory below."}
+                    ? t(
+                        "Save a resource using its bookmark button. Sign in to keep a private list across devices.",
+                      )
+                    : t(
+                        "No published listings match these filters. Try a wider radius, fewer filters, or an official directory below.",
+                      )}
                 </p>
+                {!filters.savedOnly && !searching && !searchError && (
+                  <SearchAlternatives
+                    filters={filters}
+                    saved={saved}
+                    asOf={asOf}
+                    onApply={applyDiscovery}
+                  />
+                )}
                 <button className="secondary" onClick={reset}>
-                  Clear filters
+                  {" "}
+                  <T>Clear filters</T>{" "}
                 </button>
               </div>
             )}
             {resultCount > limit ? (
               <nav
                 className="result-pagination"
-                aria-label="Resource result pages"
+                aria-label={t("Resource result pages")}
               >
                 <button
                   className="secondary"
@@ -1095,8 +1365,8 @@ export default function Directory({
                   {t("Previous resources")}
                 </button>
                 <span role="status">
-                  {offset + 1}–{Math.min(offset + limit, resultCount)} of{" "}
-                  {resultCount.toLocaleString()}
+                  {offset + 1}–{Math.min(offset + limit, resultCount)} <T>of</T>
+                  {""} {resultCount.toLocaleString()}
                 </span>
                 <button
                   className="secondary"
@@ -1112,10 +1382,19 @@ export default function Directory({
             ) : null}
             <div className="directory-fallback">
               <div className="section-inline">
-                <h3>Keep exploring</h3>
+                <h3>
+                  {""}
+                  <T>Keep exploring</T>
+                  {""}
+                </h3>
                 <ArrowUpRight size={18} />
               </div>
-              <p>More options from the organizations that maintain them.</p>
+              <p>
+                {""}
+                <T>More options from the organizations that maintain them.</T>
+                {""}
+              </p>
+              <JurisdictionHelp state={filters.state} compact />
               <div className="directory-link-grid">
                 {directoryLinks
                   .filter((x) =>
@@ -1132,7 +1411,7 @@ export default function Directory({
                     >
                       <span>
                         <strong>{d.name}</strong>
-                        <small>{d.detail}</small>
+                        <small>{t(d.detail)}</small>
                       </span>
                       <ArrowUpRight size={15} />
                     </a>
@@ -1142,11 +1421,19 @@ export default function Directory({
             <div className="suggest-box" id="feedback">
               <HandHeart size={26} strokeWidth={1.3} />
               <div>
-                <strong>Good information helps people find help.</strong>
-                <p>Know a resource we should include?</p>
+                <strong>
+                  {""}
+                  <T>Good information helps people find help.</T>
+                  {""}
+                </strong>
+                <p>
+                  {""}
+                  <T>Know a resource we should include?</T>
+                  {""}
+                </p>
               </div>
               <button
-                aria-label="Suggest a resource"
+                aria-label={t("Suggest a resource")}
                 onClick={() => setPanel("suggest")}
               >
                 <Plus size={20} />
@@ -1157,7 +1444,7 @@ export default function Directory({
             className={`map-panel ${mobileView === "list" ? "mobile-hidden" : ""}`}
             id="resource-map"
             tabIndex={-1}
-            aria-label="Resource map"
+            aria-label={t("Resource map")}
           >
             <RecoveryMap
               resources={results}
@@ -1179,11 +1466,16 @@ export default function Directory({
           </div>
         </section>
       </main>
+      <ComparisonTray filters={filters} now={now} />
       <footer className="site-footer">
         <span className="footer-brand">
-          <Compass size={18} /> recovery atlas
+          <Compass size={18} /> <T>recovery atlas</T>{" "}
         </span>
-        <p>Independent. Free to explore. Built with care.</p>
+        <p>
+          {""}
+          <T>Independent. Free to explore. Built with care.</T>
+          {""}
+        </p>
         <div>
           <button
             onClick={async () => {
@@ -1195,14 +1487,20 @@ export default function Directory({
               }
             }}
           >
-            {copied ? "Public link copied" : "Copy public link"}
+            {copied ? t("Public link copied") : t("Copy public link")}
           </button>
-          <button onClick={() => setPanel("privacy")}>Privacy</button>
+          <button onClick={() => setPanel("privacy")}>
+            {""}
+            <T>Privacy</T>
+            {""}
+          </button>
           <button onClick={() => setPanel("coverage")}>
-            Sources & coverage
+            {" "}
+            <T>Sources & coverage</T>{" "}
           </button>
           <button onClick={() => setPanel("suggest")}>
-            Suggest a resource
+            {" "}
+            <T>Suggest a resource</T>{" "}
           </button>
         </div>
       </footer>
@@ -1211,15 +1509,13 @@ export default function Directory({
           className={mobileView === "list" ? "active" : ""}
           onClick={() => setMobileView("list")}
         >
-          <List size={16} />
-          List
+          <List size={16} /> <T>List</T>{" "}
         </button>
         <button
           className={mobileView === "map" ? "active" : ""}
           onClick={() => setMobileView("map")}
         >
-          <MapIcon size={16} />
-          Map
+          <MapIcon size={16} /> <T>Map</T>{" "}
         </button>
       </div>
       {selected ? (
@@ -1246,105 +1542,36 @@ export default function Directory({
         onClose={() => setPanel("")}
         title={
           panel === "help"
-            ? "A real person. A next step."
+            ? t("A real person. A next step.")
             : panel === "guide"
-              ? "There’s more than one path."
+              ? t("There’s more than one path.")
               : panel === "privacy"
-                ? "Your search is personal."
+                ? t("Your search is personal.")
                 : panel === "suggest"
-                  ? "Help someone find their next step."
+                  ? t("Help someone find their next step.")
                   : panel === "coverage"
-                    ? "Useful information, honestly labeled."
-                    : "Recovery looks different for everyone."
+                    ? t("Useful information, honestly labeled.")
+                    : t("Recovery looks different for everyone.")
         }
       >
-        {panel === "help" ? (
-          <div className="stack">
-            <a
-              className="help-card"
-              href="https://findtreatment.gov/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <MapPin />
-              <span>
-                <strong>Find treatment in any covered state</strong>
-                <small>
-                  SAMHSA’s public treatment finder · No directory account
-                  required
-                </small>
-              </span>
-              <ArrowUpRight size={17} />
-            </a>
-            <p>
-              If there is an immediate medical emergency or suspected overdose,
-              call <a href="tel:911">911</a>.
-            </p>
-            <a className="help-card" href="tel:8003275050">
-              <Heart />
-              <span>
-                <strong>Massachusetts Substance Use Helpline</strong>
-                <small>800-327-5050 · Free and confidential · 24/7</small>
-              </span>
-              <Phone size={17} />
-            </a>
-            <a className="help-card" href="tel:8337732445">
-              <Brain />
-              <span>
-                <strong>Massachusetts Behavioral Health Help Line</strong>
-                <small>833-773-2445 · Call or text · 24/7</small>
-              </span>
-              <Phone size={17} />
-            </a>
-            <a
-              className="help-card"
-              href="tel:988?oai_link_source=model_response_hotline"
-            >
-              <HandHeart />
-              <span>
-                <strong>988 Suicide & Crisis Lifeline</strong>
-                <small>Call 988 for crisis counseling and referrals</small>
-              </span>
-              <Phone size={17} />
-            </a>
-            <a
-              className="text-link"
-              href="https://988lifeline.org/chat/?oai_link_source=model_response_hotline"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Chat with 988 <ArrowUpRight size={14} />
-            </a>
-            <p className="muted">
-              Official sources:{" "}
-              <a
-                href="https://helplinema.org/contact-us/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                MA Substance Use Helpline
-              </a>{" "}
-              ·{" "}
-              <a
-                href="https://www.mass.gov/community-behavioral-health-centers"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Mass.gov
-              </a>
-            </p>
-          </div>
-        ) : null}
+        {panel === "help" ? <JurisdictionHelp state={filters.state} /> : null}
         {panel === "guide" ? (
           <div className="stack">
             <div className="guide-step">
               <Users />
               <div>
-                <h3>Find connection</h3>
+                <h3>
+                  {""}
+                  <T>Find connection</T>
+                  {""}
+                </h3>
                 <p>
-                  AA, SMART Recovery, Recovery Dharma and other peer groups
-                  offer different approaches. Read participation details and try
-                  the official directories for more meeting choices.
+                  {" "}
+                  <T>
+                    AA, SMART Recovery, Recovery Dharma and other peer groups
+                    offer different approaches. Read participation details and
+                    try the official directories for more meeting choices.
+                  </T>{" "}
                 </p>
                 <button
                   className="text-link"
@@ -1353,19 +1580,27 @@ export default function Directory({
                     setPanel("");
                   }}
                 >
-                  Explore meetings <ArrowRight size={14} />
+                  {" "}
+                  <T>Explore meetings</T> <ArrowRight size={14} />
                 </button>
               </div>
             </div>
             <div className="guide-step">
               <Heart />
               <div>
-                <h3>Explore treatment</h3>
+                <h3>
+                  {""}
+                  <T>Explore treatment</T>
+                  {""}
+                </h3>
                 <p>
-                  Detox, residential and outpatient services offer different
-                  levels of support. A provider or an official state treatment
-                  helpline can help you understand the options and arrange an
-                  assessment.
+                  {" "}
+                  <T>
+                    Detox, residential and outpatient services offer different
+                    levels of support. A provider or an official state treatment
+                    helpline can help you understand the options and arrange an
+                    assessment.
+                  </T>{" "}
                 </p>
                 <button
                   className="text-link"
@@ -1374,18 +1609,26 @@ export default function Directory({
                     setPanel("");
                   }}
                 >
-                  Explore treatment <ArrowRight size={14} />
+                  {" "}
+                  <T>Explore treatment</T> <ArrowRight size={14} />
                 </button>
               </div>
             </div>
             <div className="guide-step">
               <Brain />
               <div>
-                <h3>Support your mental health</h3>
+                <h3>
+                  {""}
+                  <T>Support your mental health</T>
+                  {""}
+                </h3>
                 <p>
-                  Community Behavioral Health Centers offer mental health and
-                  substance use care. Check service areas, intake requirements
-                  and payment details with the center.
+                  {" "}
+                  <T>
+                    Community Behavioral Health Centers offer mental health and
+                    substance use care. Check service areas, intake requirements
+                    and payment details with the center.
+                  </T>{" "}
                 </p>
                 <button
                   className="text-link"
@@ -1394,99 +1637,141 @@ export default function Directory({
                     setPanel("");
                   }}
                 >
-                  Explore mental health care <ArrowRight size={14} />
+                  {" "}
+                  <T>Explore mental health care</T> <ArrowRight size={14} />
                 </button>
               </div>
             </div>
             <p className="notice">
-              This directory helps you find resources. A qualified professional
-              can assess your needs and recommend care.
+              {" "}
+              <T>
+                This directory helps you find resources. A qualified
+                professional can assess your needs and recommend care.
+              </T>{" "}
             </p>
           </div>
         ) : null}
         {panel === "about" ? (
           <div className="stack">
             <p>
-              Recovery Atlas brings recovery meetings, treatment and mental
-              health resources into one approachable place across Connecticut,
-              Massachusetts, Maine, New Hampshire, New Jersey, New York,
-              Pennsylvania, Rhode Island and Vermont.
+              {" "}
+              <T>
+                Recovery Atlas brings recovery meetings, treatment and mental
+                health resources into one approachable place across all 50 US
+                states, DC and US territories. Imported facility data and
+                meeting coverage vary by jurisdiction.
+              </T>{" "}
             </p>
             <p>
-              We believe people deserve clear information, room to choose their
-              own approach, and a way to connect with real support.
+              {" "}
+              <T>
+                We believe people deserve clear information, room to choose
+                their own approach, and a way to connect with real support.
+              </T>{" "}
             </p>
             <p>
-              Search results are ordered by relevance to your filters, distance
-              or meeting time. There are no paid placements or referral fees.
+              {" "}
+              <T>
+                Search results are ordered by relevance to your filters,
+                distance or meeting time. There are no paid placements or
+                referral fees.
+              </T>{" "}
             </p>
             <p className="notice">
-              This is an independent directory. Listings do not imply
-              affiliation, endorsement, verified clinical quality or guaranteed
-              availability.
+              {" "}
+              <T>
+                This is an independent directory. Listings do not imply
+                affiliation, endorsement, verified clinical quality or
+                guaranteed availability.
+              </T>{" "}
             </p>
           </div>
         ) : null}
         {panel === "privacy" ? (
           <div className="stack">
             <p>
-              Community profiles are hidden by default. Adults can choose to
-              make their handle, display name, bio, broad region and languages
-              visible to signed-in adult members. A conversation starts with a
-              request that the other person must accept. You can block or report
-              received messages.
+              {" "}
+              <T>
+                Community profiles are hidden by default. Adults can choose to
+                make their handle, display name, bio, broad region and languages
+                visible to signed-in adult members. A conversation starts with a
+                request that the other person must accept. You can block or
+                report received messages.
+              </T>{" "}
             </p>
             <p>
-              Messages are encrypted in storage and transit, but are not
-              end-to-end encrypted. The moderation inbox shows only messages
-              specifically reported by a participant. Messages are removed after
-              180 days, pending requests after 30 days and report evidence after
-              90 days. Deleting an account removes its conversations for both
-              participants; report evidence can remain for the moderation
-              period.
+              {" "}
+              <T>
+                Messages are encrypted in storage and transit, but are not
+                end-to-end encrypted. The moderation inbox shows only messages
+                specifically reported by a participant. Messages are removed
+                after 180 days, pending requests after 30 days and report
+                evidence after 90 days. Deleting an account removes its
+                conversations for both participants; report evidence can remain
+                for the moderation period.
+              </T>{" "}
             </p>
             <p>
-              Calendar buttons share meeting details with the calendar service
-              you choose. Downloads are snapshots and do not receive automatic
-              schedule changes. Optional offline copies remain readable on this
-              device after sign-out; remove them from the Offline resources
-              page. Profiles and messages are never cached for offline use.
+              {" "}
+              <T>
+                Calendar buttons share meeting details with the calendar service
+                you choose. Downloads are snapshots and do not receive automatic
+                schedule changes. Optional offline copies remain readable on
+                this device after sign-out; remove them from the Offline
+                resources page. Profiles and messages are never cached for
+                offline use.
+              </T>{" "}
             </p>
             <p>
-              No account is needed to browse. Signed-out saves stay in this
-              browser. If you create an account, its saved resource IDs are
-              stored privately in our database and can be accessed after signing
-              in on another device. Browser-only saves are copied into an
-              account only when you choose to import them. We do not install
-              advertising trackers or session replay.
+              {" "}
+              <T>
+                No account is needed to browse. Signed-out saves stay in this
+                browser. If you create an account, its saved resource IDs are
+                stored privately in our database and can be accessed after
+                signing in on another device. Browser-only saves are copied into
+                an account only when you choose to import them. We do not
+                install advertising trackers or session replay.
+              </T>{" "}
             </p>
             <p>
-              Search terms, selected filters and location coordinates are sent
-              to this app to find matching resources. Street-address lookup
-              passes the address to the U.S. Census geocoder. Saved resource IDs
-              are sent when searching your favorites. We do not store a search
-              history in the directory database.
+              {" "}
+              <T>
+                Search terms, selected filters and location coordinates are sent
+                to this app to find matching resources. Street-address lookup
+                passes the address to the U.S. Census geocoder. Saved resource
+                IDs are sent when searching your favorites. We do not store a
+                search history in the directory database.
+              </T>{" "}
             </p>
             <p>
-              The map provider receives your IP address and requests for the map
-              areas you view. Hosting providers process technical access
-              information under their own policies. We do not promise that
-              infrastructure logs contain no metadata.
+              {" "}
+              <T>
+                The map provider receives your IP address and requests for the
+                map areas you view. Hosting providers process technical access
+                information under their own policies. We do not promise that
+                infrastructure logs contain no metadata.
+              </T>{" "}
             </p>
             <p>
-              Correction submissions are stored in our review inbox. Don’t
-              include medical or insurance identification information. Rate
-              limits use a keyed hash of your IP address with an expiration, not
-              your raw IP address.
+              {" "}
+              <T>
+                Correction submissions are stored in our review inbox. Don’t
+                include medical or insurance identification information. Rate
+                limits use a keyed hash of your IP address with an expiration,
+                not your raw IP address.
+              </T>{" "}
             </p>
             <p>
-              Accounts use a private username, a hashed password and optional
-              passkeys. We do not request your real name or email. A recovery
-              code can restore access if you forget your password. Account
-              sessions use secure cookies; rate-limit records use keyed hashes
-              and expire. You can download your saved list, sign out, or delete
-              your account and its saved list in the account panel. Keep
-              downloaded files private.
+              {" "}
+              <T>
+                Accounts use a private username, a hashed password and optional
+                passkeys. We do not request your real name or email. A recovery
+                code can restore access if you forget your password. Account
+                sessions use secure cookies; rate-limit records use keyed hashes
+                and expire. You can download your saved list, sign out, or
+                delete your account and its saved list in the account panel.
+                Keep downloaded files private.
+              </T>{" "}
             </p>
             <button
               className="secondary"
@@ -1498,7 +1783,8 @@ export default function Directory({
                 setPanel("");
               }}
             >
-              Clear browser-only saves
+              {" "}
+              <T>Clear browser-only saves</T>{" "}
             </button>
           </div>
         ) : null}
@@ -1506,25 +1792,59 @@ export default function Directory({
           <div className="stack">
             <p>
               <strong>
-                {coverage.total.toLocaleString()} published listings ·{" "}
-                {coverage.mapped.toLocaleString()} mapped resources
+                {coverage.total.toLocaleString()} <T>published listings ·</T>
+                {""} {coverage.mapped.toLocaleString()}{" "}
+                <T>mapped resources</T>{" "}
               </strong>
               <br />
               {coverage.approaches
                 .map((a) => `${a.listings.toLocaleString()} ${a.name}`)
                 .join(" · ")}{" "}
-              meetings. See the source review dates and state coverage below.
+              <T>
+                meetings. See the source review dates and state coverage below.
+              </T>{" "}
+            </p>
+            <p>
+              {t("National facility catalog")}:{" "}
+              {nationalManifest.total.toLocaleString()} · {t("Directory year")}:{" "}
+              {nationalManifest.directoryYear} · {t("Survey year")}:{" "}
+              {nationalManifest.surveyYear}.{" "}
+              {t(
+                "Annual directory facts do not establish current availability.",
+              )}
+            </p>
+            <p>
+              {t(
+                "American Samoa and the Minor Outlying Islands have no facility records in this import. Official help links remain available. Meeting imports are regional; use the national meeting directories for other areas.",
+              )}
             </p>
             <table className="coverage-table">
               <caption>
-                Listings by state · source review {coverage.reviewedAt}
+                {" "}
+                <T>Listings by state · source review</T> {coverage.reviewedAt}
               </caption>
               <thead>
                 <tr>
-                  <th scope="col">State</th>
-                  <th scope="col">Listings</th>
-                  <th scope="col">Mapped</th>
-                  <th scope="col">Meetings</th>
+                  <th scope="col">
+                    {""}
+                    <T>State</T>
+                    {""}
+                  </th>
+                  <th scope="col">
+                    {""}
+                    <T>Listings</T>
+                    {""}
+                  </th>
+                  <th scope="col">
+                    {""}
+                    <T>Mapped</T>
+                    {""}
+                  </th>
+                  <th scope="col">
+                    {""}
+                    <T>Meetings</T>
+                    {""}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -1541,43 +1861,61 @@ export default function Directory({
               </tbody>
             </table>
             <p>
-              Northeast coverage includes public professional and facility
-              registries, SAMHSA’s 2025 facility directories, state treatment
-              listings and regional AA, NA, SMART, Dharma and Refuge meetings.
-              Coverage varies by state and fellowship. A state count does not
-              mean every local service or meeting is included.
+              {" "}
+              <T>
+                National and regional coverage includes public professional and
+                facility registries, SAMHSA’s 2025 facility directories, state
+                treatment listings and regional AA, NA, SMART, Dharma and Refuge
+                meetings. Coverage varies by state and fellowship. A state count
+                does not mean every local service or meeting is included.
+              </T>{" "}
             </p>
             <p>
-              Every listing links to its dated source. “Source reviewed” does
-              not mean we contacted the provider or group; direct verification
-              is shown separately.
+              {" "}
+              <T>
+                Every listing links to its dated source. “Source reviewed” does
+                not mean we contacted the provider or group; direct verification
+                is shown separately.
+              </T>{" "}
             </p>
             <p>
-              Some source meeting schedules have older update dates. Confirm
-              details with the group before traveling. The scheduled next
-              meeting is a calculation, not confirmation that it will occur.
+              {" "}
+              <T>
+                Some source meeting schedules have older update dates. Confirm
+                details with the group before traveling. The scheduled next
+                meeting is a calculation, not confirmation that it will occur.
+              </T>{" "}
             </p>
             <p>
-              NPPES records report a public practice address and specialty. An
-              active NPI does not verify a professional license, accepting new
-              patients or insurance participation. Missing payment details
-              remain unknown. Confirm with the provider and your insurer.
+              {" "}
+              <T>
+                NPPES records report a public practice address and specialty. An
+                active NPI does not verify a professional license, accepting new
+                patients or insurance participation. Missing payment details
+                remain unknown. Confirm with the provider and your insurer.
+              </T>{" "}
             </p>
             <p>
-              Every mapped resource is represented on the map, independently of
-              list pagination. Groups show the number of matching resources
-              inside them; zoom in to explore individuals. Shared locations
-              offer a choice of resources. Some pins use an approximate ZIP-area
-              location; check the address in the details. Published directories
-              can omit services or contain stale records; coverage is not a
-              guarantee that every Northeast resource is listed.
+              {" "}
+              <T>
+                Every mapped resource is represented on the map, independently
+                of list pagination. Groups show the number of matching resources
+                inside them; zoom in to explore individuals. Shared locations
+                offer a choice of resources. Some pins use an approximate
+                ZIP-area location; check the address in the details. Published
+                directories can omit services or contain stale records; coverage
+                is not a guarantee that every US resource is listed.
+              </T>{" "}
             </p>
             <p>
-              SAMHSA’s facility records reflect the 2025 directory and 2024
-              survey. Confirm current operations, payment and admission details.
-              State directories and individual sources can be newer. Additional
-              fellowships and some regional meeting directories still need
-              imports.
+              {" "}
+              <T>
+                SAMHSA’s facility records reflect the 2025 directory and 2024
+                survey. Confirm current operations, payment and admission
+                details. State directories and individual sources can be newer.
+                Additional fellowships and some regional meeting directories
+                still need imports.
+              </T>{" "}
             </p>
             <a
               className="text-link"
@@ -1585,12 +1923,17 @@ export default function Directory({
               target="_blank"
               rel="noopener noreferrer"
             >
-              View source counts and coverage report <ArrowUpRight size={14} />
+              {" "}
+              <T>View source counts and coverage report</T>{" "}
+              <ArrowUpRight size={14} />
             </a>
             <p className="notice">
-              Insurance acceptance, availability, admission and clinical
-              suitability must be confirmed. Online-only meetings never receive
-              a physical map pin.
+              {" "}
+              <T>
+                Insurance acceptance, availability, admission and clinical
+                suitability must be confirmed. Online-only meetings never
+                receive a physical map pin.
+              </T>{" "}
             </p>
             <div className="directory-link-grid">
               {directoryLinks.map((d) => (

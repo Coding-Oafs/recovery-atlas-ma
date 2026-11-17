@@ -51,6 +51,7 @@ export async function sameOrigin() {
     return false;
   }
 }
+const publicLimits = new Map<string,{count:number;expires:number}>();
 export async function rateLimit(scope: string, max: number, minutes = 60) {
   const h = await headers(),
     ip = h.get("x-forwarded-for")?.split(",")[0].trim() ?? "local";
@@ -60,6 +61,12 @@ export async function rateLimit(scope: string, max: number, minutes = 60) {
   )
     .update(`${scope}:${ip}`)
     .digest("hex");
+  if(!process.env.DATABASE_URL && ["search","map","location","saved-export","discovery","coverage"].includes(scope)) {
+    const now=Date.now(),current=publicLimits.get(key);
+    if(publicLimits.size>10000) for(const [k,v] of publicLimits) if(v.expires<now)publicLimits.delete(k);
+    if(!current || current.expires<now){if(publicLimits.size>=10000)return false;publicLimits.set(key,{count:1,expires:now+minutes*60000});return true;}
+    return ++current.count<=max;
+  }
   const rows =
     await db()`INSERT INTO rate_limits(key,count,expires_at) VALUES(${key},1,now()+${minutes}*interval '1 minute') ON CONFLICT(key) DO UPDATE SET count=CASE WHEN rate_limits.expires_at<now() THEN 1 ELSE rate_limits.count+1 END, expires_at=CASE WHEN rate_limits.expires_at<now() THEN now()+${minutes}*interval '1 minute' ELSE rate_limits.expires_at END RETURNING count`;
   return rows[0].count <= max;

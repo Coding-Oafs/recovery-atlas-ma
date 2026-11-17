@@ -14,6 +14,7 @@ export const boundsSchema = z
   );
 export const filtersSchema = z.object({
   prioritizeRecovery: z.boolean().default(true),
+  uncertainOnly: z.boolean().default(false),
   state: z.enum(["", ...regionStates]).default(""),
   query: z.string().max(200),
   category: z.enum([

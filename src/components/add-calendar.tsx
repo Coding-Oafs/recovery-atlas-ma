@@ -1,4 +1,5 @@
 "use client";
+import { T, useLanguage } from "./language-provider";
 import { useState } from "react";
 import type { Resource, Filters } from "@/lib/types";
 import { calendarLinks } from "@/lib/calendar-links";
@@ -9,6 +10,8 @@ export default function AddCalendar({
   resource: Resource;
   timeFilters?: Filters;
 }) {
+  const { t } = useLanguage();
+
   const [duration, setDuration] = useState(60),
     [reminder, setReminder] = useState(false),
     [message, setMessage] = useState("");
@@ -48,31 +51,44 @@ export default function AddCalendar({
   }
   return (
     <details className="add-calendar">
-      <summary>Add to your calendar</summary>
+      <summary>
+        {""}
+        <T>Add to your calendar</T>
+        {""}
+      </summary>
       <p>
-        Next scheduled meeting: {links.start.toLocaleString()} (
-        {Intl.DateTimeFormat().resolvedOptions().timeZone}). Confirm the meeting
-        with its source.
+        {" "}
+        <T>Next scheduled meeting:</T> {links.start.toLocaleString()} (
+        {Intl.DateTimeFormat().resolvedOptions().timeZone}
+        {""}
+        <T>). Confirm the meeting with its source.</T>{" "}
       </p>
       {r.meeting.duration === null ? (
         <label>
-          Duration is not reported. Choose the time to reserve in your calendar
+          {" "}
+          <T>
+            Duration is not reported. Choose the time to reserve in your
+            calendar
+          </T>{" "}
           <select
             value={duration}
             onChange={(e) => setDuration(Number(e.target.value))}
           >
             {[30, 45, 60, 90, 120].map((n) => (
               <option key={n} value={n}>
-                {n} minutes
+                {n} <T>minutes</T>{" "}
               </option>
             ))}
           </select>
         </label>
       ) : null}
       <p className="small muted">
-        These buttons open one event for you to review and save. Meeting details
-        are sent to the calendar service you choose. That service controls the
-        event’s privacy and reminders.
+        {" "}
+        <T>
+          These buttons open one event for you to review and save. Meeting
+          details are sent to the calendar service you choose. That service
+          controls the event’s privacy and reminders.
+        </T>{" "}
       </p>
       <div className="saved-tool-buttons">
         <a
@@ -81,7 +97,8 @@ export default function AddCalendar({
           target="_blank"
           rel="noopener noreferrer"
         >
-          Google Calendar
+          {" "}
+          <T>Google Calendar</T>{" "}
         </a>
         <a
           className="secondary"
@@ -89,7 +106,8 @@ export default function AddCalendar({
           target="_blank"
           rel="noopener noreferrer"
         >
-          Outlook.com
+          {" "}
+          <T>Outlook.com</T>{" "}
         </a>
         <a
           className="secondary"
@@ -97,7 +115,8 @@ export default function AddCalendar({
           target="_blank"
           rel="noopener noreferrer"
         >
-          Microsoft 365
+          {" "}
+          <T>Microsoft 365</T>{" "}
         </a>
         <a
           className="secondary"
@@ -105,7 +124,8 @@ export default function AddCalendar({
           target="_blank"
           rel="noopener noreferrer"
         >
-          Yahoo Calendar
+          {" "}
+          <T>Yahoo Calendar</T>{" "}
         </a>
       </div>
       <label className="check-row">
@@ -113,26 +133,34 @@ export default function AddCalendar({
           type="checkbox"
           checked={reminder}
           onChange={(e) => setReminder(e.target.checked)}
-        />
-        Include a 10-minute reminder in calendar downloads
+        />{" "}
+        <T>Include a 10-minute reminder in calendar downloads</T>{" "}
       </label>
       <p className="small muted">
-        Your calendar may display meeting names on a shared screen or lock
-        screen. The reminder text is “Saved event.”
+        {" "}
+        <T>
+          Your calendar may display meeting names on a shared screen or lock
+          screen. The reminder text is “Saved event.”
+        </T>{" "}
       </p>
       <div className="saved-tool-buttons">
         <button className="secondary" onClick={() => download(true)}>
-          Apple / Other calendars (.ics)
+          {" "}
+          <T>Apple / Other calendars (.ics)</T>{" "}
         </button>
         <button className="secondary" onClick={() => download(false)}>
-          Download recurring schedule (.ics)
+          {" "}
+          <T>Download recurring schedule (.ics)</T>{" "}
         </button>
       </div>
       <p className="small muted">
-        Recurring downloads include recorded cancellation dates. Downloads are a
-        snapshot; future changes require a new export.
+        {" "}
+        <T>
+          Recurring downloads include recorded cancellation dates. Downloads are
+          a snapshot; future changes require a new export.
+        </T>{" "}
       </p>
-      {message ? <p role="status">{message}</p> : null}
+      {message ? <p role="status">{t(message)}</p> : null}
     </details>
   );
 }

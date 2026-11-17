@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { z } from "zod";
 import { sameOrigin, rateLimit } from "@/lib/security";
 import { db } from "@/lib/db";
+import { bundledResources } from "@/lib/catalog";
 import { savedSchema, filtersSchema } from "@/lib/search-input";
 import { resourceSchema } from "@/lib/types";
 import {
@@ -49,7 +50,7 @@ export async function POST(request: NextRequest) {
         { status: 400, headers },
       );
     const rows =
-      await db()`SELECT data FROM resources WHERE id=ANY(${[...new Set(ids.data)]}::text[]) AND published ORDER BY resource_name,id`;
+      process.env.DATABASE_URL ? await db()`SELECT data FROM resources WHERE id=ANY(${[...new Set(ids.data)]}::text[]) AND published ORDER BY resource_name,id` : bundledResources().filter(r=>ids.data.includes(r.id)).map(data=>({data}));
     const resources = rows.map((r) => resourceSchema.parse(r.data));
     if (!resources.length)
       return NextResponse.json(

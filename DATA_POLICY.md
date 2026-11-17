@@ -74,3 +74,7 @@ Daily maintenance removes messages older than 180 days, pending/declined request
 Calendar details are sent only to the service a visitor chooses. Shared calendars and notifications can disclose meeting names. Offline copies require an explicit action and remain readable on the device after sign-out; they can be removed on the offline page. Community/private API responses are never cached for offline use.
 
 Organization access is verified manually using an independently obtained official contact. An approved claim permits proposals, not direct publication or a clinical-quality badge. Proposed updates are validated and compared with the previous record before approval; a concurrent edit creates a conflict rather than an overwrite. Exact-name/address duplicate groups are review suggestions, not automatic merges.
+
+## National source coverage
+
+The national release reuses the official SAMHSA 2025 facility directories and retains 2024 survey provenance, source hashes and explicit zero-data jurisdictions in `data/national-manifest.json`. It preserves existing IDs and edits. New annual-source records have no inferred direct-verification dates, named insurer networks, live admissions or confirmed entrances. SAMHSA's official Single State Agency directory supplies dated public agency names and HTTPS links for states and populated territories. Staff personal contacts are excluded. Source information remains distinct from directly confirmed facts. National meeting coverage is incomplete; official fellowship directories supplement regional imports.

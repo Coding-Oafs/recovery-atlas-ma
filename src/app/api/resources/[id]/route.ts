@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import seed from "../../../../../data/resources.json";
+import { bundledResources } from "@/lib/catalog";
 export async function GET(
   _: Request,
   { params }: { params: Promise<{ id: string }> },
@@ -10,7 +10,7 @@ export async function GET(
     return NextResponse.json({ error: "Invalid resource" }, { status: 400 });
   try {
     if (!process.env.DATABASE_URL) {
-      const resource = seed.find((r) => r.id === id);
+      const resource = bundledResources().find((r) => r.id === id);
       return resource
         ? NextResponse.json(resource)
         : NextResponse.json({ error: "Resource not found" }, { status: 404 });

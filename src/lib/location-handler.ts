@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import zipcodes from "zipcodes";
 import { rateLimit, sameOrigin } from "./security";
-import { isRegionState } from "./region";
+import { isRegionState, territoryPlaces } from "./region";
 import { parseLocationQuery } from "./location-search";
 export async function POST(request: NextRequest) {
   if (!(await sameOrigin()))
@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error:
-            "Enter a Northeast city and state, ZIP code or street address.",
+            "Enter a US city or territory and state, ZIP code or street address.",
         },
         { status: 400 },
       );
@@ -25,12 +25,12 @@ export async function POST(request: NextRequest) {
         { status: 429 },
       );
     if (/^\d{5}$/.test(query)) {
-      const z = zipcodes.lookup(query);
+      const z = zipcodes.lookup(query) ?? territoryPlaces.find((p) => p.zip === query);
       if (!z || !isRegionState(z.state))
         return NextResponse.json(
           {
             error:
-              "This directory covers CT, MA, ME, NH, NJ, NY, PA, RI and VT ZIP codes.",
+              "Enter a ZIP code in a US state or territory. If postal data is unavailable, use your location or select the territory.",
           },
           { status: 400 },
         );

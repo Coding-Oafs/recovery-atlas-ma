@@ -1,27 +1,79 @@
-export const regionStates = [
-  "MA",
-  "CT",
-  "ME",
-  "NH",
-  "NJ",
-  "NY",
-  "PA",
-  "RI",
-  "VT",
-] as const;
-export type RegionState = (typeof regionStates)[number];
-export const stateNames: Record<RegionState, string> = {
-  MA: "Massachusetts",
-  CT: "Connecticut",
-  ME: "Maine",
-  NH: "New Hampshire",
-  NJ: "New Jersey",
-  NY: "New York",
-  PA: "Pennsylvania",
-  RI: "Rhode Island",
-  VT: "Vermont",
+/** Supported jurisdictions; a selectable area does not imply complete listing coverage. */
+export const stateNames = {
+  "AL": "Alabama",
+  "AK": "Alaska",
+  "AZ": "Arizona",
+  "AR": "Arkansas",
+  "CA": "California",
+  "CO": "Colorado",
+  "CT": "Connecticut",
+  "DE": "Delaware",
+  "DC": "District of Columbia",
+  "FL": "Florida",
+  "GA": "Georgia",
+  "HI": "Hawaii",
+  "ID": "Idaho",
+  "IL": "Illinois",
+  "IN": "Indiana",
+  "IA": "Iowa",
+  "KS": "Kansas",
+  "KY": "Kentucky",
+  "LA": "Louisiana",
+  "ME": "Maine",
+  "MD": "Maryland",
+  "MA": "Massachusetts",
+  "MI": "Michigan",
+  "MN": "Minnesota",
+  "MS": "Mississippi",
+  "MO": "Missouri",
+  "MT": "Montana",
+  "NE": "Nebraska",
+  "NV": "Nevada",
+  "NH": "New Hampshire",
+  "NJ": "New Jersey",
+  "NM": "New Mexico",
+  "NY": "New York",
+  "NC": "North Carolina",
+  "ND": "North Dakota",
+  "OH": "Ohio",
+  "OK": "Oklahoma",
+  "OR": "Oregon",
+  "PA": "Pennsylvania",
+  "RI": "Rhode Island",
+  "SC": "South Carolina",
+  "SD": "South Dakota",
+  "TN": "Tennessee",
+  "TX": "Texas",
+  "UT": "Utah",
+  "VT": "Vermont",
+  "VA": "Virginia",
+  "WA": "Washington",
+  "WV": "West Virginia",
+  "WI": "Wisconsin",
+  "WY": "Wyoming",
+  "AS": "American Samoa",
+  "GU": "Guam",
+  "MP": "Northern Mariana Islands",
+  "PR": "Puerto Rico",
+  "VI": "U.S. Virgin Islands",
+  "UM": "U.S. Minor Outlying Islands"
+} as const;
+export type RegionState = keyof typeof stateNames;
+export const regionStates = Object.keys(stateNames) as RegionState[];
+export const territoryStates: RegionState[] = ["AS","GU","MP","PR","VI","UM"];
+export const regionBounds = [-125, 24, -66, 50] as const;
+export const jurisdictionBounds: Partial<Record<RegionState, readonly [number,number,number,number]>> = {
+ AK: [-180,50,-129,72], HI: [-161,18,-154,23],
+ AS: [-171.2,-14.6,-168,-10.8], GU: [144.5,13.1,145,13.8],
+ MP: [144.7,14,146.2,20.7], PR: [-67.4,17.8,-65.1,18.6],
+ VI: [-65.1,17.6,-64.5,18.5],
 };
-export const regionBounds = [-80.6, 38.8, -66.8, 47.6] as const;
-export function isRegionState(value: string): value is RegionState {
-  return (regionStates as readonly string[]).includes(value);
-}
+export const usTimeZones = ["America/New_York","America/Chicago","America/Denver","America/Phoenix","America/Los_Angeles","America/Anchorage","America/Adak","Pacific/Honolulu","America/Puerto_Rico","America/St_Thomas","Pacific/Guam","Pacific/Saipan","Pacific/Pago_Pago","UTC"];
+export const territoryPlaces = [
+ {state:"AS",city:"Pago Pago",zip:"96799",latitude:-14.2756,longitude:-170.702},
+ {state:"GU",city:"Hagatna",zip:"96910",latitude:13.4757,longitude:144.7489},
+ {state:"MP",city:"Saipan",zip:"96950",latitude:15.1901,longitude:145.7467},
+ {state:"PR",city:"San Juan",zip:"00901",latitude:18.4655,longitude:-66.1057},
+ {state:"VI",city:"Charlotte Amalie",zip:"00802",latitude:18.3419,longitude:-64.9307},
+] as const;
+export function isRegionState(value: string): value is RegionState { return Object.hasOwn(stateNames,value); }

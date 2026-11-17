@@ -1,0 +1,338 @@
+{
+  "AL": {
+    "name": "Alabama Department of Mental Health",
+    "url": "https://mh.alabama.gov",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#alabama",
+    "checkedAt": "2026-11-17"
+  },
+  "AK": {
+    "name": "Alaska Division of Behavioral Health (DBH)",
+    "url": "https://health.alaska.gov/en/division-of-behavioral-health",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#alaska",
+    "checkedAt": "2026-11-17"
+  },
+  "AS": {
+    "name": "Department of Health",
+    "url": "https://doh.as",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#american-samoa",
+    "checkedAt": "2026-11-17"
+  },
+  "AZ": {
+    "name": "Arizona Health Care Cost Containment System (AHCCCS)",
+    "url": "https://www.azahcccs.gov",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#arizona",
+    "checkedAt": "2026-11-17"
+  },
+  "AR": {
+    "name": "Office of Substance Abuse and Mental Health",
+    "url": "https://humanservices.arkansas.gov/divisions-shared-services/shared-services/office-of-substance-abuse-and-mental-health",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#arkansas",
+    "checkedAt": "2026-11-17"
+  },
+  "CA": {
+    "name": "California Department of Health Care Services",
+    "url": "https://www.dhcs.ca.gov",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#california",
+    "checkedAt": "2026-11-17"
+  },
+  "CO": {
+    "name": "Behavioral Health Administration",
+    "url": "https://bha.colorado.gov",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#colorado",
+    "checkedAt": "2026-11-17"
+  },
+  "MP": {
+    "name": "Commonwealth of the Northern Mariana Islands",
+    "url": "https://www.chcc.health",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#commonwealth-of-the-northern-mariana-islands",
+    "checkedAt": "2026-11-17"
+  },
+  "PR": {
+    "name": "Mental Health and Anti-Addiction Services Administration of Puerto Rico",
+    "url": "https://www.dea.gov/resources/puerto-rico-mental-health-anti-addiction-services-administration",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#commonwealth-of-puerto-rico",
+    "checkedAt": "2026-11-17"
+  },
+  "CT": {
+    "name": "Connecticut Department of Mental Health and Addiction Services",
+    "url": "https://portal.ct.gov/dmhas",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#connecticut",
+    "checkedAt": "2026-11-17"
+  },
+  "DE": {
+    "name": "Division of Substance Abuse and Mental Health",
+    "url": "https://dhss.delaware.gov/dsamh",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#delaware",
+    "checkedAt": "2026-11-17"
+  },
+  "DC": {
+    "name": "District of Columbia — official agency directory",
+    "url": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#district-of-columbia",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#district-of-columbia",
+    "checkedAt": "2026-11-17"
+  },
+  "FL": {
+    "name": "Florida Department of Children and Families",
+    "url": "https://www.myflfamilies.com/services",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#florida",
+    "checkedAt": "2026-11-17"
+  },
+  "GA": {
+    "name": "Georgia Department of Behavioral Health and Developmental Disabilities",
+    "url": "https://dbhdd.georgia.gov",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#georgia",
+    "checkedAt": "2026-11-17"
+  },
+  "GU": {
+    "name": "Guam — official agency directory",
+    "url": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#guam",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#guam",
+    "checkedAt": "2026-11-17"
+  },
+  "HI": {
+    "name": "Behavioral Health Administration",
+    "url": "https://health.hawaii.gov/substance-abuse",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#hawaii",
+    "checkedAt": "2026-11-17"
+  },
+  "ID": {
+    "name": "Division of Behavioral Health",
+    "url": "https://healthandwelfare.idaho.gov/services-programs/behavioral-health",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#idaho",
+    "checkedAt": "2026-11-17"
+  },
+  "IL": {
+    "name": "Division of Behavioral Health and Recovery",
+    "url": "https://www.dhs.state.il.us/page.aspx?item=33007",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#illinois",
+    "checkedAt": "2026-11-17"
+  },
+  "IN": {
+    "name": "Indiana Family and Social Services Administration (FSSA)",
+    "url": "https://www.in.gov/fssa",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#indiana",
+    "checkedAt": "2026-11-17"
+  },
+  "IA": {
+    "name": "Iowa Department of Health and Human Services",
+    "url": "https://hhs.iowa.gov",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#iowa",
+    "checkedAt": "2026-11-17"
+  },
+  "KS": {
+    "name": "Kansas Department for Aging and Disability Services (KDADS)",
+    "url": "https://www.kdads.ks.gov/services-programs/behavioral-health",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#kansas",
+    "checkedAt": "2026-11-17"
+  },
+  "KY": {
+    "name": "Kentucky Cabinet for Health and Family Services",
+    "url": "https://www.chfs.ky.gov/Pages/index.aspx",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#kentucky",
+    "checkedAt": "2026-11-17"
+  },
+  "LA": {
+    "name": "Office of Behavioral Health",
+    "url": "https://ldh.la.gov/office-of-behavioral-health",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#louisiana",
+    "checkedAt": "2026-11-17"
+  },
+  "ME": {
+    "name": "Maine Department of Health and Human Services",
+    "url": "https://www.maine.gov/dhhs/obh",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#maine",
+    "checkedAt": "2026-11-17"
+  },
+  "MD": {
+    "name": "Behavioral Health Administration",
+    "url": "https://health.maryland.gov/bha/Pages/Index.aspx",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#maryland",
+    "checkedAt": "2026-11-17"
+  },
+  "MA": {
+    "name": "Massachusetts Department of Mental Health",
+    "url": "https://www.mass.gov/orgs/massachusetts-department-of-mental-health",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#massachusetts",
+    "checkedAt": "2026-11-17"
+  },
+  "MI": {
+    "name": "Michigan Department of Health and Human Services",
+    "url": "https://www.michigan.gov/mdhhs",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#michigan",
+    "checkedAt": "2026-11-17"
+  },
+  "MN": {
+    "name": "Behavioral Health Administration Substance Use Disorder Services",
+    "url": "https://www.dhs.state.mn.us/main/idcplg?IdcService=GET_DYNAMIC_CONVERSION&RevisionSelectionMethod=LatestReleased&dDocName=id_008949",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#minnesota",
+    "checkedAt": "2026-11-17"
+  },
+  "MS": {
+    "name": "Mississippi Department of Mental Health",
+    "url": "https://www.dmh.ms.gov",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#mississippi",
+    "checkedAt": "2026-11-17"
+  },
+  "MO": {
+    "name": "Missouri Department of Mental Health",
+    "url": "https://dmh.mo.gov/behavioral-health",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#missouri",
+    "checkedAt": "2026-11-17"
+  },
+  "MT": {
+    "name": "Montana Department of Public Health and Human Services",
+    "url": "https://dphhs.mt.gov",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#montana",
+    "checkedAt": "2026-11-17"
+  },
+  "NE": {
+    "name": "Nebraska Department of Health and Human Services",
+    "url": "https://dhhs.ne.gov/Pages/default.aspx",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#nebraska",
+    "checkedAt": "2026-11-17"
+  },
+  "NV": {
+    "name": "Division of Public and Behavioral Health",
+    "url": "https://www.dpbh.nv.gov",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#nevada",
+    "checkedAt": "2026-11-17"
+  },
+  "NH": {
+    "name": "Bureau of Drug & Alcohol Services",
+    "url": "https://www.dhhs.nh.gov/bureau-drug-alcohol-services-bdas",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#new-hampshire",
+    "checkedAt": "2026-11-17"
+  },
+  "NJ": {
+    "name": "Division of Mental Health and Addiction Services",
+    "url": "https://www.nj.gov/humanservices/dmhas",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#new-jersey",
+    "checkedAt": "2026-11-17"
+  },
+  "NM": {
+    "name": "New Mexico Health Care Authority",
+    "url": "https://www.hca.nm.gov",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#new-mexico",
+    "checkedAt": "2026-11-17"
+  },
+  "NY": {
+    "name": "New York State Office of Addiction Services and Supports",
+    "url": "https://oasas.ny.gov",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#new-york",
+    "checkedAt": "2026-11-17"
+  },
+  "NC": {
+    "name": "Division of Mental Health, Developmental Disabilities, and Substance Use Services (DMHDDSUS)",
+    "url": "https://www.ncdhhs.gov/divisions/mhddsus",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#north-carolina",
+    "checkedAt": "2026-11-17"
+  },
+  "ND": {
+    "name": "North Dakota — official agency directory",
+    "url": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#north-dakota",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#north-dakota",
+    "checkedAt": "2026-11-17"
+  },
+  "OH": {
+    "name": "Ohio Department of Behavioral Health",
+    "url": "https://dbh.ohio.gov",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#ohio",
+    "checkedAt": "2026-11-17"
+  },
+  "OK": {
+    "name": "Oklahoma Department of Mental Health and Substance Abuse Services",
+    "url": "https://oklahoma.gov/odmhsas.html",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#oklahoma",
+    "checkedAt": "2026-11-17"
+  },
+  "OR": {
+    "name": "Oregon Health Authority–Health Systems Division",
+    "url": "https://www.oregon.gov/oha/hsd/pages/index.aspx",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#oregon",
+    "checkedAt": "2026-11-17"
+  },
+  "PA": {
+    "name": "Pennsylvania Department of Drug and Alcohol Programs",
+    "url": "https://www.pa.gov/agencies/ddap",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#pennsylvania",
+    "checkedAt": "2026-11-17"
+  },
+  "RI": {
+    "name": "Rhode Island Department of Behavioral Healthcare",
+    "url": "https://bhddh.ri.gov",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#rhode-island",
+    "checkedAt": "2026-11-17"
+  },
+  "SC": {
+    "name": "South Carolina Department of Behavioral Health and Developmental Disabilities",
+    "url": "https://bhdd.sc.gov",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#south-carolina",
+    "checkedAt": "2026-11-17"
+  },
+  "SD": {
+    "name": "South Dakota Department of Social Services",
+    "url": "https://dss.sd.gov",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#south-dakota",
+    "checkedAt": "2026-11-17"
+  },
+  "TN": {
+    "name": "Tennessee Department of Mental Health and Substance Abuse Services",
+    "url": "https://www.tn.gov/behavioral-health.html",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#tennessee",
+    "checkedAt": "2026-11-17"
+  },
+  "TX": {
+    "name": "Behavioral Health Services",
+    "url": "https://www.hhs.texas.gov/providers/behavioral-health-services-providers-programs",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#texas",
+    "checkedAt": "2026-11-17"
+  },
+  "VI": {
+    "name": "United States Virgin Islands — official agency directory",
+    "url": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#united-states-virgin-islands",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#united-states-virgin-islands",
+    "checkedAt": "2026-11-17"
+  },
+  "UT": {
+    "name": "Utah — official agency directory",
+    "url": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#utah",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#utah",
+    "checkedAt": "2026-11-17"
+  },
+  "VT": {
+    "name": "Division of Substance Use Programs",
+    "url": "https://www.healthvermont.gov/alcohol-drugs",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#vermont",
+    "checkedAt": "2026-11-17"
+  },
+  "VA": {
+    "name": "Virginia Department of Behavioral Health and Developmental Services",
+    "url": "https://dbhds.virginia.gov",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#virginia",
+    "checkedAt": "2026-11-17"
+  },
+  "WA": {
+    "name": "Division of Behavioral Health and Recovery",
+    "url": "https://www.hca.wa.gov/about-hca/programs-and-initiatives/behavioral-health-and-recovery",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#washington",
+    "checkedAt": "2026-11-17"
+  },
+  "WV": {
+    "name": "West Virginia Department of Human Services",
+    "url": "https://dohs.wv.gov",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#west-virginia",
+    "checkedAt": "2026-11-17"
+  },
+  "WI": {
+    "name": "Bureau of Prevention, Treatment and Recovery",
+    "url": "https://www.dhs.wisconsin.gov/dcts/index.htm",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#wisconsin",
+    "checkedAt": "2026-11-17"
+  },
+  "WY": {
+    "name": "Wyoming Department of Health",
+    "url": "https://health.wyo.gov",
+    "sourceUrl": "https://www.samhsa.gov/grants/block-grants/subg/ssa-directory#wyoming",
+    "checkedAt": "2026-11-17"
+  }
+}

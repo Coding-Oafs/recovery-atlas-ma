@@ -1,0 +1,39 @@
+name: Prepare national catalog
+on:
+  pull_request:
+    paths:
+      - 'scripts/collect-national.py'
+      - 'scripts/normalize-national.mts'
+      - '.github/workflows/national-catalog.yml'
+permissions:
+  contents: read
+jobs:
+  catalog:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.head_ref }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: python -m pip install openpyxl==3.1.5
+      - run: python scripts/collect-national.py
+      - run: npx tsx scripts/normalize-national.mts
+      - run: npm run data:check
+      - name: Save reproducible public-source catalog to this feature branch
+        run: |
+          git config user.name "Recovery Atlas data build"
+          git config user.email "catalog@users.noreply.github.com"
+          git add data/national-catalog.json.gz data/national-manifest.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Generate national annual-source facility catalog and coverage manifest"
+            git push origin "HEAD:$CATALOG_BRANCH"
+          fi
+        env:
+          CATALOG_BRANCH: ${{ github.head_ref }}

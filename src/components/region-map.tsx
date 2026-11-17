@@ -5,6 +5,7 @@ import type { GeoJSONSource } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { MapPin, Maximize, Search } from "lucide-react";
 import type { Filters, MapResource, MapPoint, Resource } from "@/lib/types";
+import stateBounds from "../../data/jurisdiction-bounds.json";
 import { regionBounds } from "@/lib/region";
 import { resourceMapTarget } from "@/lib/map-selection";
 maplibregl.setWorkerUrl(
@@ -75,6 +76,7 @@ export default function RegionMap({
         ],
         fitBoundsOptions: { padding: 30 },
         maxZoom: 18,
+        renderWorldCopies: false,
         minZoom: 3,
         attributionControl: { compact: true },
       });
@@ -89,9 +91,9 @@ export default function RegionMap({
         const b = m.getBounds();
         setViewport({
           bounds: [
-            b.getWest(),
+            Math.max(-180, b.getWest()),
             Math.max(-85, b.getSouth()),
-            b.getEast(),
+            Math.min(180, b.getEast()),
             Math.min(85, b.getNorth()),
           ],
           zoom: m.getZoom(),
@@ -394,6 +396,18 @@ export default function RegionMap({
         duration: 900,
       });
   }, [center, ready]);
+  useEffect(() => {
+    if (!ready || !map.current || center || selectedResource) return;
+    const b = stateBounds[filters.state as keyof typeof stateBounds];
+    if (b)
+      map.current.fitBounds(
+        [
+          [b[0], b[1]],
+          [b[2], b[3]],
+        ],
+        { padding: 35, duration: 700 },
+      );
+  }, [filters.state, ready, center, selectedResource]);
   useEffect(() => {
     if (!ready) return;
     const r = resources.find((r) => r.id === highlight);
