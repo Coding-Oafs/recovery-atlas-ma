@@ -15,7 +15,7 @@ export async function geocodePublicAddresses({
   const key = `md5(concat_ws('|',lower(trim(regexp_replace(data->>'address','\\s+',' ','g'))),lower(trim(regexp_replace(data->>'city','\\s+',' ','g'))),lower(resource_state),COALESCE(data->>'zip','')))`;
   const eligible = `data->>'coordinateAccuracy' IN('approximate','unavailable') AND resource_state<>'US' AND data->>'address'~'^[0-9]' AND data->>'address' !~* 'p[.]?o[.]? box' AND COALESCE(data->'locationEvidence'->>'method','')<>'publisher-approximate' AND (resource_kind<>'meeting' OR data->'locationEvidence'->>'method' IN('city-centroid','zip-centroid') OR data->>'sourceName' LIKE 'SMART%')`;
   await q(
-    `INSERT INTO atlas_geocode_cache(address_key,address,city,state,zip) SELECT DISTINCT ON(${key}) ${key},data->>'address',data->>'city',resource_state,COALESCE(data->>'zip','') FROM resources WHERE ${eligible} AND (published OR id IN(SELECT resource_id FROM atlas_import_release_member WHERE release_id='national-providers-20261117')) ORDER BY ${key} ON CONFLICT DO NOTHING`,
+    `INSERT INTO atlas_geocode_cache(address_key,address,city,state,zip) SELECT DISTINCT ON(${key}) ${key},data->>'address',data->>'city',resource_state,COALESCE(data->>'zip','') FROM resources WHERE ${eligible} AND published AND resource_kind IN('clinic','hospital','treatment','support','meeting') ORDER BY ${key} ON CONFLICT DO NOTHING`,
   );
   while (batches < maxBatches) {
     const rows = await q(
@@ -24,17 +24,26 @@ export async function geocodePublicAddresses({
     );
     if (!rows.length) break;
     try {
-      const form = new FormData();
-      form.set(
-        "addressFile",
-        new Blob([helpers.censusBatchCsv(rows)], { type: "text/csv" }),
-        "addresses.csv",
+      const boundary = "----RecoveryAtlas" + Date.now().toString(16);
+      const body = Buffer.from(
+        "--" +
+          boundary +
+          '\r\nContent-Disposition: form-data; name="addressFile"; filename="addresses.csv"\r\nContent-Type: text/csv\r\n\r\n' +
+          helpers.censusBatchCsv(rows) +
+          "\r\n--" +
+          boundary +
+          '\r\nContent-Disposition: form-data; name="benchmark"\r\n\r\nPublic_AR_Current\r\n--' +
+          boundary +
+          '\r\nContent-Disposition: form-data; name="vintage"\r\n\r\nCurrent_Current\r\n--' +
+          boundary +
+          "--\r\n",
       );
-      form.set("benchmark", "Public_AR_Current");
-      form.set("vintage", "Current_Current");
       const response = await fetch(helpers.censusBatchUrl, {
         method: "POST",
-        body: form,
+        headers: {
+          "Content-Type": "multipart/form-data; boundary=" + boundary,
+        },
+        body,
         signal: AbortSignal.timeout(180000),
       });
       if (!response.ok) throw Error("Census HTTP " + response.status);
@@ -67,7 +76,7 @@ export async function geocodePublicAddresses({
     }
     // Preserve dates and administrator edits. Interpolation is identified explicitly and never called an entrance verification.
     const changed = await q(
-      `WITH changes AS(SELECT r.id,r.data AS before_data,r.data||jsonb_build_object('lat',c.lat,'lng',c.lng,'coordinateAccuracy','address','locationEvidence',jsonb_build_object('method','census-street-range','sourceUrl','https://geocoding.geo.census.gov/geocoder/','checkedAt',c.checked_at::date::text)) AS after_data,c.lat,c.lng FROM resources r JOIN atlas_geocode_cache c ON c.address_key=${key} WHERE c.status='matched' AND ${eligible}), applied AS(UPDATE resources r SET data=c.after_data,location=ST_SetSRID(ST_MakePoint(c.lng,c.lat),4326)::geography,updated_at=now() FROM changes c WHERE r.id=c.id AND r.data=c.before_data RETURNING r.id,c.before_data,c.after_data) INSERT INTO audit_events(action,resource_id,before_data,after_data) SELECT 'census-address-interpolation',id,before_data,after_data FROM applied RETURNING resource_id`,
+      `WITH candidates AS MATERIALIZED(SELECT r.id,r.data,${key} AS address_key FROM resources r WHERE r.published AND r.resource_kind IN('clinic','hospital','treatment','support','meeting') AND ${eligible}),changes AS(SELECT r.id,r.data AS before_data,r.data||jsonb_build_object('lat',c.lat,'lng',c.lng,'coordinateAccuracy','address','locationEvidence',jsonb_build_object('method','census-street-range','sourceUrl','https://geocoding.geo.census.gov/geocoder/','checkedAt',c.checked_at::date::text)) AS after_data,c.lat,c.lng FROM candidates r JOIN atlas_geocode_cache c ON c.address_key=r.address_key WHERE c.status='matched'), applied AS(UPDATE resources r SET data=c.after_data,location=ST_SetSRID(ST_MakePoint(c.lng,c.lat),4326)::geography,updated_at=now() FROM changes c WHERE r.id=c.id AND r.data=c.before_data RETURNING r.id,c.before_data,c.after_data) INSERT INTO audit_events(action,resource_id,before_data,after_data) SELECT 'census-address-interpolation',id,before_data,after_data FROM applied RETURNING resource_id`,
     );
     updated += changed.length;
     await writeFile(

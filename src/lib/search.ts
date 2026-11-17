@@ -112,22 +112,27 @@ export function filterResources(
         !r.categories.includes(f.category as Resource["categories"][number])
       )
         return false;
-      if (
-        f.format === "online" &&
-        !r.formats.some((x) => ["online", "hybrid"].includes(x))
-      )
-        return false;
-      if (
-        f.format === "in-person" &&
-        !r.formats.some((x) => ["in-person", "hybrid"].includes(x))
-      )
-        return false;
-      if (
-        ["hybrid", "telehealth"].includes(f.format) &&
-        !r.formats.includes(f.format as "hybrid" | "telehealth")
-      )
-        return false;
       if (f.fellowship && r.fellowship !== f.fellowship) return false;
+      if (
+        f.countyFips &&
+        r.countyFips !== f.countyFips &&
+        !(
+          r.kind === "meeting" &&
+          r.formats.includes("online") &&
+          !r.formats.includes("hybrid")
+        )
+      )
+        return false;
+      if (
+        f.city &&
+        r.city.trim().toLowerCase() !== f.city.trim().toLowerCase() &&
+        !(
+          r.kind === "meeting" &&
+          r.formats.includes("online") &&
+          !r.formats.includes("hybrid")
+        )
+      )
+        return false;
       if (!matchesEvidence(r, f)) return false;
       if (f.service && !r.services.includes(f.service)) return false;
       if (f.population && !r.populations.includes(f.population)) return false;
@@ -205,6 +210,8 @@ export function filterResources(
     });
 }
 export const defaultFilters: Filters = {
+  countyFips: "",
+  city: "",
   prioritizeRecovery: true,
   state: "",
   query: "",

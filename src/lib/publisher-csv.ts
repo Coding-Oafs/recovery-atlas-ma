@@ -43,6 +43,11 @@ export function parsePublisherMeetings(text: string, state: string) {
     !["Day", "Time", "Name", "Address", "City"].every((k) => k in records[0])
   )
     throw Error("Changed publisher spreadsheet layout");
+  const idCounts = new Map<string, number>();
+  for (const r of records) {
+    const id = r.Id || r.ID;
+    if (id) idCounts.set(id, (idCounts.get(id) || 0) + 1);
+  }
   return records.map((r) => {
     const types = r.Types || "",
       status = r.Status || "",
@@ -55,7 +60,15 @@ export function parsePublisherMeetings(text: string, state: string) {
     return {
       name: r.Name,
       id: r.Id || r.ID,
-      slug: r.Id || r.ID || [r.Name, r.Day, r.Time, street].join("|"),
+      slug:
+        r.Id || r.ID
+          ? [
+              r.Id || r.ID,
+              ...((idCounts.get(r.Id || r.ID) || 0) > 1
+                ? [r.Day, r.Time, street]
+                : []),
+            ].join("|")
+          : [r.Name, r.Day, r.Time, street].join("|"),
       day: [
         "Sunday",
         "Monday",

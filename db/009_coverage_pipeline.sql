@@ -24,6 +24,13 @@ CREATE TABLE IF NOT EXISTS atlas_geocode_cache (
  source_url text NOT NULL DEFAULT 'https://geocoding.geo.census.gov/geocoder/'
 );
 CREATE INDEX IF NOT EXISTS atlas_geocode_pending_idx ON atlas_geocode_cache(next_attempt_at) WHERE status IN('pending','retry');
+CREATE TABLE IF NOT EXISTS atlas_resource_address (
+ resource_id text PRIMARY KEY REFERENCES resources(id) ON DELETE CASCADE,address_key text NOT NULL REFERENCES atlas_geocode_cache(address_key),checked_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS atlas_resource_address_key_idx ON atlas_resource_address(address_key);
+CREATE TABLE IF NOT EXISTS atlas_county_unassigned (
+ resource_id text PRIMARY KEY REFERENCES resources(id) ON DELETE CASCADE,checked_at timestamptz NOT NULL DEFAULT now()
+);
 CREATE TABLE IF NOT EXISTS atlas_source_job (
  id text PRIMARY KEY, name text NOT NULL, url text NOT NULL, adapter text NOT NULL, config jsonb NOT NULL DEFAULT '{}',
  status text NOT NULL DEFAULT 'queued', attempts integer NOT NULL DEFAULT 0, next_run_at timestamptz NOT NULL DEFAULT now(), lease_until timestamptz,
@@ -45,4 +52,8 @@ CREATE TABLE IF NOT EXISTS atlas_source_member (
 );
 CREATE TABLE IF NOT EXISTS atlas_county_coverage (
  county_fips text PRIMARY KEY REFERENCES atlas_county(fips), counts jsonb NOT NULL DEFAULT '{}', generated_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS atlas_city_coverage (
+ state text NOT NULL,city text NOT NULL,name text NOT NULL,counts jsonb NOT NULL DEFAULT '{}',generated_at timestamptz,
+ PRIMARY KEY(state,city)
 );

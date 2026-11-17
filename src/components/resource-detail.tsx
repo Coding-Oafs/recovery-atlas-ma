@@ -67,18 +67,22 @@ export function CorrectionForm({
         setBusy(true);
         const f = new FormData(e.currentTarget);
         try {
-        const r = await submitCorrection({
-          kind: resource ? "correction" : "new",
-          resourceId: resource?.id ?? "",
-          message: f.get("message"),
-          sourceUrl: f.get("sourceUrl"),
-          website: f.get("website"),
-        });
-        if (r.success) setSuccess(true);
-        else setResult(r.error ?? "Please try again.");
+          const r = await submitCorrection({
+            kind: resource ? "correction" : "new",
+            resourceId: resource?.id ?? "",
+            message: f.get("message"),
+            sourceUrl: f.get("sourceUrl"),
+            website: f.get("website"),
+          });
+          if (r.success) setSuccess(true);
+          else setResult(r.error ?? "Please try again.");
         } catch {
-          setResult("The review inbox is temporarily unavailable. Please try again later.");
-        } finally { setBusy(false); }
+          setResult(
+            "The review inbox is temporarily unavailable. Please try again later.",
+          );
+        } finally {
+          setBusy(false);
+        }
       }}
     >
       <p className="notice">
@@ -257,7 +261,7 @@ export default function ResourceDetail({
             {r.coordinateAccuracy === "approximate" && (
               <p className="notice">
                 {t(
-                  "Map pin is approximate (ZIP area), not a verified entrance. Use the street address for directions.",
+                  "Map pin is approximate. Use the published address and confirm the venue before traveling.",
                 )}
               </p>
             )}
@@ -278,6 +282,12 @@ export default function ResourceDetail({
                 r.kind === "provider"
                   ? "Appointments & eligibility"
                   : "Intake & eligibility",
+              )}
+              {r.locationEvidence?.method === "census-street-range" && (
+                <p className="notice">
+                  Map location estimated from a Census street address range.
+                  Confirm the building and entrance before traveling.
+                </p>
               )}
             </h4>
             <p lang="en">{r.intake}</p>

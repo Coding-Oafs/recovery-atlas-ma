@@ -71,6 +71,9 @@ export default async function Admin({
           <h1 style={{ marginTop: 15 }}>A little care for the directory.</h1>
         </div>
         <div className="admin-nav">
+          <Link className="secondary" href="/admin/sources">
+            Source health
+          </Link>
           <Link className="secondary" href="/admin/quality">
             Quality & refresh inbox
           </Link>

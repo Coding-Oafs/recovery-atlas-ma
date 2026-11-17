@@ -3,6 +3,7 @@ import zipcodes from "zipcodes";
 import { resourceSchema, type Resource } from "./types";
 import { isRegionState } from "./region";
 type ProviderRow = {
+  siteKey?: string;
   npi: string;
   entity: string;
   organization: string;
@@ -84,7 +85,7 @@ export function normalizeNationalProvider(
     sourceUrl = "https://npiregistry.cms.hhs.gov/provider-view/" + row.npi;
   const updated = row.updated?.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
   const r: Resource = {
-    id: "npi-" + row.npi,
+    id: "npi-" + row.npi + (row.siteKey ? "-site-" + row.siteKey : ""),
     name: name.slice(0, 220),
     kind: individual ? "provider" : addiction ? "treatment" : "clinic",
     categories: [

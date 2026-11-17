@@ -21,6 +21,14 @@ async function queryDatabaseDirectory(
     return "$" + values.length;
   };
   const where = ["published=true"];
+  if (f.city)
+    where.push(
+      `(lower(trim(data->>'city'))=lower(trim(${param(f.city)})) OR (resource_kind='meeting' AND data->'formats' ? 'online' AND NOT(data->'formats' ? 'hybrid')))`,
+    );
+  if (f.countyFips)
+    where.push(
+      `(EXISTS(SELECT 1 FROM atlas_resource_county county WHERE county.resource_id=resources.id AND county.county_fips=${param(f.countyFips)}) OR (resource_kind='meeting' AND data->'formats' ? 'online' AND NOT(data->'formats' ? 'hybrid')))`,
+    );
   if (f.state)
     where.push(
       `(resource_state=${param(f.state)} OR (resource_state='US' AND resource_kind='meeting' AND data->'formats' ? 'online' AND NOT(data->'formats' ? 'hybrid')))`,
@@ -28,17 +36,6 @@ async function queryDatabaseDirectory(
   if (hasMeetingTimeFilter(f)) where.push(`resource_kind='meeting'`);
   const has = (path: string, value: string) => `${path} ? ${param(value)}`;
   if (f.category !== "all") where.push(has("data->'categories'", f.category));
-  if (f.format) {
-    const formats =
-      f.format === "online"
-        ? ["online", "hybrid"]
-        : f.format === "in-person"
-          ? ["in-person", "hybrid"]
-          : [f.format];
-    where.push(
-      "(" + formats.map((s) => has("data->'formats'", s)).join(" OR ") + ")",
-    );
-  }
   if (f.fellowship) where.push(`data->>'fellowship'=${param(f.fellowship)}`);
   const evidence: string[] = [],
     unknowns: string[] = [];
@@ -47,6 +44,18 @@ async function queryDatabaseDirectory(
       f.uncertainOnly ? "(" + match + " OR " + unknown + ")" : match,
     );
     unknowns.push(unknown);
+  }
+  if (f.format) {
+    const formats =
+      f.format === "online"
+        ? ["online", "hybrid"]
+        : f.format === "in-person"
+          ? ["in-person", "hybrid"]
+          : [f.format];
+    evidenceFilter(
+      "(" + formats.map((s) => has("data->'formats'", s)).join(" OR ") + ")",
+      "jsonb_array_length(COALESCE(data->'formats','[]'))=0",
+    );
   }
   if (f.payment) {
     const p = param(f.payment);

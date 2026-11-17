@@ -39,6 +39,10 @@ export const resourceSchema = z
       .regex(/^[A-Z]{2}$/)
       .optional(),
     postalCode: z.string().max(24).optional(),
+    countyFips: z
+      .string()
+      .regex(/^\d{5}$/)
+      .optional(),
     zip: z.string().regex(/^\d{5}$|^$/),
     lat: z.number().min(-90).max(90).nullable(),
     lng: z.number().min(-180).max(180).nullable(),
@@ -55,6 +59,7 @@ export const resourceSchema = z
         sourceUrl: webUrl,
         checkedAt: date,
       })
+      .nullable()
       .optional(),
     phone: z.string().max(70),
     website: webUrl,
@@ -81,6 +86,10 @@ export const resourceSchema = z
     ),
     sourceUrl: webUrl,
     sourceName: z.string().max(160),
+    sourceRecordHash: z
+      .string()
+      .regex(/^[a-f0-9]{32}$/)
+      .optional(),
     sourceCheckedAt: date,
     verifiedAt: date.nullable(),
     sourceUpdatedAt: date.nullable(),
@@ -185,6 +194,8 @@ export const categories = [
   { id: "support", label: "Recovery support" },
 ] as const;
 export type Filters = {
+  countyFips?: string;
+  city?: string;
   prioritizeRecovery?: boolean;
   uncertainOnly?: boolean;
   state?: string;

@@ -13,6 +13,11 @@ export const boundsSchema = z
       v[1] < v[3],
   );
 export const filtersSchema = z.object({
+  countyFips: z
+    .string()
+    .regex(/^$|^\d{5}$/)
+    .default(""),
+  city: z.string().max(100).default(""),
   prioritizeRecovery: z.boolean().default(true),
   uncertainOnly: z.boolean().default(false),
   state: z.enum(["", ...regionStates]).default(""),

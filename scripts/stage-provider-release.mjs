@@ -40,7 +40,8 @@ export async function stageProviders({
       [release],
     );
     const existing = await client.query(
-      "SELECT id FROM resources WHERE id LIKE 'npi-%'",
+      "SELECT resource_id AS id FROM atlas_import_release_member WHERE release_id=$1",
+      [release],
     );
     const ids = new Set(existing.rows.map((r) => r.id));
     async function flush() {
@@ -59,7 +60,7 @@ export async function stageProviders({
     })) {
       scanned++;
       const row = JSON.parse(line);
-      if (ids.has("npi-" + row.npi)) continue;
+      if (!row.siteKey && ids.has("npi-" + row.npi)) continue;
       const r = normalize(row, checkedAt);
       if (!r) continue;
       selected++;

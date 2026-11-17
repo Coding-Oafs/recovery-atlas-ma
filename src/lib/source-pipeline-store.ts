@@ -27,12 +27,19 @@ export async function installMeetingCapture(
   };
   if (!rows.length) throw Error("No usable schedules");
   const existing = await sql.query(
-    "SELECT id,data,published FROM resources WHERE resource_kind='meeting' AND (resource_state=ANY($1::text[]) AND data->>'fellowship'=$2 OR id=ANY($3::text[]))",
+    "SELECT id,data,published FROM resources WHERE published AND resource_kind='meeting' AND resource_state=ANY($1::text[]) AND data->>'fellowship'=$2 UNION SELECT id,data,published FROM resources WHERE id=ANY($3::text[])",
     [
       [...new Set(rows.map((r) => r.state))],
       rows[0].fellowship,
       rows.map((r) => r.id),
     ],
+  );
+  const identities = await sql.query(
+    "SELECT r.id,r.data,r.published FROM atlas_meeting_identity i JOIN resources r ON r.id=i.resource_id WHERE i.fingerprint=ANY($1::text[])",
+    [rows.map(meetingSignature)],
+  );
+  existing.push(
+    ...identities.filter((r) => !existing.some((e) => e.id === r.id)),
   );
   const ids = new Map<string, any>(existing.map((r) => [r.id, r])),
     signatures = new Map(existing.map((r) => [meetingSignature(r.data), r]));
@@ -57,8 +64,14 @@ export async function installMeetingCapture(
       old =
         ids.get(tracked?.resource_id || fresh.id) || signatures.get(signature);
     if (!old) {
+      if (
+        fresh.meeting?.endsOn &&
+        fresh.meeting.endsOn < new Date().toISOString().slice(0, 10)
+      )
+        continue;
       added.push(fresh);
       const entry = {
+        pending: true,
         id: fresh.id,
         data: fresh,
         published: options.publish !== false,
@@ -75,6 +88,15 @@ export async function installMeetingCapture(
       continue;
     }
     if (old.id !== fresh.id) counts.duplicate++;
+    if (old.pending) {
+      seen.push({
+        external: fresh.id,
+        id: old.id,
+        facts: sourceFacts(old.data),
+        signature,
+      });
+      continue;
+    }
     const before = sourceFacts(old.data);
     if (sameFacts(before, sourceFacts(fresh))) {
       counts.unchanged++;

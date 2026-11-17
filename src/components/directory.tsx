@@ -40,6 +40,7 @@ import { resourceFreshness } from "@/lib/resource-quality";
 import { resourceMapTarget } from "@/lib/map-selection";
 import ResourceDetail, { CorrectionForm, NextTime } from "./resource-detail";
 import initialCoverage from "../../public/coverage.json";
+import counties from "../../data/us-counties.json";
 import nationalManifest from "../../data/national-manifest.json";
 import GuidedFinder from "./guided-finder";
 import SearchAlternatives from "./search-alternatives";
@@ -423,7 +424,20 @@ export default function Directory({
   function update<K extends keyof Filters>(k: K, v: Filters[K]) {
     setFilters((f) => {
       const next = { ...f, [k]: v };
-      if (!next.payment && !next.language && !next.accessibility)
+      if (k === "state") {
+        next.countyFips = "";
+        next.city = "";
+      }
+      if (k === "countyFips") {
+        next.center = null;
+        next.bounds = null;
+      }
+      if (
+        !next.payment &&
+        !next.language &&
+        !next.accessibility &&
+        !next.format
+      )
         next.uncertainOnly = false;
       return next;
     });
@@ -449,6 +463,8 @@ export default function Directory({
       setFilters((f) => ({
         ...f,
         center: { lat: data.lat, lng: data.lng },
+        countyFips: "",
+        city: "",
         state: data.state || f.state,
         bounds: null,
       }));
@@ -475,6 +491,8 @@ export default function Directory({
         setFilters((f) => ({
           ...f,
           center: { lat: p.coords.latitude, lng: p.coords.longitude },
+          countyFips: "",
+          city: "",
           bounds: null,
         }));
         setLocationLabel("Your current location");
@@ -1193,7 +1211,37 @@ export default function Directory({
                 />{" "}
                 <T>Meetings starting in 3 hours</T>{" "}
               </label>
-              {(filters.payment ||
+              {filters.state && (
+                <>
+                  <label>
+                    County or equivalent
+                    <select
+                      value={filters.countyFips || ""}
+                      onChange={(e) => update("countyFips", e.target.value)}
+                    >
+                      <option value="">All counties / nearby search</option>
+                      {counties
+                        .filter((c) => c.state === filters.state)
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map((c) => (
+                          <option key={c.fips} value={c.fips}>
+                            {c.name}
+                          </option>
+                        ))}
+                    </select>
+                  </label>
+                  <label>
+                    City name from source
+                    <input
+                      value={filters.city || ""}
+                      maxLength={100}
+                      onChange={(e) => update("city", e.target.value)}
+                    />
+                  </label>
+                </>
+              )}
+              {(filters.format ||
+                filters.payment ||
                 filters.language ||
                 filters.accessibility) && (
                 <label className="checkbox-label">
@@ -1836,6 +1884,9 @@ export default function Directory({
         ) : null}
         {panel === "coverage" ? (
           <div className="stack">
+            <Link className="secondary" href="/coverage">
+              Explore county coverage and gaps
+            </Link>
             <p>
               <strong>
                 {coverage.total.toLocaleString()} <T>published listings ·</T>
