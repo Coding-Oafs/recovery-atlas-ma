@@ -77,7 +77,6 @@ export default function RegionMap({
         fitBoundsOptions: { padding: 30 },
         maxZoom: 18,
         renderWorldCopies: false,
-        maxBounds: [[-180,-85],[180,85]],
         minZoom: 3,
         attributionControl: { compact: true },
       });
@@ -398,10 +397,17 @@ export default function RegionMap({
       });
   }, [center, ready]);
   useEffect(() => {
-    if(!ready || !map.current || center || selectedResource) return;
-    const b=stateBounds[filters.state as keyof typeof stateBounds];
-    if(b) map.current.fitBounds([[b[0],b[1]],[b[2],b[3]]],{padding:35,duration:700});
-  },[filters.state,ready,center,selectedResource]);
+    if (!ready || !map.current || center || selectedResource) return;
+    const b = stateBounds[filters.state as keyof typeof stateBounds];
+    if (b)
+      map.current.fitBounds(
+        [
+          [b[0], b[1]],
+          [b[2], b[3]],
+        ],
+        { padding: 35, duration: 700 },
+      );
+  }, [filters.state, ready, center, selectedResource]);
   useEffect(() => {
     if (!ready) return;
     const r = resources.find((r) => r.id === highlight);

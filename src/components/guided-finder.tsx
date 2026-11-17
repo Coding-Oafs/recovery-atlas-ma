@@ -75,6 +75,7 @@ export default function GuidedFinder({
               <label>
                 {t("Who are you looking for?")}
                 <select
+                  aria-label={t("Who are you looking for?")}
                   value={audience}
                   onChange={(e) => setAudience(e.target.value)}
                 >
@@ -85,6 +86,7 @@ export default function GuidedFinder({
               <label>
                 {t("What are you looking for?")}
                 <select
+                  aria-label={t("What are you looking for?")}
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
                 >
@@ -111,6 +113,7 @@ export default function GuidedFinder({
               <label>
                 {t("Online or nearby?")}
                 <select
+                  aria-label={t("Online or nearby?")}
                   value={format}
                   onChange={(e) => setFormat(e.target.value)}
                 >
@@ -130,6 +133,7 @@ export default function GuidedFinder({
               <label>
                 {t("State or territory")}
                 <select
+                  aria-label={t("State or territory")}
                   value={state}
                   onChange={(e) => setState(e.target.value)}
                 >
@@ -154,6 +158,7 @@ export default function GuidedFinder({
                 <label>
                   {t("When would you like to go?")}
                   <select
+                    aria-label={t("When would you like to go?")}
                     value={when}
                     onChange={(e) => setWhen(e.target.value)}
                   >

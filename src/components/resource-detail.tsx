@@ -66,6 +66,7 @@ export function CorrectionForm({
         e.preventDefault();
         setBusy(true);
         const f = new FormData(e.currentTarget);
+        try {
         const r = await submitCorrection({
           kind: resource ? "correction" : "new",
           resourceId: resource?.id ?? "",
@@ -73,9 +74,11 @@ export function CorrectionForm({
           sourceUrl: f.get("sourceUrl"),
           website: f.get("website"),
         });
-        setBusy(false);
         if (r.success) setSuccess(true);
         else setResult(r.error ?? "Please try again.");
+        } catch {
+          setResult("The review inbox is temporarily unavailable. Please try again later.");
+        } finally { setBusy(false); }
       }}
     >
       <p className="notice">

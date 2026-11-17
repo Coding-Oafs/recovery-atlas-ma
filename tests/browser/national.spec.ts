@@ -34,9 +34,7 @@ test("guided finder applies visible national preferences and help follows the st
     .getByRole("button", { name: /Talk to someone who can help/ })
     .click();
   await expect(
-    page
-      .getByRole("dialog")
-      .getByRole("link", { name: new RegExp(agencies.NV.name) }),
+    page.getByRole("dialog").getByRole("link", { name: agencies.NV.name }),
   ).toHaveAttribute("href", agencies.NV.url);
 });
 test("zero-result alternatives display actual counts and preserve chosen geography", async ({
@@ -49,7 +47,7 @@ test("zero-result alternatives display actual counts and preserve chosen geograp
     .getByRole("textbox", { name: "Search keywords", exact: true })
     .fill("zzzxxyy-no-matches");
   const option = page.getByRole("button", {
-    name: /Search without these keywords \(\d+\)/,
+    name: /Search without these keywords \([\d,]+\)/,
   });
   await expect(option).toBeVisible();
   await option.click();
