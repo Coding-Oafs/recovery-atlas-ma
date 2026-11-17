@@ -49,6 +49,12 @@ export function nextMeeting(
   const [hour, minute] = m.time.split(":").map(Number);
   for (let n = 0; n < 35; n++) {
     const day = new Date(Date.UTC(p.year, p.month - 1, p.day + n));
+    const localDate = day.toISOString().slice(0, 10);
+    if (
+      (m.startsOn && localDate < m.startsOn) ||
+      (m.endsOn && localDate > m.endsOn)
+    )
+      continue;
     if (!m.days.includes(day.getUTCDay())) continue;
     if (criteria.day && Number(criteria.day) !== day.getUTCDay()) continue;
     if (

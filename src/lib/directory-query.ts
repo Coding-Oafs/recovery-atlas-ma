@@ -127,6 +127,12 @@ async function queryDatabaseDirectory(
     zone +
     ")";
   const conditions = [candidate + ">=" + start + "::timestamptz"];
+  conditions.push(
+    "(NULLIF(data->'meeting'->>'startsOn','') IS NULL OR d::date >= (data->'meeting'->>'startsOn')::date)",
+  );
+  conditions.push(
+    "(NULLIF(data->'meeting'->>'endsOn','') IS NULL OR d::date <= (data->'meeting'->>'endsOn')::date)",
+  );
   if (end) conditions.push(candidate + "<" + end + "::timestamptz");
   if (f.day) conditions.push("extract(dow from d)=" + param(Number(f.day)));
   if (f.startAfter || f.startBefore) {

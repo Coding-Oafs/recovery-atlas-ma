@@ -43,6 +43,19 @@ export const resourceSchema = z
     lat: z.number().min(-90).max(90).nullable(),
     lng: z.number().min(-180).max(180).nullable(),
     coordinateAccuracy: z.enum(["address", "approximate", "unavailable"]),
+    locationEvidence: z
+      .object({
+        method: z.enum([
+          "publisher-approximate",
+          "publisher-address",
+          "zip-centroid",
+          "city-centroid",
+          "census-street-range",
+        ]),
+        sourceUrl: webUrl,
+        checkedAt: date,
+      })
+      .optional(),
     phone: z.string().max(70),
     website: webUrl,
     description: z.string().min(5).max(3000),
@@ -87,6 +100,8 @@ export const resourceSchema = z
               return false;
             }
           }, "Use a valid IANA time zone"),
+        startsOn: date.optional(),
+        endsOn: date.optional(),
         exceptions: z
           .array(
             z.object({
