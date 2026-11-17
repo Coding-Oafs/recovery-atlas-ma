@@ -57,7 +57,17 @@ Share [Recovery Atlas](https://recoveryatlas.vercel.app/). Visitors need no logi
 
 Connect this repository to the `recovery-atlas-ma` Vercel project. Set the environment variables for production and preview separately. Verify the intended account, project, commit and database branch before deployment. Use Vercel Git integration for preview builds; production tracks `main`. Standard deployment protection keeps preview and per-deployment URLs protected while the production domain is public. `/admin` has its own application authentication.
 
-Vercel Cron calls `/api/maintenance` daily at 11:00 UTC (7am Eastern daylight / 6am Eastern standard). The endpoint requires the secret bearer token. It checks six source links per run, records results and expires old rate-limit records. It also rotates through two approved official meeting feeds, queues proposed changes for review and expires community records under the retention policy. It does not publish unreviewed changes, insurer lists or bed availability.
+Vercel Cron calls `/api/maintenance` daily at 11:00 UTC (7am Eastern daylight / 6am Eastern standard). The endpoint requires the secret bearer token. It checks six source links, rotates through six approved meeting feeds, refreshes bounded Georgia/Montana directory sections, checks a day of Online Intergroup schedules and imports the approved BMLT daily static export. New validated meetings are added; changed facts on existing listings become administrator review proposals. Source outages never delete meetings or imply none exist. Existing edits, insurer lists and availability claims are preserved.
+
+## Nationwide meeting sources
+
+AA imports use public local intergroup Meeting Guide feeds and crawler indexes, plus the Online Intergroup's public Code for Recovery Central service. Its default response covers only one hour; the initial collector explicitly retrieves a full week. Online AA records use national availability (`US`), appear with any selected state or territory and never receive physical map pins. AA presence in a state does not establish complete coverage of every city, county or group. Category-specific counts are available at `/api/coverage`.
+
+County and county-equivalent lookup uses the [Census 2026 National Counties Gazetteer](https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2026_Gazetteer/2026_Gaz_counties_national.zip). County searches use a labeled representative center and the selected radius, rather than claiming a county-boundary filter.
+
+To prepare a fresh reviewed release, run `npx tsx scripts/refresh-national-meetings.mts`, then `npx tsx --env-file=.env.local scripts/install-national-meetings.mts`. Review the ignored capture manifests, validation and staged IDs before running the installer with `--activate`. Imports are insert-only; existing publication decisions and edits are retained. SMART's current HTML format needs a separate schedule adapter; collecting its pages does not publish guessed schedules.
+
+NA data comes from the [BMLT Aggregator daily static export](https://cdn.aws.bmlt.app/aggregator/manifest.json), with SHA-256 validation and publishing-service-body attribution. Third-party bulk imports must not use the live aggregator API. Raw and normalized NA captures remain in ignored `.local/` storage and the application database; do not commit or redistribute them as a bulk dataset. See the publisher's [terms](https://cdn.aws.bmlt.app/aggregator/tos.html).
 
 ## Verification
 

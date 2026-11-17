@@ -1,6 +1,6 @@
 import "server-only";
 import { db } from "./db";
-import { refreshMeetingSources } from "./source-refresh";
+import { refreshNationalMeetingSources } from "./national-meeting-refresh";
 const hosts = new Set([
   "www.mass.gov",
   "aaboston.org",
@@ -61,6 +61,6 @@ export async function checkSources() {
     sql`DELETE FROM atlas_community_report WHERE created_at<now()-interval '90 days'`,
     sql`INSERT INTO sync_runs(source,status,details) VALUES('source-link-check','completed',${JSON.stringify({ checked: rows.length, note: "No source review or verification dates changed" })}::jsonb)`,
   ]);
-  await refreshMeetingSources();
+  await refreshNationalMeetingSources();
   return rows.length;
 }

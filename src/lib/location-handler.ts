@@ -25,7 +25,8 @@ export async function POST(request: NextRequest) {
         { status: 429 },
       );
     if (/^\d{5}$/.test(query)) {
-      const z = zipcodes.lookup(query) ?? territoryPlaces.find((p) => p.zip === query);
+      const z =
+        zipcodes.lookup(query) ?? territoryPlaces.find((p) => p.zip === query);
       if (!z || !isRegionState(z.state))
         return NextResponse.json(
           {
@@ -54,6 +55,14 @@ export async function POST(request: NextRequest) {
         },
         { status: 400 },
       );
+    if (parsed.county)
+      return NextResponse.json({
+        lat: parsed.county.lat,
+        lng: parsed.county.lng,
+        state: parsed.county.state,
+        label: `${parsed.county.name}, ${parsed.county.state} (county center)`,
+        approximate: true,
+      });
     if (parsed.matches.length) {
       const zs = parsed.matches;
       return NextResponse.json({

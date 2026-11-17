@@ -21,7 +21,10 @@ async function queryDatabaseDirectory(
     return "$" + values.length;
   };
   const where = ["published=true"];
-  if (f.state) where.push(`resource_state=${param(f.state)}`);
+  if (f.state)
+    where.push(
+      `(resource_state=${param(f.state)} OR (resource_state='US' AND resource_kind='meeting' AND data->'formats' ? 'online' AND NOT(data->'formats' ? 'hybrid')))`,
+    );
   if (hasMeetingTimeFilter(f)) where.push(`resource_kind='meeting'`);
   const has = (path: string, value: string) => `${path} ? ${param(value)}`;
   if (f.category !== "all") where.push(has("data->'categories'", f.category));
@@ -37,22 +40,40 @@ async function queryDatabaseDirectory(
     );
   }
   if (f.fellowship) where.push(`data->>'fellowship'=${param(f.fellowship)}`);
-  const evidence:string[] = [], unknowns:string[] = [];
-  function evidenceFilter(match:string, unknown:string) {
-    evidence.push(f.uncertainOnly ? "(" + match + " OR " + unknown + ")" : match);
+  const evidence: string[] = [],
+    unknowns: string[] = [];
+  function evidenceFilter(match: string, unknown: string) {
+    evidence.push(
+      f.uncertainOnly ? "(" + match + " OR " + unknown + ")" : match,
+    );
     unknowns.push(unknown);
   }
   if (f.payment) {
-    const p=param(f.payment);
-    evidenceFilter("(data->'payment' ? "+p+" OR EXISTS(SELECT 1 FROM jsonb_array_elements(data->'insurance') i WHERE i->>'name'="+p+"))",
-      "(jsonb_array_length(COALESCE(data->'payment','[]'))=0 AND jsonb_array_length(COALESCE(data->'insurance','[]'))=0)");
+    const p = param(f.payment);
+    evidenceFilter(
+      "(data->'payment' ? " +
+        p +
+        " OR EXISTS(SELECT 1 FROM jsonb_array_elements(data->'insurance') i WHERE i->>'name'=" +
+        p +
+        "))",
+      "(jsonb_array_length(COALESCE(data->'payment','[]'))=0 AND jsonb_array_length(COALESCE(data->'insurance','[]'))=0)",
+    );
   }
-  if(f.language) evidenceFilter(has("data->'languages'",f.language), "jsonb_array_length(COALESCE(data->'languages','[]'))=0");
-  if(f.accessibility) evidenceFilter(has("data->'accessibility'","Wheelchair access"), "jsonb_array_length(COALESCE(data->'accessibility','[]'))=0");
+  if (f.language)
+    evidenceFilter(
+      has("data->'languages'", f.language),
+      "jsonb_array_length(COALESCE(data->'languages','[]'))=0",
+    );
+  if (f.accessibility)
+    evidenceFilter(
+      has("data->'accessibility'", "Wheelchair access"),
+      "jsonb_array_length(COALESCE(data->'accessibility','[]'))=0",
+    );
   where.push(...evidence);
-  if(f.uncertainOnly) where.push(unknowns.length ? "("+unknowns.join(" OR ")+")" : "false");
-  if(f.service) where.push(has("data->'services'",f.service));
-  if(f.population) where.push(has("data->'populations'",f.population));
+  if (f.uncertainOnly)
+    where.push(unknowns.length ? "(" + unknowns.join(" OR ") + ")" : "false");
+  if (f.service) where.push(has("data->'services'", f.service));
+  if (f.population) where.push(has("data->'populations'", f.population));
   if (f.day !== "")
     where.push(
       `data->'meeting'->'days' @> ${param(JSON.stringify([Number(f.day)]))}::jsonb`,
@@ -161,7 +182,13 @@ async function queryDatabaseDirectory(
   };
 }
 
-export async function queryDirectory(f:Filters,saved:string[],limit:number,options:Parameters<typeof queryDatabaseDirectory>[3]={}) {
- if(!process.env.DATABASE_URL) return catalogQuery(bundledResources(),f,saved,limit,options);
- return queryDatabaseDirectory(f,saved,limit,options);
+export async function queryDirectory(
+  f: Filters,
+  saved: string[],
+  limit: number,
+  options: Parameters<typeof queryDatabaseDirectory>[3] = {},
+) {
+  if (!process.env.DATABASE_URL)
+    return catalogQuery(bundledResources(), f, saved, limit, options);
+  return queryDatabaseDirectory(f, saved, limit, options);
 }
