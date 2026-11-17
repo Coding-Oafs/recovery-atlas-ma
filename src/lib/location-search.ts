@@ -23,12 +23,16 @@ export function parseLocationQuery(query: string, preferred = "") {
       ? preferred
       : undefined;
   const city = match ? query.slice(0, match.index).trim() : query;
+  const plainCity = city.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   const matches = (state ? [state] : regionStates)
-    .flatMap((s) => zipcodes.lookupByName(city, s))
+    .flatMap((s) => zipcodes.lookupByName(plainCity, s))
     .filter((z) => isRegionState(z.state));
   if (!matches.length) {
     for (const place of territoryPlaces) {
-      if ((!state || place.state === state) && place.city.toLowerCase() === city.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")) {
+      if (
+        (!state || place.state === state) &&
+        place.city.toLowerCase() === plainCity.toLowerCase()
+      ) {
         matches.push({ ...place, country: "US" } as (typeof matches)[number]);
       }
     }

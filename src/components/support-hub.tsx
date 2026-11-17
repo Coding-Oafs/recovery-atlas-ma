@@ -1,5 +1,8 @@
 "use client";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { regionStates, stateNames, isRegionState } from "@/lib/region";
+import JurisdictionHelp from "./jurisdiction-help";
 import { useLanguage, T } from "./language-provider";
 const resources = [
   {
@@ -81,6 +84,12 @@ const resources = [
 ];
 export default function SupportHub() {
   const { language, t } = useLanguage();
+  const [state, setState] = useState("");
+  useEffect(() => {
+    const value =
+      new URLSearchParams(window.location.search).get("state") || "";
+    if (isRegionState(value)) setState(value);
+  }, []);
   return (
     <div className="stack">
       <h1>
@@ -97,11 +106,23 @@ export default function SupportHub() {
               "Recovery can include health, home, purpose and community. These links take you to original sources; confirm current services and eligibility directly.",
             )}
       </p>
+      <label>
+        {t("State or territory")}
+        <select value={state} onChange={(e) => setState(e.target.value)}>
+          <option value="">{t("All states & territories")}</option>
+          {regionStates.map((code) => (
+            <option key={code} value={code}>
+              {stateNames[code]}
+            </option>
+          ))}
+        </select>
+      </label>
+      <JurisdictionHelp state={state} compact />
       <div className="support-grid">
         {resources.map((r) => (
           <section id={r.id} className="peer-card stack" key={r.id}>
             <h2>{language === "es" ? r.es : r.title}</h2>
-            <p lang="en">{t(r.text)}</p>
+            <p>{t(r.text)}</p>
             {r.links.map(([name, url]) => (
               <a
                 key={url}

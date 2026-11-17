@@ -17,9 +17,15 @@ export function useDirectoryResults(
   saved: string[],
   limit: number,
   mode: "database" | "snapshot",
-  options: { enabled?: boolean; restore?: RestoredPage } = {},
+  options: {
+    enabled?: boolean;
+    restore?: RestoredPage;
+    serverSnapshot?: boolean;
+  } = {},
 ) {
   const enabled = options.enabled ?? true;
+  // National snapshots stay on the server; small caller-supplied offline lists can still paginate locally.
+  const useServer = mode === "database" || !!options.serverSnapshot;
   const restoreToken = options.restore?.token ?? 0;
   // Bookmark refreshes and saves outside Saved-only do not change the search.
   const criteria = JSON.stringify({
@@ -61,10 +67,10 @@ export function useDirectoryResults(
   const [error, setError] = useState("");
   const locked = useRef(false);
   const requestKey = JSON.stringify(session);
-  const searching = (!enabled || requestKey !== settled);
+  const searching = useServer && (!enabled || requestKey !== settled);
 
   useEffect(() => {
-    if (!enabled || !session.asOf) return;
+    if (!enabled || !useServer || !session.asOf) return;
     const abort = new AbortController();
     const timer = setTimeout(async () => {
       try {
@@ -98,7 +104,7 @@ export function useDirectoryResults(
       clearTimeout(timer);
       abort.abort();
     };
-  }, [enabled, mode, session, requestKey]);
+  }, [enabled, useServer, session, requestKey]);
 
   const local = useMemo(
     () =>
@@ -110,7 +116,7 @@ export function useDirectoryResults(
       ),
     [resources, criteria, session.asOf],
   );
-  const remote = loaded?.criteria === criteria ? loaded : null;
+  const remote = useServer && loaded?.criteria === criteria ? loaded : null;
   const offset = remote?.offset ?? (mode === "snapshot" ? session.offset : 0);
   const data = remote?.data ?? {
     resources: local.slice(offset, offset + limit),
@@ -120,7 +126,7 @@ export function useDirectoryResults(
   };
   function changePage(next: number) {
     if (searching || locked.current) return;
-    if (mode === "database") locked.current = true;
+    if (useServer) locked.current = true;
     setSession((s) => ({ ...s, offset: next, attempt: s.attempt + 1 }));
   }
   // A new search invalidates any previous request's click guard.
@@ -133,7 +139,7 @@ export function useDirectoryResults(
     asOf: session.asOf,
     searching,
     error: settled === requestKey ? error : "",
-    usingBackup: !remote,
+    usingBackup: useServer && !remote,
     changePage,
     retry: () => setSession((s) => ({ ...s, attempt: s.attempt + 1 })),
   };

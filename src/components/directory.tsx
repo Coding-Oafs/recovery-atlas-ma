@@ -172,7 +172,7 @@ function ResourceCard({
         </span>
         <button
           className={`save-button ${saved ? "saved" : ""}`}
-          aria-label={`${saved ? "Unsave" : "Save"} ${r.name}`}
+          aria-label={`${t(saved ? "Unsave" : "Save")} ${r.name}`}
           aria-pressed={saved}
           disabled={savesLoading}
           onClick={onSave}
@@ -334,6 +334,7 @@ export default function Directory({
     retry,
   } = useDirectoryResults(resources, effectiveFilters, saved, limit, mode, {
     enabled: navigation.ready,
+    serverSnapshot: true,
     restore: navigation.restoration,
   });
   const {
@@ -414,7 +415,12 @@ export default function Directory({
     filters.startBefore ?? "",
   ].filter((v) => v !== "" && v !== false).length;
   function update<K extends keyof Filters>(k: K, v: Filters[K]) {
-    setFilters((f) => ({ ...f, [k]: v }));
+    setFilters((f) => {
+      const next = { ...f, [k]: v };
+      if (!next.payment && !next.language && !next.accessibility)
+        next.uncertainOnly = false;
+      return next;
+    });
     setLimit(20);
   }
   async function searchLocation(e?: React.FormEvent) {
@@ -437,6 +443,7 @@ export default function Directory({
       setFilters((f) => ({
         ...f,
         center: { lat: data.lat, lng: data.lng },
+        state: data.state || f.state,
         bounds: null,
       }));
       setLocationLabel(
@@ -599,7 +606,15 @@ export default function Directory({
                 {t(label)}
               </button>
             ))}
-            <Link className="secondary" href="/support">
+            <Link
+              className="secondary"
+              href={
+                "/support" +
+                (filters.state
+                  ? "?state=" + encodeURIComponent(filters.state)
+                  : "")
+              }
+            >
               {t("Support for daily life")}
             </Link>
           </div>
@@ -1241,7 +1256,7 @@ export default function Directory({
               <Info size={15} />
               <p>
                 {searching
-                  ? t("Searching regional sources…")
+                  ? t("Searching national and regional sources.")
                   : t(
                       "National facility sources and regional meetings. Coverage varies by location.",
                     )}
