@@ -40,7 +40,7 @@ import { resourceFreshness } from "@/lib/resource-quality";
 import { resourceMapTarget } from "@/lib/map-selection";
 import ResourceDetail, { CorrectionForm, NextTime } from "./resource-detail";
 import initialCoverage from "../../public/coverage.json";
-import counties from "../../data/us-counties.json";
+import { countyReferences as counties } from "@/lib/county-reference";
 import nationalManifest from "../../data/national-manifest.json";
 import GuidedFinder from "./guided-finder";
 import SearchAlternatives from "./search-alternatives";

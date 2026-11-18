@@ -1,0 +1,93 @@
+[
+  {
+    "fips": "60010",
+    "state": "AS",
+    "name": "Eastern District",
+    "lat": -14.280286,
+    "lng": -170.644819
+  },
+  {
+    "fips": "60020",
+    "state": "AS",
+    "name": "Manu'a District",
+    "lat": -14.213424,
+    "lng": -169.553035
+  },
+  {
+    "fips": "60030",
+    "state": "AS",
+    "name": "Rose Island",
+    "lat": -14.541726,
+    "lng": -168.151631
+  },
+  {
+    "fips": "60040",
+    "state": "AS",
+    "name": "Swains Island",
+    "lat": -11.055768,
+    "lng": -171.077952
+  },
+  {
+    "fips": "60050",
+    "state": "AS",
+    "name": "Western District",
+    "lat": -14.330685,
+    "lng": -170.775893
+  },
+  {
+    "fips": "66010",
+    "state": "GU",
+    "name": "Guam",
+    "lat": 13.44982,
+    "lng": 144.78869
+  },
+  {
+    "fips": "69085",
+    "state": "MP",
+    "name": "Northern Islands Municipality",
+    "lat": 18.28141,
+    "lng": 145.476491
+  },
+  {
+    "fips": "69100",
+    "state": "MP",
+    "name": "Rota Municipality",
+    "lat": 14.15511,
+    "lng": 145.20412
+  },
+  {
+    "fips": "69110",
+    "state": "MP",
+    "name": "Saipan Municipality",
+    "lat": 15.19415,
+    "lng": 145.759842
+  },
+  {
+    "fips": "69120",
+    "state": "MP",
+    "name": "Tinian Municipality",
+    "lat": 14.970789,
+    "lng": 145.603367
+  },
+  {
+    "fips": "78010",
+    "state": "VI",
+    "name": "St. Croix Island",
+    "lat": 17.733104,
+    "lng": -64.730862
+  },
+  {
+    "fips": "78020",
+    "state": "VI",
+    "name": "St. John Island",
+    "lat": 18.338119,
+    "lng": -64.753044
+  },
+  {
+    "fips": "78030",
+    "state": "VI",
+    "name": "St. Thomas Island",
+    "lat": 18.357851,
+    "lng": -64.955315
+  }
+]

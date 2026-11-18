@@ -1,5 +1,5 @@
 import zipcodes from "zipcodes";
-import counties from "../../data/us-counties.json";
+import { countyReferences as counties } from "./county-reference";
 import {
   territoryPlaces,
   regionStates,
@@ -26,7 +26,7 @@ export function parseLocationQuery(query: string, preferred = "") {
   const city = match ? query.slice(0, match.index).trim() : query;
   const plainCity = city.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   const county =
-    /\b(county|parish|borough|census area|municipality|municipio)\b/i.test(
+    /\b(county|parish|borough|census area|municipality|municipio|district|island)\b/i.test(
       plainCity,
     )
       ? counties.filter(
