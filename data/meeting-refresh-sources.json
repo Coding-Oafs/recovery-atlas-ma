@@ -820,5 +820,50 @@
     "feed": "https://aabroward.org/locations/",
     "fellowship": "AA",
     "adapter": "broward-table"
+  },
+  {
+    "id": "aa-venue-mustard-seed-chicago",
+    "state": "IL",
+    "page": "https://mustardseedchicago.com/physical-meetings/",
+    "feed": "https://mustardseedchicago.com/physical-meetings/",
+    "fellowship": "AA",
+    "adapter": "venue-meetings",
+    "layout": "mustard-seed"
+  },
+  {
+    "id": "aa-venue-wicker-park",
+    "state": "IL",
+    "page": "https://www.thewickerparkalanoclub.org/meeting-schedule.html",
+    "feed": "https://www.thewickerparkalanoclub.org/meeting-schedule.html",
+    "fellowship": "AA",
+    "adapter": "venue-meetings",
+    "layout": "wicker-park"
+  },
+  {
+    "id": "aa-venue-dallas-24-hour",
+    "state": "TX",
+    "page": "https://www.dallas24hourclub.org/meetings",
+    "feed": "https://www.dallas24hourclub.org/meetings",
+    "fellowship": "AA",
+    "adapter": "venue-meetings",
+    "layout": "dallas-24-hour"
+  },
+  {
+    "id": "aa-venue-sobe-room",
+    "state": "FL",
+    "page": "https://www.thesoberoom.com/the-sobe-room-aa",
+    "feed": "https://www.thesoberoom.com/the-sobe-room-aa",
+    "fellowship": "AA",
+    "adapter": "venue-meetings",
+    "layout": "sobe-room"
+  },
+  {
+    "id": "aa-venue-lambda-miami",
+    "state": "FL",
+    "page": "https://www.lambdamiami-dade.org/meeting-schedule",
+    "feed": "https://www.lambdamiami-dade.org/meeting-schedule",
+    "fellowship": "AA",
+    "adapter": "venue-meetings",
+    "layout": "lambda-miami"
   }
 ]
