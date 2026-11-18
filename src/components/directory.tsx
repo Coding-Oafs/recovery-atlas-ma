@@ -44,6 +44,7 @@ import { countyReferences as counties } from "@/lib/county-reference";
 import nationalManifest from "../../data/national-manifest.json";
 import GuidedFinder from "./guided-finder";
 import SearchAlternatives from "./search-alternatives";
+import { localAaDirectory } from "@/lib/local-aa-directory";
 import JurisdictionHelp from "./jurisdiction-help";
 import { CompareButton, ComparisonTray } from "./shortlist-tools";
 import { unreportedFields } from "@/lib/match-evidence";
@@ -286,6 +287,7 @@ export default function Directory({
     [now, setNow] = useState<Date | null>(null);
   const { saved, toggleSave, clearGuest, error: savedError } = useSaved();
   const { t, language } = useLanguage();
+  const localAa = localAaDirectory(filters);
   const pendingScroll = useRef(false);
   const [viewerZone, setViewerZone] = useState("America/New_York");
   useEffect(() => {
@@ -1340,12 +1342,20 @@ export default function Directory({
               </p>
             </div>
             {(filters.category === "meetings" ||
-              filters.fellowship === "AA") && (
+              filters.fellowship === "AA" || localAa) && (
               <p className="notice">
                 <T>
                   Local AA lists may be incomplete. An empty search does not
                   mean no meetings exist.
                 </T>{" "}
+                {localAa && (
+                  <>
+                    <a href={localAa.url} target="_blank" rel="noopener noreferrer">
+                      {localAa.name}
+                    </a>
+                    {" · "}
+                  </>
+                )}
                 <a
                   href={
                     filters.center

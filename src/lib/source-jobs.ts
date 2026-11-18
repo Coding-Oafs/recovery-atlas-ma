@@ -24,6 +24,7 @@ import {
   parseSamoanSerenity,
 } from "./meeting-index";
 import { normalizeSmartCalendar } from "./smart-calendar";
+import { parseVenueMeetings } from "./venue-meetings";
 import type { Resource } from "./types";
 import { stateNames } from "./region";
 import { runProviderJob } from "./provider-jobs";
@@ -142,6 +143,7 @@ async function capture(job: Job) {
       "publisher-csv",
       "crawler-index",
       "broward-table",
+      "venue-meetings",
       "sioux-falls",
       "samoan-serenity",
     ].includes(job.adapter)
@@ -180,11 +182,13 @@ async function capture(job: Job) {
             ? parseCrawlerIndex(text, source.state === "VI" ? "VI" : undefined)
             : job.adapter === "broward-table"
               ? parseBrowardMeetings(text)
-              : job.adapter === "sioux-falls"
-                ? parseSiouxFalls(text)
-                : job.adapter === "samoan-serenity"
-                  ? parseSamoanSerenity(text)
-                  : JSON.parse(text);
+              : job.adapter === "venue-meetings"
+                ? parseVenueMeetings(text, source.layout)
+                : job.adapter === "sioux-falls"
+                  ? parseSiouxFalls(text)
+                  : job.adapter === "samoan-serenity"
+                    ? parseSamoanSerenity(text)
+                    : JSON.parse(text);
     if (!Array.isArray(raw)) throw Error("Changed publisher structure");
     rawCount = raw.length;
     rows = raw
