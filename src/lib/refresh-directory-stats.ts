@@ -30,6 +30,10 @@ export async function refreshDirectoryStats(sql: PipelineSql) {
     ),
     approaches,
   };
+  await sql.query(
+    "INSERT INTO atlas_directory_stats(id,data)VALUES('coverage',$1::jsonb)ON CONFLICT(id)DO UPDATE SET data=EXCLUDED.data,generated_at=now()",
+    [JSON.stringify(coverage)],
+  );
   const fields = await sql.query(
     "SELECT k.field,jsonb_agg(DISTINCT v.value ORDER BY v.value) AS values FROM resources r CROSS JOIN LATERAL(VALUES('services',r.data->'services'),('languages',r.data->'languages'),('populations',r.data->'populations'),('payment',r.data->'payment')) k(field,items) CROSS JOIN LATERAL jsonb_array_elements_text(k.items) v(value) WHERE r.published GROUP BY k.field",
   );
@@ -41,8 +45,8 @@ export async function refreshDirectoryStats(sql: PipelineSql) {
     ...new Set([...(facets.payment ?? []), ...insurance.map((r) => r.name)]),
   ].sort();
   await sql.query(
-    "INSERT INTO atlas_directory_stats(id,data)VALUES('coverage',$1::jsonb),('facets',$2::jsonb)ON CONFLICT(id)DO UPDATE SET data=EXCLUDED.data,generated_at=now()",
-    [JSON.stringify(coverage), JSON.stringify(facets)],
+    "INSERT INTO atlas_directory_stats(id,data)VALUES('facets',$1::jsonb)ON CONFLICT(id)DO UPDATE SET data=EXCLUDED.data,generated_at=now()",
+    [JSON.stringify(facets)],
   );
   return coverage;
 }

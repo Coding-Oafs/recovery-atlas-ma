@@ -36,6 +36,14 @@
     {
       "path": "/api/coverage-jobs",
       "schedule": "45 7 * * *"
+    },
+    {
+      "path": "/api/coverage-jobs/city",
+      "schedule": "55 7 * * *"
+    },
+    {
+      "path": "/api/coverage-jobs/county",
+      "schedule": "5 8 * * *"
     }
   ]
 }

@@ -7,6 +7,10 @@ export function equal(a: string, b: string) {
     y = createHash("sha256").update(b).digest();
   return timingSafeEqual(x, y);
 }
+export function authorizeCron(request: Request) {
+  const secret = process.env.CRON_SECRET;
+  return !!secret && equal(request.headers.get("authorization") || "", "Bearer " + secret);
+}
 function sign(value: string) {
   if (!process.env.SESSION_SECRET) throw Error("Session secret not configured");
   return createHmac("sha256", process.env.SESSION_SECRET)
