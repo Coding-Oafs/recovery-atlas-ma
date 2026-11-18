@@ -1,6 +1,6 @@
 import "server-only";
 import { db } from "./db";
-import counties from "../../data/us-counties.json";
+import { countyReferences as counties } from "./county-reference";
 export async function getCountyCoverage(input: {
   state: string;
   query: string;
