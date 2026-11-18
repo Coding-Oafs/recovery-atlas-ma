@@ -57,6 +57,9 @@ export const getCoverage = unstable_cache(
       };
     }
     const sql = db();
+    const [cached] =
+      await sql`SELECT data FROM atlas_directory_stats WHERE id='coverage'`;
+    if (cached) return cached.data;
     const [states, approaches] = await Promise.all([
       sql`SELECT resource_state AS state,count(*)::int AS listings,count(location)::int AS mapped,count(*) FILTER(WHERE resource_kind='meeting')::int AS meetings,count(*) FILTER(WHERE data->>'fellowship'='AA' AND data->'formats' ? 'in-person')::int AS "aaPhysical",count(*) FILTER(WHERE resource_kind='provider')::int AS providers,count(*) FILTER(WHERE data->'categories' ? 'treatment')::int AS treatment,count(*) FILTER(WHERE data->'categories' ? 'mental-health')::int AS "mentalHealth",count(*) FILTER(WHERE data->'categories' ? 'counseling')::int AS counseling,count(*) FILTER(WHERE data->'categories' ? 'support')::int AS support FROM resources WHERE published GROUP BY resource_state`,
       sql`SELECT data->>'fellowship' AS name,count(*)::int AS listings FROM resources WHERE published AND resource_kind='meeting' GROUP BY 1`,
