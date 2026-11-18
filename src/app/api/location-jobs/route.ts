@@ -1,11 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authorizeCron } from "@/lib/security";
 import { db } from "@/lib/db";
-import {
-  seedAddressQueue,
-  runGeocodingBatch,
-  applyGeocodedAddresses,
-} from "@/lib/location-jobs";
+import { seedAddressQueue, runGeocodingBatch } from "@/lib/location-jobs";
 import { revalidateTag } from "next/cache";
 export const maxDuration = 300;
 export async function GET(request: NextRequest) {
@@ -25,10 +21,9 @@ export async function GET(request: NextRequest) {
       "UPDATE atlas_source_job SET config=jsonb_set(config,'{cursor}',to_jsonb($1::text)) WHERE id='public-location-enrichment'",
       [seeded.cursor],
     );
-    const cached = await applyGeocodedAddresses(sql);
-    const geocoding = await runGeocodingBatch(sql);
+    const geocoding = await runGeocodingBatch(sql, 2000);
 
-    const result = { seeded, cached, geocoding };
+    const result = { seeded, geocoding };
     await sql.query(
       "UPDATE atlas_source_job SET status='healthy',attempts=0,lease_until=NULL,last_success_at=now(),last_error=NULL,next_run_at=now()+interval '8 hours' WHERE id='public-location-enrichment'",
     );

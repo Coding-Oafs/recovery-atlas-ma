@@ -34,6 +34,18 @@
       "schedule": "0 22 * * *"
     },
     {
+      "path": "/api/coverage-jobs/addresses",
+      "schedule": "45 6 * * *"
+    },
+    {
+      "path": "/api/coverage-jobs/addresses",
+      "schedule": "45 14 * * *"
+    },
+    {
+      "path": "/api/coverage-jobs/addresses",
+      "schedule": "45 22 * * *"
+    },
+    {
       "path": "/api/coverage-jobs",
       "schedule": "45 7 * * *"
     },
