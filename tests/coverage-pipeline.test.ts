@@ -7,6 +7,7 @@ import {
 } from "../src/lib/provider-import";
 import { CsvStream } from "../src/lib/nppes-stream";
 import { parsePublisherMeetings } from "../src/lib/publisher-csv";
+import { parseBrowardMeetings } from "../src/lib/meeting-index";
 import { censusBatchCsv, readCensusMatches } from "../src/lib/census-batch";
 import {
   acceptableCapture,
@@ -24,6 +25,49 @@ import { savedCalendar } from "../src/lib/saved-export";
 import raw from "../data/resources.json";
 import { resourceSchema } from "../src/lib/types";
 const fixture = resourceSchema.parse(raw.find((r) => r.meeting)!);
+test("Broward schedules keep declared times and physical attendance without importing join credentials", () => {
+  const schedule = (
+    mode: string,
+  ) => `<table class="meeting-list ${mode}"><tr class="time-slot" data-time="18:30:00"><td>
+    <div class="day-column" data-day="tuesday"><span data-specific="O">O</span><span data-specific="conference-widget"></span></div>
+    <div class="day-column" data-day="thursday"><span data-specific="w">Women</span></div>
+  </td></tr></table>`;
+  const records = parseBrowardMeetings(`<div class="single-meeting" id="1">
+    <h4 class="meeting-name">Example Group<span class="status-inline"> | In-Person Meeting</span></h4>
+    <div class="meeting-address in-person-meeting">Community Center, 101 Main Street | Example City | FL | 33004</div>
+    ${schedule("in-person-meeting")}${schedule("online-meeting")}${schedule("not-meeting")}
+  </div>`);
+  assert.deepEqual(
+    records.map(
+      ({ name, day, time, types, attendance_option, formatted_address }) => [
+        name,
+        day,
+        time,
+        types,
+        attendance_option,
+        formatted_address,
+      ],
+    ),
+    [
+      [
+        "Example Group",
+        2,
+        "18:30",
+        ["O"],
+        "in_person",
+        "101 Main Street, Example City, FL 33004",
+      ],
+      [
+        "Example Group",
+        4,
+        "18:30",
+        ["W"],
+        "in_person",
+        "101 Main Street, Example City, FL 33004",
+      ],
+    ],
+  );
+});
 const calendar = (rule = "FREQ=WEEKLY;BYDAY=TU;UNTIL=20261202T010000Z") =>
   `BEGIN:VCALENDAR\r\nBEGIN:VEVENT\r\nDTSTART;TZID=America/New_York:20261124T080000\r\nDTEND;TZID=America/New_York:20261124T090000\r\nRRULE:${rule}\r\nEXDATE;TZID=America/New_York:20261124T080000\r\nDESCRIPTION:private access details\r\nEND:VEVENT\r\nEND:VCALENDAR`;
 test("SMART calendars preserve wall time, local date bounds and cancellations without access credentials", () => {

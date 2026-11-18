@@ -780,5 +780,45 @@
     "feed": "https://wncaa.org/index.php/locations/",
     "fellowship": "AA",
     "adapter": "crawler-index"
+  },
+  {
+    "id": "aa-v2-cf54f7b3c625",
+    "state": "TX",
+    "page": "https://fortworthaa.org/meetings/",
+    "feed": "https://fortworthaa.org/wp-content/tsml-cache-87c092dd60.json?1794931612",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-v2-793848e26629",
+    "state": "AZ",
+    "page": "https://aamesaaz.org/meetings/",
+    "feed": "https://aamesaaz.org/wp-admin/admin-ajax.php?action=meetings",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-v2-62abb17a01e8",
+    "state": "CA",
+    "page": "https://aainlandempire.org/meetings",
+    "feed": "https://aainlandempire.org/wp-content/tsml-cache-1cb8021415.json?1794934003",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-v2-b2c53048236f",
+    "state": "FL",
+    "page": "https://aapalmbeachcounty.org/meetings/",
+    "feed": "https://aapalmbeachcounty.org/wp-content/tsml-cache-841ed00bcd.json?1793654022",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-v2-55b27e8b9bb4",
+    "state": "FL",
+    "page": "https://aabroward.org/locations/",
+    "feed": "https://aabroward.org/locations/",
+    "fellowship": "AA",
+    "adapter": "broward-table"
   }
 ]

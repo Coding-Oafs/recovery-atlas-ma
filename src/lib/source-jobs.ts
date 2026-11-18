@@ -17,6 +17,7 @@ import {
 import { parsePublisherMeetings } from "./publisher-csv";
 import {
   parseCrawlerIndex,
+  parseBrowardMeetings,
   parseGeorgia,
   parseMontana,
   parseSiouxFalls,
@@ -140,6 +141,7 @@ async function capture(job: Job) {
       "meeting-guide",
       "publisher-csv",
       "crawler-index",
+      "broward-table",
       "sioux-falls",
       "samoan-serenity",
     ].includes(job.adapter)
@@ -176,11 +178,13 @@ async function capture(job: Job) {
           ? parsePublisherMeetings(text, source.state)
           : job.adapter === "crawler-index"
             ? parseCrawlerIndex(text, source.state === "VI" ? "VI" : undefined)
-            : job.adapter === "sioux-falls"
-              ? parseSiouxFalls(text)
-              : job.adapter === "samoan-serenity"
-                ? parseSamoanSerenity(text)
-                : JSON.parse(text);
+            : job.adapter === "broward-table"
+              ? parseBrowardMeetings(text)
+              : job.adapter === "sioux-falls"
+                ? parseSiouxFalls(text)
+                : job.adapter === "samoan-serenity"
+                  ? parseSamoanSerenity(text)
+                  : JSON.parse(text);
     if (!Array.isArray(raw)) throw Error("Changed publisher structure");
     rawCount = raw.length;
     rows = raw

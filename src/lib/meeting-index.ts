@@ -71,6 +71,96 @@ export function parseCrawlerIndex(html: string, territory?: "VI") {
       ];
     });
 }
+const browardMeetingTypes = new Set(["O", "C", "M", "W"]);
+export function parseBrowardMeetings(html: string) {
+  const $ = load(html);
+  return $(".single-meeting")
+    .toArray()
+    .flatMap((group) => {
+      const meeting = $(group);
+      const heading = meeting.children(".meeting-name").clone();
+      heading.find(".status-inline").remove();
+      const name = clean(heading.text());
+      return meeting
+        .children(
+          ".meeting-list.in-person-meeting,.meeting-list.hybrid-meeting",
+        )
+        .toArray()
+        .flatMap((table) => {
+          const hybrid = $(table).hasClass("hybrid-meeting");
+          const address = clean(
+            meeting
+              .children(
+                hybrid
+                  ? ".meeting-address.hybrid-meeting"
+                  : ".meeting-address.in-person-meeting",
+              )
+              .text(),
+          );
+          const parts = address.split("|").map(clean);
+          const [city, state, zip] = parts.slice(-3);
+          const street = parts[0].match(/(?:^|,\s*)(\d{1,6}\s+[^,]+)/)?.[1];
+          if (
+            !name ||
+            !street ||
+            !city ||
+            state !== "FL" ||
+            !/^\d{5}$/.test(zip)
+          )
+            return [];
+          const notes = parts
+            .slice(1, -3)
+            .filter((part) => /[a-z]/i.test(part))
+            .join(". ");
+
+          return $(table)
+            .find(".time-slot[data-time]")
+            .toArray()
+            .flatMap((slot) => {
+              const time = ($(slot).attr("data-time") || "").slice(0, 5);
+              return $(slot)
+                .find(".day-column[data-day]")
+                .toArray()
+                .flatMap((column) => {
+                  const day = days.findIndex(
+                    (value) =>
+                      value.toLowerCase() === $(column).attr("data-day"),
+                  );
+                  if (day < 0 || !/^\d{2}:\d{2}$/.test(time)) return [];
+                  const types = $(column)
+                    .find("[data-specific]")
+                    .toArray()
+                    .map((entry) =>
+                      ($(entry).attr("data-specific") || "").toUpperCase(),
+                    )
+                    .filter((type) => browardMeetingTypes.has(type));
+                  return [
+                    {
+                      name,
+                      slug: [
+                        meeting.attr("id") || name,
+                        city,
+                        street,
+                        day,
+                        time,
+                      ].join("|"),
+                      day,
+                      time,
+                      city,
+                      state,
+                      formatted_address: [street, city, state + " " + zip].join(
+                        ", ",
+                      ),
+                      attendance_option: hybrid ? "hybrid" : "in_person",
+                      types,
+                      notes,
+                    },
+                  ];
+                });
+            });
+        });
+    });
+}
 export function parseSamoanSerenity(html: string) {
   const $ = load(html);
   $("script,style").remove();
