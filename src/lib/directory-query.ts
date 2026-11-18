@@ -24,19 +24,26 @@ async function queryDatabaseDirectory(
     "published=true",
     "(resource_kind<>'meeting' OR NULLIF(data->'meeting'->>'endsOn','') IS NULL OR (data->'meeting'->>'endsOn')::date >= (now() AT TIME ZONE COALESCE(data->'meeting'->>'timezone','UTC'))::date)",
   ];
+  const includeOnline = !f.format || f.format === "online";
+  const online =
+    "(resource_kind='meeting' AND data->'formats' ? 'online' AND NOT(data->'formats' ? 'hybrid'))";
+  const withOnline = (condition: string, national = false) =>
+    includeOnline
+      ? `(${condition} OR (${national ? "resource_state='US' AND " : ""}${online}))`
+      : condition;
   if (f.city)
     where.push(
-      `(lower(trim(data->>'city'))=lower(trim(${param(f.city)})) OR (resource_kind='meeting' AND data->'formats' ? 'online' AND NOT(data->'formats' ? 'hybrid')))`,
+      withOnline(`lower(trim(data->>'city'))=lower(trim(${param(f.city)}))`),
     );
   if (f.countyFips)
     where.push(
-      `(EXISTS(SELECT 1 FROM atlas_resource_county county WHERE county.resource_id=resources.id AND county.county_fips=${param(f.countyFips)}) OR (resource_kind='meeting' AND data->'formats' ? 'online' AND NOT(data->'formats' ? 'hybrid')))`,
+      withOnline(
+        `id IN(SELECT resource_id FROM atlas_resource_county WHERE county_fips=${param(f.countyFips)})`,
+      ),
     );
-  if (f.state)
-    where.push(
-      `(resource_state=${param(f.state)} OR (resource_state='US' AND resource_kind='meeting' AND data->'formats' ? 'online' AND NOT(data->'formats' ? 'hybrid')))`,
-    );
-  if (hasMeetingTimeFilter(f)) where.push(`resource_kind='meeting'`);
+  if (f.state) where.push(withOnline(`resource_state=${param(f.state)}`, true));
+  if (f.category === "meetings" || f.fellowship || hasMeetingTimeFilter(f))
+    where.push(`resource_kind='meeting'`);
   const has = (path: string, value: string) => `${path} ? ${param(value)}`;
   if (f.category !== "all") where.push(has("data->'categories'", f.category));
   if (f.fellowship) where.push(`data->>'fellowship'=${param(f.fellowship)}`);
@@ -97,8 +104,6 @@ async function queryDatabaseDirectory(
       `concat_ws(' ',data->>'name',data->>'city',data->>'address',data->>'description',data->>'fellowship',data->>'services',data->>'languages',data->>'populations',data->>'payment',data->>'insurance') ILIKE ${param("%" + escaped + "%")}`,
     );
   }
-  const online =
-    "(resource_kind='meeting' AND data->'formats' ? 'online' AND NOT(data->'formats' ? 'hybrid'))";
   let distance = "NULL::float8";
   if (f.center) {
     const lng = param(f.center.lng),
@@ -106,13 +111,17 @@ async function queryDatabaseDirectory(
     const point = `ST_SetSRID(ST_MakePoint(${lng}::float8,${lat}::float8),4326)::geography`;
     distance = `ST_Distance(location,${point})/1609.344`;
     where.push(
-      `(${online} OR ST_DWithin(location,${point},${param(f.radius * 1609.344)}::float8))`,
+      withOnline(
+        `ST_DWithin(location,${point},${param(f.radius * 1609.344)}::float8)`,
+      ),
     );
   }
   if (f.bounds) {
     const [w, s, e, n] = f.bounds;
     where.push(
-      `(${online} OR ST_Intersects(location::geometry,ST_MakeEnvelope(${param(w)}::float8,${param(s)}::float8,${param(e)}::float8,${param(n)}::float8,4326)))`,
+      withOnline(
+        `ST_Intersects(location::geometry,ST_MakeEnvelope(${param(w)}::float8,${param(s)}::float8,${param(e)}::float8,${param(n)}::float8,4326))`,
+      ),
     );
   }
   const view = options.map?.bounds ?? options.selection?.bounds;
@@ -190,7 +199,14 @@ async function queryDatabaseDirectory(
     const [row] = await db().query(query, values);
     return { pins: row.pins, represented: Number(row.represented) };
   }
-  const query = `${base},page AS(SELECT data,row_number() OVER(ORDER BY ${order},id) AS position FROM filtered ORDER BY ${order},id LIMIT ${param(limit)} OFFSET ${param(options.selection?.offset ?? options.offset ?? 0)}),counts AS(SELECT count(*) AS total,count(*) FILTER(WHERE location IS NULL) AS online_or_unmapped,count(location) AS mapped FROM filtered) SELECT counts.*,COALESCE((SELECT jsonb_agg(data ORDER BY position) FROM page),'[]') AS resources FROM counts`;
+  const unfiltered =
+    where.length === 2 && !f.uncertainOnly && !hasMeetingTimeFilter(f);
+  const countRows =
+    "SELECT count(*) AS total,count(*) FILTER(WHERE location IS NULL) AS online_or_unmapped,count(location) AS mapped FROM filtered";
+  const counts = unfiltered
+    ? `SELECT (data->>'total')::bigint AS total,(data->>'total')::bigint-(data->>'mapped')::bigint AS online_or_unmapped,(data->>'mapped')::bigint AS mapped FROM atlas_directory_stats WHERE id='coverage' UNION ALL SELECT fallback.* FROM (${countRows}) fallback WHERE NOT EXISTS(SELECT 1 FROM atlas_directory_stats WHERE id='coverage')`
+    : countRows;
+  const query = `${base},page AS(SELECT data,row_number() OVER(ORDER BY ${order},id) AS position FROM filtered ORDER BY ${order},id LIMIT ${param(limit)} OFFSET ${param(options.selection?.offset ?? options.offset ?? 0)}),counts AS(${counts}) SELECT counts.*,COALESCE((SELECT jsonb_agg(data ORDER BY position) FROM page),'[]') AS resources FROM counts`;
   const rows = await db().query(query, values);
   return {
     ...rows[0],

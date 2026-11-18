@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS atlas_import_release (
 );
 ALTER TABLE resources ADD COLUMN IF NOT EXISTS provider_baseline_hash text;
 CREATE INDEX IF NOT EXISTS resources_priority_name_idx ON resources((CASE WHEN resource_source LIKE 'NPPES%' THEN 1 ELSE 0 END),resource_name,id) WHERE published;
+CREATE INDEX IF NOT EXISTS resources_meeting_fellowship_state_idx ON resources((data->>'fellowship'),resource_state,id) WHERE published AND resource_kind='meeting';
 CREATE INDEX IF NOT EXISTS audit_events_resource_idx ON audit_events(resource_id,created_at);
 CREATE TABLE IF NOT EXISTS atlas_directory_stats(id text PRIMARY KEY,data jsonb NOT NULL,generated_at timestamptz NOT NULL DEFAULT now());
 CREATE TABLE IF NOT EXISTS atlas_import_release_member (

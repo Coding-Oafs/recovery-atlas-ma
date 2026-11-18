@@ -194,6 +194,8 @@ async function capture(job: Job) {
       })
       .filter((r): r is Resource => !!r);
   } else if (job.adapter === "online-aa") {
+    // This query covers one day of a weekly directory.
+    complete = false;
     const midnight = new Date();
     midnight.setUTCHours(0, 0, 0, 0);
     for (let hour = 0; hour < 24; hour += 6) {

@@ -21,7 +21,7 @@ export const getResources = unstable_cache(
       };
     try {
       const rows =
-        await db()`SELECT data FROM resources WHERE published = true ORDER BY CASE WHEN data->>'sourceName' LIKE 'NPPES%' THEN 1 ELSE 0 END, data->>'name', id LIMIT 50`;
+        await db()`SELECT data FROM resources WHERE published = true ORDER BY CASE WHEN resource_source LIKE 'NPPES%' THEN 1 ELSE 0 END, resource_name, id LIMIT 50`;
       return {
         resources: rows.map((r) => resourceSchema.parse(r.data)),
         mode: "database",
