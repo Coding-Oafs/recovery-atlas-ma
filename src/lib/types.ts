@@ -39,10 +39,28 @@ export const resourceSchema = z
       .regex(/^[A-Z]{2}$/)
       .optional(),
     postalCode: z.string().max(24).optional(),
+    countyFips: z
+      .string()
+      .regex(/^\d{5}$/)
+      .optional(),
     zip: z.string().regex(/^\d{5}$|^$/),
     lat: z.number().min(-90).max(90).nullable(),
     lng: z.number().min(-180).max(180).nullable(),
     coordinateAccuracy: z.enum(["address", "approximate", "unavailable"]),
+    locationEvidence: z
+      .object({
+        method: z.enum([
+          "publisher-approximate",
+          "publisher-address",
+          "zip-centroid",
+          "city-centroid",
+          "census-street-range",
+        ]),
+        sourceUrl: webUrl,
+        checkedAt: date,
+      })
+      .nullable()
+      .optional(),
     phone: z.string().max(70),
     website: webUrl,
     description: z.string().min(5).max(3000),
@@ -68,6 +86,10 @@ export const resourceSchema = z
     ),
     sourceUrl: webUrl,
     sourceName: z.string().max(160),
+    sourceRecordHash: z
+      .string()
+      .regex(/^[a-f0-9]{32}$/)
+      .optional(),
     sourceCheckedAt: date,
     verifiedAt: date.nullable(),
     sourceUpdatedAt: date.nullable(),
@@ -87,6 +109,8 @@ export const resourceSchema = z
               return false;
             }
           }, "Use a valid IANA time zone"),
+        startsOn: date.optional(),
+        endsOn: date.optional(),
         exceptions: z
           .array(
             z.object({
@@ -170,6 +194,8 @@ export const categories = [
   { id: "support", label: "Recovery support" },
 ] as const;
 export type Filters = {
+  countyFips?: string;
+  city?: string;
   prioritizeRecovery?: boolean;
   uncertainOnly?: boolean;
   state?: string;

@@ -1,5 +1,6 @@
 import type { Resource } from "./types";
 import type { MeetingTimeFilters } from "./meeting-time";
+import { meetingTimeBounds } from "./meeting-time";
 import { nextMeeting } from "./search";
 import { getVtimezoneComponent } from "@touch4it/ical-timezones";
 // Referrer-Policy: no-referrer makes Chromium send Origin:null for form navigations.
@@ -168,7 +169,23 @@ export function savedCalendar(
           [...new Set(m.days)]
             .sort()
             .map((d) => ["SU", "MO", "TU", "WE", "TH", "FR", "SA"][d])
-            .join(","),
+            .join(",") +
+          (m.endsOn
+            ? ";UNTIL=" +
+              new Date(
+                meetingTimeBounds(
+                  {
+                    meetingWindow: "date",
+                    meetingDate: m.endsOn,
+                    timeZone: m.timezone,
+                  },
+                  new Date("1900-01-01T00:00:00Z"),
+                ).end!.getTime() - 1000,
+              )
+                .toISOString()
+                .replace(/[-:]/g, "")
+                .replace(/\.\d{3}Z/, "Z")
+            : ""),
       );
       const dates = (m.exceptions ?? [])
         .filter((e) => e.cancelled)

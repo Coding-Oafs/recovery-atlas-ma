@@ -18,6 +18,9 @@ const facets = unstable_cache(
           ].sort(),
         ]),
       );
+    const [cached] =
+      await db()`SELECT data FROM atlas_directory_stats WHERE id='facets'`;
+    if (cached) return cached.data;
     const rows =
       await db()`SELECT k.field,jsonb_agg(DISTINCT v.value ORDER BY v.value) AS values FROM resources r CROSS JOIN LATERAL(VALUES('services',r.data->'services'),('languages',r.data->'languages'),('populations',r.data->'populations'),('payment',r.data->'payment')) k(field,items) CROSS JOIN LATERAL jsonb_array_elements_text(k.items) v(value) WHERE r.published=true GROUP BY k.field`;
     const result = Object.fromEntries(rows.map((r) => [r.field, r.values]));

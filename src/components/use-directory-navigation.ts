@@ -1,6 +1,9 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Filters } from "@/lib/types";
+import { defaultFilters } from "@/lib/search";
+import { isRegionState } from "@/lib/region";
+import { filtersSchema } from "@/lib/search-input";
 import {
   directorySearchKey,
   directoryStorageKey,
@@ -57,6 +60,56 @@ export function useDirectoryNavigation(
           JSON.parse(sessionStorage.getItem(directoryStorageKey) ?? "null"),
         );
       } catch {}
+    }
+    const publicLink = new URL(window.location.href),
+      county = publicLink.searchParams.get("county"),
+      state = publicLink.searchParams.get("state") || "";
+    if (county && /^\d{5}$/.test(county) && isRegionState(state)) {
+      initial = {
+        version: 1,
+        filters: filtersSchema.parse({
+          ...defaultFilters,
+          state,
+          countyFips: county,
+        }),
+        offset: 0,
+        asOf: new Date().toISOString(),
+        location: "",
+        locationLabel: "County boundary selected",
+        mobileView: "list",
+        more: true,
+        scrollTop: 0,
+        windowY: 0,
+      };
+      publicLink.searchParams.delete("county");
+      publicLink.searchParams.delete("state");
+      history.replaceState(
+        history.state,
+        "",
+        publicLink.pathname + publicLink.search + publicLink.hash,
+      );
+    }
+    const city = publicLink.searchParams.get("place");
+    if (city && city.length <= 100 && isRegionState(state)) {
+      initial = {
+        version: 1,
+        filters: filtersSchema.parse({ ...defaultFilters, state, city }),
+        offset: 0,
+        asOf: new Date().toISOString(),
+        location: "",
+        locationLabel: "City name selected: " + city,
+        mobileView: "list",
+        more: true,
+        scrollTop: 0,
+        windowY: 0,
+      };
+      publicLink.searchParams.delete("place");
+      publicLink.searchParams.delete("state");
+      history.replaceState(
+        history.state,
+        "",
+        publicLink.pathname + publicLink.search + publicLink.hash,
+      );
     }
     if (initial) restore(initial);
     setReady(true);

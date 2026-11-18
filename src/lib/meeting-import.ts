@@ -182,6 +182,11 @@ export function normalizeMeetingGuide(
   }
   const city = clean(
     m.city ||
+      (state === "GU"
+        ? address.match(
+            /(?:,\s*|^[A-Z0-9]{4}\+[A-Z0-9]{2,3}\s+)([^,]+),\s*Guam$/i,
+          )?.[1]
+        : null) ||
       address.match(/,\s*([^,]+),\s*[A-Z]{2}\b/)?.[1] ||
       (Array.isArray(m.regions) ? m.regions.at(-1) : m.region) ||
       "",
@@ -237,6 +242,20 @@ export function normalizeMeetingGuide(
     lat: online && !hybrid ? null : lat,
     lng: online && !hybrid ? null : lng,
     coordinateAccuracy: online && !hybrid ? "unavailable" : accuracy,
+    ...(!online || hybrid
+      ? {
+          locationEvidence: {
+            method:
+              m.approximate === "yes"
+                ? "publisher-approximate"
+                : accuracy === "address"
+                  ? "publisher-address"
+                  : "city-centroid",
+            sourceUrl: source.page,
+            checkedAt: today,
+          },
+        }
+      : {}),
     formats: hybrid
       ? ["in-person", "online", "hybrid"]
       : online

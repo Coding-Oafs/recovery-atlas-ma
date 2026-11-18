@@ -460,5 +460,325 @@
     "feed": "https://siouxfallsaa.org/meeting-times/",
     "fellowship": "AA",
     "adapter": "sioux-falls"
+  },
+  {
+    "id": "aa-v2-d8c594f809f7",
+    "state": "NC",
+    "page": "https://ncdistrict11.org/",
+    "fellowship": "AA",
+    "feed": "https://ncdistrict11.org/wp-admin/admin-ajax.php?action=meetings",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-v2-472079f30a6d",
+    "state": "NC",
+    "page": "https://aajacksonvillenc.org/",
+    "fellowship": "AA",
+    "feed": "https://aajacksonvillenc.org/wp-admin/admin-ajax.php?action=meetings",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-v2-7052d462c9a8",
+    "state": "NC",
+    "page": "https://ncfoothillsaa.org/",
+    "fellowship": "AA",
+    "feed": "https://ncfoothillsaa.org/wp-admin/admin-ajax.php?action=meetings",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-v2-867083c77724",
+    "state": "NC",
+    "page": "https://nwpi.net/",
+    "fellowship": "AA",
+    "feed": "https://nwpi.net/wp-admin/admin-ajax.php?action=meetings",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-v2-c70931710121",
+    "state": "NC",
+    "page": "https://aaeasternnc.org/meetings/",
+    "fellowship": "AA",
+    "feed": "https://aaeasternnc.org/wp-content/tsml-cache-c1ab0cd974.json?1794868271",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-v2-90eda9eb0f19",
+    "state": "NC",
+    "page": "https://www.aa91nc.org/",
+    "fellowship": "AA",
+    "feed": "https://www.aa91nc.org/wp-admin/admin-ajax.php?action=meetings",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-v2-2b1e5edcc556",
+    "state": "IL",
+    "page": "https://southernillinoisaa.org/",
+    "fellowship": "AA",
+    "feed": "https://southernillinoisaa.org/wp-admin/admin-ajax.php?action=meetings",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-v2-aeec2ea69b96",
+    "state": "IL",
+    "page": "https://area21district10aa.org/",
+    "fellowship": "AA",
+    "feed": "https://area21district10aa.org/wp-admin/admin-ajax.php?action=meetings",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-v2-f933da1e1998",
+    "state": "IL",
+    "page": "https://district7aa.com/",
+    "fellowship": "AA",
+    "feed": "https://district7aa.com/wp-admin/admin-ajax.php?action=meetings",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-v2-83305c07f4d2",
+    "state": "IL",
+    "page": "https://aad5.org/",
+    "fellowship": "AA",
+    "feed": "https://aad5.org/wp-admin/admin-ajax.php?action=meetings",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-v2-e5c07e42084a",
+    "state": "IL",
+    "page": "https://aa-eci.org/meetings/",
+    "fellowship": "AA",
+    "feed": "https://aa-eci.org/wp-content/tsml-cache-f12d2cb09a.json?1794910448",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-v2-a66340b5220c",
+    "state": "IL",
+    "page": "https://www.aaci11.org/",
+    "fellowship": "AA",
+    "feed": "https://www.aaci11.org/wp-admin/admin-ajax.php?action=meetings",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-v2-ddaf3550576b",
+    "state": "IL",
+    "page": "https://ildistrict13.com/",
+    "fellowship": "AA",
+    "feed": "https://ildistrict13.com/wp-admin/admin-ajax.php?action=meetings",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-v2-dde1bcc2ea89",
+    "state": "IL",
+    "page": "https://dupage41aa.org/",
+    "fellowship": "AA",
+    "feed": "https://dupage41aa.org/wp-admin/admin-ajax.php?action=meetings",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-v2-7aca6312d96c",
+    "state": "LA",
+    "page": "https://ladistrict4.org/meetings",
+    "fellowship": "AA",
+    "feed": "https://sheets.code4recovery.org/storage/1p9ru7v2fGQvbBZRBCuJu6aypAlYH549DM_ZfybcRjXU.json",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-v2-bc9e6684bcd4",
+    "state": "LA",
+    "page": "https://www.aa-cenla.org/",
+    "fellowship": "AA",
+    "feed": "https://www.aa-cenla.org/wp-admin/admin-ajax.php?action=meetings",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-wv-district-1",
+    "state": "WV",
+    "page": "https://www.aawv.org/district-1",
+    "fellowship": "AA",
+    "adapter": "publisher-csv",
+    "feed": "https://docs.google.com/spreadsheets/d/1sjx5Noq8J6LTllby0DbX1h7jT24VnMoeeWiN6g7GaX0/export?format=csv",
+    "advertised": "https://docs.google.com/spreadsheets/d/1sjx5Noq8J6LTllby0DbX1h7jT24VnMoeeWiN6g7GaX0/edit?usp=sharing"
+  },
+  {
+    "id": "aa-wv-district-3",
+    "state": "WV",
+    "page": "https://www.aawv.org/district-3",
+    "fellowship": "AA",
+    "adapter": "publisher-csv",
+    "feed": "https://docs.google.com/spreadsheets/d/1faXzvJli5KY1GNBvWRT6IVPrQYxJEXMk-HoWwM33H0w/export?format=csv&gid=1609037803",
+    "advertised": "https://docs.google.com/spreadsheets/d/1faXzvJli5KY1GNBvWRT6IVPrQYxJEXMk-HoWwM33H0w/edit#gid=1609037803"
+  },
+  {
+    "id": "aa-wv-district-5",
+    "state": "WV",
+    "page": "https://www.aawv.org/district-5",
+    "fellowship": "AA",
+    "adapter": "publisher-csv",
+    "feed": "https://docs.google.com/spreadsheets/d/1YP_ppVDCZh4OCH3GYtypD7fZSi1FEie5zY6hjm6ZbjE/export?format=csv",
+    "advertised": "https://docs.google.com/spreadsheets/d/1YP_ppVDCZh4OCH3GYtypD7fZSi1FEie5zY6hjm6ZbjE/edit?usp=sharing"
+  },
+  {
+    "id": "aa-wv-district-7",
+    "state": "WV",
+    "page": "https://www.aawv.org/district-7",
+    "fellowship": "AA",
+    "adapter": "publisher-csv",
+    "feed": "https://docs.google.com/spreadsheets/d/13gB18p0pFa9z0rDqPP35bSWrUBX7luL55QQ3Kxt1VWU/export?format=csv&gid=565759956",
+    "advertised": "https://docs.google.com/spreadsheets/d/13gB18p0pFa9z0rDqPP35bSWrUBX7luL55QQ3Kxt1VWU/edit#gid=565759956"
+  },
+  {
+    "id": "aa-wv-district-4",
+    "state": "WV",
+    "page": "https://www.aawv.org/district-4",
+    "fellowship": "AA",
+    "adapter": "publisher-csv",
+    "feed": "https://docs.google.com/spreadsheets/d/1Jj6CTDmuwqB2ZYWj1KZvqVN4rfjr7fOjci9-4u2Ad4g/export?format=csv&gid=940412377",
+    "advertised": "https://docs.google.com/spreadsheets/d/1Jj6CTDmuwqB2ZYWj1KZvqVN4rfjr7fOjci9-4u2Ad4g/edit#gid=940412377"
+  },
+  {
+    "id": "aa-wv-district-6",
+    "state": "WV",
+    "page": "https://www.aawv.org/district-6",
+    "fellowship": "AA",
+    "adapter": "publisher-csv",
+    "feed": "https://docs.google.com/spreadsheets/d/1zkLi8qpDGWDWRG_ocdUsY7cV26_tQvGbbz81IJGXvT0/export?format=csv&gid=1295469625",
+    "advertised": "https://docs.google.com/spreadsheets/d/1zkLi8qpDGWDWRG_ocdUsY7cV26_tQvGbbz81IJGXvT0/edit#gid=1295469625"
+  },
+  {
+    "id": "aa-wv-district-8",
+    "state": "WV",
+    "page": "https://www.aawv.org/district-8",
+    "fellowship": "AA",
+    "adapter": "publisher-csv",
+    "feed": "https://docs.google.com/spreadsheets/d/1eflxhO_KXSyGiCTSO4PHfsPZilISAXL8d--xoql2TH8/export?format=csv&gid=1730150343",
+    "advertised": "https://docs.google.com/spreadsheets/d/1eflxhO_KXSyGiCTSO4PHfsPZilISAXL8d--xoql2TH8/edit#gid=1730150343"
+  },
+  {
+    "id": "aa-wv-district-9",
+    "state": "WV",
+    "page": "https://www.aawv.org/district-9",
+    "fellowship": "AA",
+    "adapter": "publisher-csv",
+    "feed": "https://docs.google.com/spreadsheets/d/1G4mdwzLWUpxADz-PG41qSodDl-X9cXJ48c6QYU43sLc/export?format=csv&gid=2121381243",
+    "advertised": "https://docs.google.com/spreadsheets/d/1G4mdwzLWUpxADz-PG41qSodDl-X9cXJ48c6QYU43sLc/edit#gid=2121381243"
+  },
+  {
+    "id": "aa-wv-district-10",
+    "state": "WV",
+    "page": "https://www.aawv.org/district-10",
+    "fellowship": "AA",
+    "adapter": "publisher-csv",
+    "feed": "https://docs.google.com/spreadsheets/d/1EDlWAOgs61gTIEWAF1O7J5KvfSKX3EWBNfC70xgvAHI/export?format=csv&gid=613508900",
+    "advertised": "https://docs.google.com/spreadsheets/d/1EDlWAOgs61gTIEWAF1O7J5KvfSKX3EWBNfC70xgvAHI/edit#gid=613508900"
+  },
+  {
+    "id": "aa-wv-district-11",
+    "state": "WV",
+    "page": "https://www.aawv.org/district-11",
+    "fellowship": "AA",
+    "adapter": "publisher-csv",
+    "feed": "https://docs.google.com/spreadsheets/d/1WGxZVDQUqBD2n10nHwMAu0yRPrvk1sAcbDOmxWBEX_E/export?format=csv&gid=2004524564",
+    "advertised": "https://docs.google.com/spreadsheets/d/1WGxZVDQUqBD2n10nHwMAu0yRPrvk1sAcbDOmxWBEX_E/edit#gid=2004524564"
+  },
+  {
+    "id": "aa-wv-district-13",
+    "state": "WV",
+    "page": "https://www.aawv.org/district-13",
+    "fellowship": "AA",
+    "adapter": "publisher-csv",
+    "feed": "https://docs.google.com/spreadsheets/d/15WujtBSsSr6tTD_lvuPEH6ItCGqo3ar2t_DXKnTI0ps/export?format=csv&gid=380472963",
+    "advertised": "https://docs.google.com/spreadsheets/d/15WujtBSsSr6tTD_lvuPEH6ItCGqo3ar2t_DXKnTI0ps/edit#gid=380472963"
+  },
+  {
+    "id": "aa-wv-district-12",
+    "state": "WV",
+    "page": "https://www.aawv.org/district-12",
+    "fellowship": "AA",
+    "adapter": "publisher-csv",
+    "feed": "https://docs.google.com/spreadsheets/d/141ZfoO8IDnVv8Fs7VVIgTdAyt1BUEe-XBuZctt0lWL0/export?format=csv&gid=1858931836",
+    "advertised": "https://docs.google.com/spreadsheets/d/141ZfoO8IDnVv8Fs7VVIgTdAyt1BUEe-XBuZctt0lWL0/edit#gid=1858931836"
+  },
+  {
+    "id": "aa-wv-district-17",
+    "state": "WV",
+    "page": "https://www.aawv.org/district-17",
+    "fellowship": "AA",
+    "adapter": "publisher-csv",
+    "feed": "https://docs.google.com/spreadsheets/d/1szOO-VhIktBetCPFE53lIux7_ODaV24svefbVTclLJU/export?format=csv",
+    "advertised": "https://docs.google.com/spreadsheets/d/1szOO-VhIktBetCPFE53lIux7_ODaV24svefbVTclLJU/edit?usp=sharing"
+  },
+  {
+    "id": "aa-wv-district-16",
+    "state": "WV",
+    "page": "https://www.aawv.org/district-16",
+    "fellowship": "AA",
+    "adapter": "publisher-csv",
+    "feed": "https://docs.google.com/spreadsheets/d/1KCSbFsVWADYwkN-_H6C6nNQ3z9Q2Cm2JH0L0qZmUR-w/export?format=csv&gid=687617754",
+    "advertised": "https://docs.google.com/spreadsheets/d/1KCSbFsVWADYwkN-_H6C6nNQ3z9Q2Cm2JH0L0qZmUR-w/edit#gid=687617754"
+  },
+  {
+    "id": "aa-wv-district-15",
+    "state": "WV",
+    "page": "https://www.aawv.org/district-15",
+    "fellowship": "AA",
+    "adapter": "publisher-csv",
+    "feed": "https://docs.google.com/spreadsheets/d/1r0DY0MAlNyTC5fh22DBVWfSxpjwFd1LUCHu19Lyo0iA/export?format=csv&gid=1705464907",
+    "advertised": "https://docs.google.com/spreadsheets/d/1r0DY0MAlNyTC5fh22DBVWfSxpjwFd1LUCHu19Lyo0iA/edit#gid=1705464907"
+  },
+  {
+    "id": "aa-puerto-rico-area77",
+    "state": "PR",
+    "page": "https://pr-area77.org/english-meetings",
+    "feed": "https://docs.google.com/spreadsheets/d/1J6X0YDoInCR4p50VOCiT4lqUhm-FXeQxUE7lXMGzyx8/export?format=csv&gid=1392197499",
+    "fellowship": "AA",
+    "adapter": "publisher-csv",
+    "advertised": "https://docs.google.com/spreadsheets/d/1J6X0YDoInCR4p50VOCiT4lqUhm-FXeQxUE7lXMGzyx8/edit?gid=1392197499#gid=1392197499"
+  },
+  {
+    "id": "aa-oregon-jackson-county",
+    "state": "OR",
+    "page": "https://jccoaa.org/meetings/",
+    "feed": "https://jccoaa.org/wp-content/tsml-cache-6de54cc642.json?1794764547",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-guam-intergroup",
+    "state": "GU",
+    "page": "https://guamaa671.org/meetings/",
+    "feed": "https://guamaa671.org/wp-content/tsml-cache-9c99cb7e68.json?1781517524",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-us-virgin-islands",
+    "state": "VI",
+    "page": "https://aavirginislands.org/locations/",
+    "feed": "https://aavirginislands.org/locations/",
+    "fellowship": "AA",
+    "adapter": "crawler-index"
+  },
+  {
+    "id": "aa-american-samoa-serenity",
+    "state": "AS",
+    "page": "https://aainamericansamoa.godaddysites.com/contact",
+    "feed": "https://aainamericansamoa.godaddysites.com/contact",
+    "fellowship": "AA",
+    "adapter": "samoan-serenity"
+  },
+  {
+    "id": "aa-metrolina-charlotte",
+    "state": "NC",
+    "page": "https://charlotteaa.org/meetings/",
+    "feed": "https://charlotteaa.org/locations/",
+    "fellowship": "AA",
+    "adapter": "crawler-index"
+  },
+  {
+    "id": "aa-western-north-carolina",
+    "state": "NC",
+    "page": "https://wncaa.org/index.php/meetings/",
+    "feed": "https://wncaa.org/index.php/locations/",
+    "fellowship": "AA",
+    "adapter": "crawler-index"
   }
 ]

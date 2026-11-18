@@ -1,0 +1,286 @@
+[
+  {
+    "code": "207LA0401X",
+    "label": "Addiction Medicine (Anesthesiology) Physician"
+  },
+  {
+    "code": "207QA0401X",
+    "label": "Addiction Medicine (Family Medicine) Physician"
+  },
+  {
+    "code": "207RA0401X",
+    "label": "Addiction Medicine (Internal Medicine) Physician"
+  },
+  {
+    "code": "2083A0300X",
+    "label": "Addiction Medicine (Preventive Medicine) Physician"
+  },
+  {
+    "code": "2084A0401X",
+    "label": "Addiction Medicine (Psychiatry & Neurology) Physician"
+  },
+  {
+    "code": "2084P0802X",
+    "label": "Addiction Psychiatry Physician"
+  },
+  {
+    "code": "2084B0040X",
+    "label": "Behavioral Neurology & Neuropsychiatry Physician"
+  },
+  {
+    "code": "2084P0804X",
+    "label": "Child & Adolescent Psychiatry Physician"
+  },
+  {
+    "code": "2084F0202X",
+    "label": "Forensic Psychiatry Physician"
+  },
+  {
+    "code": "2084P0805X",
+    "label": "Geriatric Psychiatry Physician"
+  },
+  {
+    "code": "2084P0800X",
+    "label": "Psychiatry Physician"
+  },
+  {
+    "code": "103G00000X",
+    "label": "Clinical Neuropsychologist"
+  },
+  {
+    "code": "103GC0700X",
+    "label": "Clinical Neuropsychologist"
+  },
+  {
+    "code": "101Y00000X",
+    "label": "Counselor"
+  },
+  {
+    "code": "101YA0400X",
+    "label": "Addiction (Substance Use Disorder) Counselor"
+  },
+  {
+    "code": "101YM0800X",
+    "label": "Mental Health Counselor"
+  },
+  {
+    "code": "101YP1600X",
+    "label": "Pastoral Counselor"
+  },
+  {
+    "code": "101YP2500X",
+    "label": "Professional Counselor"
+  },
+  {
+    "code": "101YS0200X",
+    "label": "School Counselor"
+  },
+  {
+    "code": "106H00000X",
+    "label": "Marriage & Family Therapist"
+  },
+  {
+    "code": "102L00000X",
+    "label": "Psychoanalyst"
+  },
+  {
+    "code": "103T00000X",
+    "label": "Psychologist"
+  },
+  {
+    "code": "103TA0400X",
+    "label": "Addiction (Substance Use Disorder) Psychologist"
+  },
+  {
+    "code": "103TA0700X",
+    "label": "Adult Development & Aging Psychologist"
+  },
+  {
+    "code": "103TC0700X",
+    "label": "Clinical Psychologist"
+  },
+  {
+    "code": "103TC2200X",
+    "label": "Clinical Child & Adolescent Psychologist"
+  },
+  {
+    "code": "103TB0200X",
+    "label": "Cognitive & Behavioral Psychologist"
+  },
+  {
+    "code": "103TC1900X",
+    "label": "Counseling Psychologist"
+  },
+  {
+    "code": "103TE1000X",
+    "label": "Psychologist"
+  },
+  {
+    "code": "103TE1100X",
+    "label": "Exercise & Sports Psychologist"
+  },
+  {
+    "code": "103TF0000X",
+    "label": "Family Psychologist"
+  },
+  {
+    "code": "103TF0200X",
+    "label": "Forensic Psychologist"
+  },
+  {
+    "code": "103TP2701X",
+    "label": "Group Psychotherapy Psychologist"
+  },
+  {
+    "code": "103TH0004X",
+    "label": "Health Psychologist"
+  },
+  {
+    "code": "103TH0100X",
+    "label": "Health Service Psychologist"
+  },
+  {
+    "code": "103TM1700X",
+    "label": "Psychologist Men & Masculinity"
+  },
+  {
+    "code": "103TM1800X",
+    "label": "Intellectual & Developmental Disabilities Psychologist"
+  },
+  {
+    "code": "103TP0016X",
+    "label": "Prescribing (Medical) Psychologist"
+  },
+  {
+    "code": "103TP0814X",
+    "label": "Psychoanalysis Psychologist"
+  },
+  {
+    "code": "103TP2700X",
+    "label": "Psychologist Psychotherapy"
+  },
+  {
+    "code": "103TR0400X",
+    "label": "Rehabilitation Psychologist"
+  },
+  {
+    "code": "103TS0200X",
+    "label": "School Psychologist"
+  },
+  {
+    "code": "103TW0100X",
+    "label": "Psychotherapy Women"
+  },
+  {
+    "code": "104100000X",
+    "label": "Social Worker"
+  },
+  {
+    "code": "1041C0700X",
+    "label": "Clinical Social Worker"
+  },
+  {
+    "code": "1041S0200X",
+    "label": "School Social Worker"
+  },
+  {
+    "code": "167G00000X",
+    "label": "Licensed Psychiatric Technician"
+  },
+  {
+    "code": "163WA0400X",
+    "label": "Addiction (Substance Use Disorder) Registered Nurse"
+  },
+  {
+    "code": "163WP0808X",
+    "label": "Psychiatric/Mental Health Registered Nurse"
+  },
+  {
+    "code": "163WP0809X",
+    "label": "Adult Psychiatric/Mental Health Registered Nurse"
+  },
+  {
+    "code": "163WP0807X",
+    "label": "Child & Adolescent Psychiatric/Mental Health Registered Nurse"
+  },
+  {
+    "code": "1835P1300X",
+    "label": "Psychiatric Pharmacist"
+  },
+  {
+    "code": "364SP0808X",
+    "label": "Psychiatric/Mental Health Clinical Nurse Specialist"
+  },
+  {
+    "code": "364SP0809X",
+    "label": "Adult Psychiatric/Mental Health Clinical Nurse Specialist"
+  },
+  {
+    "code": "364SP0807X",
+    "label": "Child & Adolescent Psychiatric/Mental Health Clinical Nurse Specialist"
+  },
+  {
+    "code": "364SP0810X",
+    "label": "Child & Family Psychiatric/Mental Health Clinical Nurse Specialist"
+  },
+  {
+    "code": "364SP0811X",
+    "label": "Chronically Ill Psychiatric/Mental Health Clinical Nurse Specialist"
+  },
+  {
+    "code": "364SP0812X",
+    "label": "Community Psychiatric/Mental Health Clinical Nurse Specialist"
+  },
+  {
+    "code": "364SP0813X",
+    "label": "Geropsychiatric Psychiatric/Mental Health Clinical Nurse Specialist"
+  },
+  {
+    "code": "363LP0808X",
+    "label": "Psychiatric/Mental Health Nurse Practitioner"
+  },
+  {
+    "code": "225XM0800X",
+    "label": "Mental Health Occupational Therapist"
+  },
+  {
+    "code": "261QM0855X",
+    "label": "Adolescent and Children Mental Health Clinic/Center"
+  },
+  {
+    "code": "261QM0850X",
+    "label": "Adult Mental Health Clinic/Center"
+  },
+  {
+    "code": "261QM0801X",
+    "label": "Mental Health Clinic/Center (Including Community Mental Health Center)"
+  },
+  {
+    "code": "261QR0405X",
+    "label": "Substance Use Disorder Rehabilitation Clinic/Center"
+  },
+  {
+    "code": "273R00000X",
+    "label": "Psychiatric Hospital Unit"
+  },
+  {
+    "code": "276400000X",
+    "label": "Substance Use Disorder Rehabilitation Hospital Unit"
+  },
+  {
+    "code": "283Q00000X",
+    "label": "Psychiatric Hospital"
+  },
+  {
+    "code": "323P00000X",
+    "label": "Psychiatric Residential Treatment Facility"
+  },
+  {
+    "code": "324500000X",
+    "label": "Substance Abuse Rehabilitation Facility"
+  },
+  {
+    "code": "3245S0500X",
+    "label": "Children's Substance Abuse Rehabilitation Facility"
+  }
+]

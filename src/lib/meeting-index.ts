@@ -21,7 +21,7 @@ export function clock(value: string) {
         (m[2] || "00")
     : "";
 }
-export function parseCrawlerIndex(html: string) {
+export function parseCrawlerIndex(html: string, territory?: "VI") {
   const $ = load(html);
   return $("table tr")
     .toArray()
@@ -29,9 +29,16 @@ export function parseCrawlerIndex(html: string) {
       const cells = $(row).children("td");
       if (cells.length !== 10) return [];
       const c = cells.toArray().map((e) => clean($(e).text()));
+      if (
+        territory === "VI" &&
+        (!/\bUSVI$/i.test(c[4]) || /\bAl[- ]?Anon\b/i.test(c[2]))
+      )
+        return [];
       const types = c[7],
         online = /Online Meeting/.test(types),
-        hybrid = /Hybrid|In.person and Online/i.test(types);
+        hybrid = /Hybrid|In.person and Online/i.test(
+          types + (territory ? " " + c[2] : ""),
+        );
       return [
         {
           name: c[2],
@@ -40,6 +47,13 @@ export function parseCrawlerIndex(html: string) {
           time: clock(c[1]),
           formatted_address: c[4],
           region: c[5],
+          ...(territory
+            ? {
+                city: c[6] || c[5],
+                state: territory,
+                timezone: "America/St_Thomas",
+              }
+            : {}),
           latitude: Number(c[8]),
           longitude: Number(c[9]),
           attendance_option: hybrid
@@ -56,6 +70,28 @@ export function parseCrawlerIndex(html: string) {
         },
       ];
     });
+}
+export function parseSamoanSerenity(html: string) {
+  const $ = load(html);
+  $("script,style").remove();
+  const text = clean($("body").text());
+  const local = text.match(
+    /Tuesday and Saturday Virtual Meeting \(Bilingual English\/Samoan\)\s*(\d{1,2}:\d{2}\s*[ap]m) American Samoa local time/i,
+  );
+  if (!local) throw Error("American Samoa publisher schedule needs review");
+  return [
+    {
+      name: "Samoan Serenity Group",
+      slug: "samoan-serenity-group",
+      day: [2, 6],
+      time: clock(local[1]),
+      city: "Pago Pago",
+      state: "AS",
+      timezone: "Pacific/Pago_Pago",
+      attendance_option: "online",
+      types: ["O", "EN"],
+    },
+  ];
 }
 export function parseMontana(html: string, city: string, url: string) {
   const $ = load(html);

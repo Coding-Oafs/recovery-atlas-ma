@@ -1,0 +1,57 @@
+name: Prepare monthly public provider baseline
+on:
+  push:
+    branches: [main]
+    paths: [".github/workflows/provider-baseline.yml"]
+  workflow_dispatch:
+  schedule:
+    - cron: "0 7 10,17,24 * *"
+permissions:
+  contents: write
+concurrency:
+  group: public-provider-baseline
+  cancel-in-progress: false
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Discover the official monthly file
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import os,re,urllib.request
+          html=urllib.request.urlopen('https://download.cms.gov/nppes/NPI_Files.html').read().decode()
+          links=re.findall(r'href=["\']([^"\']*NPPES_Data_Dissemination_[A-Za-z]+_\d{4}_V2\.zip)["\']',html)
+          if not links:raise RuntimeError('Changed CMS monthly index')
+          url=urllib.parse.urljoin('https://download.cms.gov/nppes/',links[0])
+          if not url.startswith('https://download.cms.gov/nppes/'):raise RuntimeError('Unapproved CMS host')
+          tag='nppes-baseline-'+re.search(r'Dissemination_(.+)_V2',url).group(1).lower().replace('_','-')
+          with open(os.environ['GITHUB_ENV'],'a') as f:f.write('NPPES_SOURCE='+url+'\nNPPES_TAG='+tag+'\n')
+          PY
+      - name: Check for an existing baseline
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$NPPES_TAG" >/dev/null 2>&1; then echo 'ALREADY_PUBLISHED=true' >> "$GITHUB_ENV"; fi
+      - name: Filter public practice facts
+        if: env.ALREADY_PUBLISHED != 'true'
+        run: |
+          mkdir -p .local/national-providers
+          curl --fail --location --retry 3 "$NPPES_SOURCE" -o .local/national-providers/nppes-2026-11-v2.zip
+          python scripts/prepare-national-providers.py --source-url "$NPPES_SOURCE"
+          python scripts/prepare-additional-practices.py
+          BASELINE=$(python - <<'PY'
+          import re,zipfile
+          z=zipfile.ZipFile('.local/national-providers/nppes-2026-11-v2.zip');name=next(n for n in z.namelist() if re.match(r'npidata_pfile_\d{8}-\d{8}\.csv$',n));d=re.search(r'-(\d{8})',name).group(1);print(d[:4]+'-'+d[4:6]+'-'+d[6:8])
+          PY
+          )
+          python scripts/package-provider-release.py --input .local/national-providers/filtered.ndjson.gz --input .local/national-providers/additional.ndjson.gz --output .local/provider-release --source-url "$NPPES_SOURCE" --checked-at "$(date -u +%F)" --baseline-date "$BASELINE"
+      - name: Publish checksummed public-source facts
+        if: env.ALREADY_PUBLISHED != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$NPPES_TAG" .local/provider-release/* --title "Public provider baseline: $NPPES_TAG" --notes "Public NPPES practice-location facts, filtered to recovery and behavioral health taxonomy classifications. Registry facts do not verify professional licensure, services, payer participation or availability. Official source: $NPPES_SOURCE. No directory database credentials are used by this job."
