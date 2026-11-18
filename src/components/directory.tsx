@@ -652,6 +652,7 @@ export default function Directory({
                 {""}
               </span>
               <input
+                disabled={!navigation.ready}
                 value={filters.query}
                 onChange={(e) => update("query", e.target.value)}
                 placeholder={t("Meeting, service, or keyword…")}
@@ -665,6 +666,7 @@ export default function Directory({
                   <T>US city, state, ZIP or address</T>{" "}
                 </span>
                 <input
+                  disabled={!navigation.ready}
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   placeholder={t("City, state, ZIP or street address")}
