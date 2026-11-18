@@ -30,7 +30,7 @@
     "zipcodes": "latest",
     "zod": "latest",
     "tz-lookup": "6.1.25",
-    "fflate": "0.8.2"
+    "fflate": "0.8.3"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
