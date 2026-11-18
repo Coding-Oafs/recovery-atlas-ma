@@ -20,6 +20,7 @@ import {
   parseGeorgia,
   parseMontana,
   parseSiouxFalls,
+  parseSamoanSerenity,
 } from "./meeting-index";
 import { normalizeSmartCalendar } from "./smart-calendar";
 import type { Resource } from "./types";
@@ -132,9 +133,13 @@ async function capture(job: Job) {
     complete = true;
   let metadata: { etag: string | null; modified: string | null } | undefined;
   if (
-    ["meeting-guide", "publisher-csv", "crawler-index", "sioux-falls"].includes(
-      job.adapter,
-    )
+    [
+      "meeting-guide",
+      "publisher-csv",
+      "crawler-index",
+      "sioux-falls",
+      "samoan-serenity",
+    ].includes(job.adapter)
   ) {
     const source = job.config;
     let feed = source.feed;
@@ -167,10 +172,12 @@ async function capture(job: Job) {
         job.adapter === "publisher-csv"
           ? parsePublisherMeetings(text, source.state)
           : job.adapter === "crawler-index"
-            ? parseCrawlerIndex(text)
+            ? parseCrawlerIndex(text, source.state === "VI" ? "VI" : undefined)
             : job.adapter === "sioux-falls"
               ? parseSiouxFalls(text)
-              : JSON.parse(text);
+              : job.adapter === "samoan-serenity"
+                ? parseSamoanSerenity(text)
+                : JSON.parse(text);
     if (!Array.isArray(raw)) throw Error("Changed publisher structure");
     rawCount = raw.length;
     rows = raw
@@ -183,6 +190,8 @@ async function capture(job: Job) {
           source,
           date,
         );
+        if (r && job.adapter === "samoan-serenity")
+          r.languages = ["English", "Samoan"];
         if (r && cancelled) {
           r.meeting!.endsOn = new Date(Date.now() - 86400000)
             .toISOString()

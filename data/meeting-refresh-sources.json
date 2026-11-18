@@ -740,5 +740,29 @@
     "feed": "https://jccoaa.org/wp-content/tsml-cache-6de54cc642.json?1794764547",
     "fellowship": "AA",
     "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-guam-intergroup",
+    "state": "GU",
+    "page": "https://guamaa671.org/meetings/",
+    "feed": "https://guamaa671.org/wp-content/tsml-cache-9c99cb7e68.json?1781517524",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
+  },
+  {
+    "id": "aa-us-virgin-islands",
+    "state": "VI",
+    "page": "https://aavirginislands.org/locations/",
+    "feed": "https://aavirginislands.org/locations/",
+    "fellowship": "AA",
+    "adapter": "crawler-index"
+  },
+  {
+    "id": "aa-american-samoa-serenity",
+    "state": "AS",
+    "page": "https://aainamericansamoa.godaddysites.com/contact",
+    "feed": "https://aainamericansamoa.godaddysites.com/contact",
+    "fellowship": "AA",
+    "adapter": "samoan-serenity"
   }
 ]
