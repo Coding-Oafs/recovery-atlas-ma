@@ -124,6 +124,8 @@ async function queryDatabaseDirectory(
       ),
     );
   }
+  const unfiltered =
+    where.length === 2 && !f.uncertainOnly && !hasMeetingTimeFilter(f);
   const view = options.map?.bounds ?? options.selection?.bounds;
   if (view) {
     const [w, s, e, n] = view;
@@ -193,19 +195,47 @@ async function queryDatabaseDirectory(
   const base = `WITH matched AS NOT MATERIALIZED(SELECT id,data,location,CASE WHEN resource_source LIKE 'NPPES%' THEN 1 ELSE 0 END AS registry_rank,resource_name AS name,resource_kind AS kind,${distance} AS distance,${nextColumn} AS next_meeting FROM resources WHERE ${where.join(" AND ")}),filtered AS NOT MATERIALIZED(SELECT * FROM matched ${hasMeetingTimeFilter(f) ? "WHERE next_meeting IS NOT NULL" : ""})`;
   if (options.map) {
     const zoom = Math.floor(options.map.zoom),
-      size = ((40075016.68557849 / 2 ** zoom) * (zoom >= 14 ? 12 : 55)) / 512,
-      cell = param(size);
-    const query = `${base},projected AS(SELECT id,kind,ST_X(location::geometry) AS lng,ST_Y(location::geometry) AS lat,ST_SnapToGrid(ST_Transform(location::geometry,3857),${cell}::float8) AS cell FROM filtered WHERE location IS NOT NULL),grouped AS(SELECT ST_X(cell) AS x,ST_Y(cell) AS y,min(id) AS id,min(kind) AS kind,count(*)::int AS count,avg(lat) AS lat,avg(lng) AS lng,ARRAY[min(lng)-0.0000001,min(lat)-0.0000001,max(lng)+0.0000001,max(lat)+0.0000001] AS bounds FROM projected GROUP BY cell),points AS(SELECT CASE WHEN count=1 THEN id ELSE 'group-'||x||'-'||y END AS id,CASE WHEN count=1 THEN kind ELSE 'cluster' END AS kind,count,lat,lng,bounds FROM grouped) SELECT COALESCE(jsonb_agg(to_jsonb(p)),'[]') AS pins,COALESCE(sum(count),0)::int AS represented FROM points p`;
+      size = ((40075016.68557849 / 2 ** zoom) * (zoom >= 14 ? 12 : 55)) / 512;
+    const grouped = `,grouped AS(
+      SELECT ST_X(cell) AS x,ST_Y(cell) AS y,min(id) AS id,min(kind) AS kind,
+        sum(weight)::int AS count,sum(lat*weight)/sum(weight) AS lat,
+        sum(lng*weight)/sum(weight) AS lng,
+        ARRAY[min(lng)-0.0000001,min(lat)-0.0000001,max(lng)+0.0000001,max(lat)+0.0000001] AS bounds
+      FROM projected GROUP BY cell
+    ), points AS(
+      SELECT CASE WHEN count=1 THEN id ELSE 'group-'||x||'-'||y END AS id,
+        CASE WHEN count=1 THEN kind ELSE 'cluster' END AS kind,count,lat,lng,bounds
+      FROM grouped
+    ) SELECT COALESCE(jsonb_agg(to_jsonb(p)),'[]') AS pins,
+      COALESCE(sum(count),0)::int AS represented`;
+    if (unfiltered && zoom <= 6) {
+      const [cached] = await db().query(
+        `WITH snapshot AS(SELECT data FROM atlas_directory_stats WHERE id='map-points'),
+        projected AS(
+          SELECT p.*,ST_SnapToGrid(ST_Transform(ST_SetSRID(ST_MakePoint(p.lng,p.lat),4326),3857),$5::float8) AS cell
+          FROM snapshot CROSS JOIN LATERAL jsonb_to_recordset(data) AS p(lng float8,lat float8,id text,kind text,weight int)
+          WHERE p.lng BETWEEN $1 AND $3 AND p.lat BETWEEN $2 AND $4
+        )${grouped}, EXISTS(SELECT 1 FROM snapshot) AS cached FROM points p`,
+        [...options.map.bounds, size],
+      );
+      if (cached.cached)
+        return { pins: cached.pins, represented: Number(cached.represented) };
+    }
+    const cell = param(size);
+    const query = `${base},projected AS(
+      SELECT id,kind,ST_X(location::geometry) AS lng,ST_Y(location::geometry) AS lat,
+        1 AS weight,ST_SnapToGrid(ST_Transform(location::geometry,3857),${cell}::float8) AS cell
+      FROM filtered WHERE location IS NOT NULL
+    )${grouped} FROM points p`;
     const [row] = await db().query(query, values);
     return { pins: row.pins, represented: Number(row.represented) };
   }
-  const unfiltered =
-    where.length === 2 && !f.uncertainOnly && !hasMeetingTimeFilter(f);
   const countRows =
     "SELECT count(*) AS total,count(*) FILTER(WHERE location IS NULL) AS online_or_unmapped,count(location) AS mapped FROM filtered";
-  const counts = unfiltered
-    ? `SELECT (data->>'total')::bigint AS total,(data->>'total')::bigint-(data->>'mapped')::bigint AS online_or_unmapped,(data->>'mapped')::bigint AS mapped FROM atlas_directory_stats WHERE id='coverage' UNION ALL SELECT fallback.* FROM (${countRows}) fallback WHERE NOT EXISTS(SELECT 1 FROM atlas_directory_stats WHERE id='coverage')`
-    : countRows;
+  const counts =
+    unfiltered && !view
+      ? `SELECT (data->>'total')::bigint AS total,(data->>'total')::bigint-(data->>'mapped')::bigint AS online_or_unmapped,(data->>'mapped')::bigint AS mapped FROM atlas_directory_stats WHERE id='coverage' UNION ALL SELECT fallback.* FROM (${countRows}) fallback WHERE NOT EXISTS(SELECT 1 FROM atlas_directory_stats WHERE id='coverage')`
+      : countRows;
   const query = `${base},page AS(SELECT data,row_number() OVER(ORDER BY ${order},id) AS position FROM filtered ORDER BY ${order},id LIMIT ${param(limit)} OFFSET ${param(options.selection?.offset ?? options.offset ?? 0)}),counts AS(${counts}) SELECT counts.*,COALESCE((SELECT jsonb_agg(data ORDER BY position) FROM page),'[]') AS resources FROM counts`;
   const rows = await db().query(query, values);
   return {
