@@ -26,6 +26,7 @@ import { normalizeSmartCalendar } from "./smart-calendar";
 import type { Resource } from "./types";
 import { stateNames } from "./region";
 import { runProviderJob } from "./provider-jobs";
+import { publishStagedProviderBatch } from "./coverage-publication";
 type Job = {
   id: string;
   url: string;
@@ -121,6 +122,8 @@ export async function seedSourceJobs() {
   return jobs.length;
 }
 async function capture(job: Job) {
+  if (job.adapter === "release-activation")
+    return publishStagedProviderBatch(db(), job.id);
   if (["provider-discovery", "provider-chunk"].includes(job.adapter))
     return runProviderJob(db(), job);
   const signal = AbortSignal.timeout(65000),
@@ -471,10 +474,14 @@ export async function runSourceJobs(budgetMs = 235000) {
         try {
           const result: any = await capture(job as Job);
           await sql.query(
-            `UPDATE atlas_source_job SET status=$2,attempts=0,lease_until=NULL,last_success_at=now(),last_error=NULL,record_count=COALESCE($3,record_count),etag=COALESCE($4,etag),last_modified=COALESCE($5,last_modified),next_run_at=now()+make_interval(hours=>interval_hours) WHERE id=$1`,
+            `UPDATE atlas_source_job SET status=$2,attempts=0,lease_until=NULL,last_success_at=now(),last_error=NULL,record_count=COALESCE($3,record_count),etag=COALESCE($4,etag),last_modified=COALESCE($5,last_modified),next_run_at=now()+CASE WHEN adapter='release-activation' THEN interval '0 seconds' ELSE make_interval(hours=>interval_hours) END WHERE id=$1`,
             [
               job.id,
-              result.partial ? "partial" : "healthy",
+              result.complete === true
+                ? "completed"
+                : result.partial
+                  ? "partial"
+                  : "healthy",
               result.scanned ?? null,
               result.metadata?.etag ?? null,
               result.metadata?.modified ?? null,
