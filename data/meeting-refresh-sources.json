@@ -764,5 +764,21 @@
     "feed": "https://aainamericansamoa.godaddysites.com/contact",
     "fellowship": "AA",
     "adapter": "samoan-serenity"
+  },
+  {
+    "id": "aa-metrolina-charlotte",
+    "state": "NC",
+    "page": "https://charlotteaa.org/meetings/",
+    "feed": "https://charlotteaa.org/locations/",
+    "fellowship": "AA",
+    "adapter": "crawler-index"
+  },
+  {
+    "id": "aa-western-north-carolina",
+    "state": "NC",
+    "page": "https://wncaa.org/index.php/meetings/",
+    "feed": "https://wncaa.org/index.php/locations/",
+    "fellowship": "AA",
+    "adapter": "crawler-index"
   }
 ]
