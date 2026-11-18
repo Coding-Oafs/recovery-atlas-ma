@@ -59,10 +59,29 @@ export async function seedAddressQueue(
 export async function applyGeocodedAddresses(
   sql: PipelineSql,
   keys?: string[],
+  limit?: number,
 ) {
   const rows = await sql.query(
-    `WITH changes AS MATERIALIZED(SELECT r.id,r.data AS before_data,r.data||jsonb_build_object('lat',c.lat,'lng',c.lng,'coordinateAccuracy','address','locationEvidence',jsonb_build_object('method','census-street-range','sourceUrl','https://geocoding.geo.census.gov/geocoder/','checkedAt',c.checked_at::date::text)) AS after_data,c.lat,c.lng FROM atlas_geocode_cache c JOIN atlas_resource_address a ON a.address_key=c.address_key JOIN resources r ON r.id=a.resource_id WHERE c.status='matched' AND ($1::text[] IS NULL OR c.address_key=ANY($1::text[])) AND r.published AND ${eligible} AND a.address_key=${addressKeySql("r.data")}),applied AS(UPDATE resources r SET data=c.after_data,location=ST_SetSRID(ST_MakePoint(c.lng,c.lat),4326)::geography,updated_at=now() FROM changes c WHERE r.id=c.id AND r.data=c.before_data RETURNING r.id,c.before_data,c.after_data),invalidated AS(DELETE FROM atlas_resource_county x USING applied a WHERE x.resource_id=a.id) INSERT INTO audit_events(action,resource_id,before_data,after_data) SELECT 'census-address-interpolation',id,before_data,after_data FROM applied RETURNING resource_id`,
-    [keys ?? null],
+    `WITH changes AS MATERIALIZED(
+      SELECT r.id,r.data AS before_data,
+        r.data||jsonb_build_object('lat',c.lat,'lng',c.lng,'coordinateAccuracy','address',
+          'locationEvidence',jsonb_build_object('method','census-street-range','sourceUrl','https://geocoding.geo.census.gov/geocoder/','checkedAt',c.checked_at::date::text)) AS after_data,c.lat,c.lng
+      FROM atlas_geocode_cache c JOIN atlas_resource_address a ON a.address_key=c.address_key
+      CROSS JOIN LATERAL (
+        SELECT r.id,r.data FROM resources r
+        WHERE r.id=a.resource_id AND r.published AND ${eligible} AND a.address_key=${addressKeySql("r.data")}
+        LIMIT 1
+      ) r
+      WHERE c.status='matched' AND ($1::text[] IS NULL OR c.address_key=ANY($1::text[]))
+      LIMIT $2
+    ), applied AS(
+      UPDATE resources r SET data=c.after_data,location=ST_SetSRID(ST_MakePoint(c.lng,c.lat),4326)::geography,updated_at=now()
+      FROM changes c WHERE r.id=c.id AND r.data=c.before_data RETURNING r.id,c.before_data,c.after_data
+    ), invalidated AS(
+      DELETE FROM atlas_resource_county x USING applied a WHERE x.resource_id=a.id
+    ) INSERT INTO audit_events(action,resource_id,before_data,after_data)
+      SELECT 'census-address-interpolation',id,before_data,after_data FROM applied RETURNING resource_id`,
+    [keys ?? null, limit ?? null],
   );
   return rows.length;
 }
@@ -74,12 +93,7 @@ export async function runGeocodingBatch(sql: PipelineSql, batchSize = 3000) {
     `WITH due AS(SELECT address_key FROM atlas_geocode_cache WHERE status IN('pending','retry') AND next_attempt_at<=now() ORDER BY attempts,address_key LIMIT $1 FOR UPDATE SKIP LOCKED) UPDATE atlas_geocode_cache c SET status='processing',attempts=attempts+1,next_attempt_at=now()+interval '20 minutes' FROM due WHERE c.address_key=due.address_key RETURNING c.*`,
     [batchSize],
   );
-  if (!rows.length)
-    return {
-      submitted: 0,
-      matched: 0,
-      updated: await applyGeocodedAddresses(sql),
-    };
+  if (!rows.length) return { submitted: 0, matched: 0 };
   try {
     const facts = await fetchCensusBatch(rows);
     await sql.query(
@@ -89,10 +103,6 @@ export async function runGeocodingBatch(sql: PipelineSql, batchSize = 3000) {
     return {
       submitted: rows.length,
       matched: facts.filter((r) => r.status === "matched").length,
-      updated: await applyGeocodedAddresses(
-        sql,
-        rows.map((r) => r.address_key),
-      ),
     };
   } catch (e) {
     await sql.query(

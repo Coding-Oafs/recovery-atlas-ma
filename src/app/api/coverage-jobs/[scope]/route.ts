@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { refreshCityCoverage } from "@/lib/refresh-city-coverage";
 import { refreshCountyCoverage } from "@/lib/refresh-county-coverage";
 import { refreshMapCoverage } from "@/lib/refresh-map-coverage";
+import { applyGeocodedAddresses } from "@/lib/location-jobs";
 
 export const maxDuration = 300;
 
@@ -16,7 +17,12 @@ export async function GET(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { scope } = await params;
-  if (scope !== "city" && scope !== "county" && scope !== "map")
+  if (
+    scope !== "city" &&
+    scope !== "county" &&
+    scope !== "map" &&
+    scope !== "addresses"
+  )
     return NextResponse.json(
       { error: "Unknown coverage scope" },
       { status: 404 },
@@ -29,7 +35,9 @@ export async function GET(
         ? await refreshCountyCoverage(sql, 10000)
         : scope === "city"
           ? await refreshCityCoverage(sql)
-          : await refreshMapCoverage(sql);
+          : scope === "map"
+            ? await refreshMapCoverage(sql)
+            : { updated: await applyGeocodedAddresses(sql, undefined, 4000) };
     revalidateTag("resources", "max");
     return NextResponse.json({
       scope,
