@@ -4,6 +4,7 @@ import { authorizeCron } from "@/lib/security";
 import { db } from "@/lib/db";
 import { refreshCityCoverage } from "@/lib/refresh-city-coverage";
 import { refreshCountyCoverage } from "@/lib/refresh-county-coverage";
+import { refreshMapCoverage } from "@/lib/refresh-map-coverage";
 
 export const maxDuration = 300;
 
@@ -15,7 +16,7 @@ export async function GET(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { scope } = await params;
-  if (scope !== "city" && scope !== "county")
+  if (scope !== "city" && scope !== "county" && scope !== "map")
     return NextResponse.json(
       { error: "Unknown coverage scope" },
       { status: 404 },
@@ -26,7 +27,9 @@ export async function GET(
     const assignments =
       scope === "county"
         ? await refreshCountyCoverage(sql, 10000)
-        : await refreshCityCoverage(sql);
+        : scope === "city"
+          ? await refreshCityCoverage(sql)
+          : await refreshMapCoverage(sql);
     revalidateTag("resources", "max");
     return NextResponse.json({
       scope,
