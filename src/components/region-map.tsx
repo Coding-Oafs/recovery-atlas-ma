@@ -9,6 +9,14 @@ import stateBounds from "../../data/jurisdiction-bounds.json";
 import { regionBounds } from "@/lib/region";
 import { resourceMapTarget } from "@/lib/map-selection";
 import { useLanguage } from "./language-provider";
+import { useViewMode } from "./view-mode";
+const standardMapStyle =
+  process.env.NEXT_PUBLIC_MAP_STYLE ||
+  "https://tiles.openfreemap.org/styles/positron";
+const darkMapStyle =
+  process.env.NEXT_PUBLIC_MAP_STYLE ||
+  "https://tiles.openfreemap.org/styles/dark";
+const resourceSources = new Set(["resources", "hovered", "selected"]);
 maplibregl.setWorkerUrl(
   new URL(
     "maplibre-gl/dist/maplibre-gl-worker.mjs",
@@ -44,6 +52,8 @@ export default function RegionMap({
   highlight,
 }: Props) {
   const { t, language } = useLanguage();
+  const view = useViewMode();
+  const mapStyle = useRef(standardMapStyle);
   const container = useRef<HTMLDivElement>(null),
     map = useRef<maplibregl.Map | null>(null),
     props = useRef({ filters, saved, onSelect });
@@ -67,11 +77,13 @@ export default function RegionMap({
     if (!container.current) return;
     let m: maplibregl.Map;
     try {
+      mapStyle.current =
+        document.documentElement.dataset.viewMode === "dark"
+          ? darkMapStyle
+          : standardMapStyle;
       m = new maplibregl.Map({
         container: container.current,
-        style:
-          process.env.NEXT_PUBLIC_MAP_STYLE ||
-          "https://tiles.openfreemap.org/styles/positron",
+        style: mapStyle.current,
         bounds: [
           [regionBounds[0], regionBounds[1]],
           [regionBounds[2], regionBounds[3]],
@@ -337,6 +349,32 @@ export default function RegionMap({
     };
   }, []);
   useEffect(() => {
+    const m = map.current;
+    const style = view === "dark" ? darkMapStyle : standardMapStyle;
+    if (!ready || !m || style === mapStyle.current) return;
+    mapStyle.current = style;
+    m.setStyle(style, {
+      transformStyle: (previous, next) => ({
+        ...next,
+        sources: {
+          ...next.sources,
+          ...Object.fromEntries(
+            Object.entries(previous?.sources ?? {}).filter(([id]) =>
+              resourceSources.has(id),
+            ),
+          ),
+        },
+        layers: [
+          ...next.layers,
+          ...(previous?.layers ?? []).filter(
+            (layer) =>
+              "source" in layer && resourceSources.has(String(layer.source)),
+          ),
+        ],
+      }),
+    });
+  }, [ready, view]);
+  useEffect(() => {
     if (!ready || !viewport) return;
     const abort = new AbortController();
     const timer = setTimeout(async () => {
@@ -503,7 +541,10 @@ export default function RegionMap({
       <div className="map-top">
         <span className="map-label">
           <span className="live-dot" />
-          {mappedTotal.toLocaleString(language === "es" ? "es-US" : "en-US")} {t("MAPPED RESOURCES · GROUPED")}
+          {mappedTotal.toLocaleString(
+            language === "es" ? "es-US" : "en-US",
+          )}{" "}
+          {t("MAPPED RESOURCES · GROUPED")}
         </span>
         <button
           className="map-button"

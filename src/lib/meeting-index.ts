@@ -21,9 +21,29 @@ export function clock(value: string) {
         (m[2] || "00")
     : "";
 }
-export function parseCrawlerIndex(html: string, territory?: "VI") {
+const meetingPath = (url: string | undefined) =>
+  url
+    ?.split(/[?#]/, 1)[0]
+    .replace(/^https?:\/\/[^/]+/i, "")
+    .replace(/\/$/, "");
+
+export function parseCrawlerIndex(
+  html: string,
+  territory?: "VI",
+  weeklyHtml?: string,
+) {
   const $ = load(html);
-  return $("table tr")
+  const weekly = new Map<string, boolean>();
+  if (weeklyHtml) {
+    const schedule = load(weeklyHtml);
+    schedule("table tr").each((_, row) => {
+      const cells = schedule(row).children("td");
+      const path = meetingPath(cells.eq(2).find("a").attr("href"));
+      if (path)
+        weekly.set(path, /In.person and Online/i.test(cells.eq(3).text()));
+    });
+  }
+  const rows = $("table tr")
     .toArray()
     .flatMap((row) => {
       const cells = $(row).children("td");
@@ -34,15 +54,18 @@ export function parseCrawlerIndex(html: string, territory?: "VI") {
         (!/\bUSVI$/i.test(c[4]) || /\bAl[- ]?Anon\b/i.test(c[2]))
       )
         return [];
+      const url = cells.eq(2).find("a").attr("href");
       const types = c[7],
         online = /Online Meeting/.test(types),
-        hybrid = /Hybrid|In.person and Online/i.test(
-          types + (territory ? " " + c[2] : ""),
-        );
+        hybrid =
+          weekly.get(meetingPath(url) || "") ||
+          /Hybrid|In.person and Online/i.test(
+            types + (territory ? " " + c[2] : ""),
+          );
       return [
         {
           name: c[2],
-          url: cells.eq(2).find("a").attr("href"),
+          url,
           day: days.indexOf(c[0]),
           time: clock(c[1]),
           formatted_address: c[4],
@@ -65,11 +88,26 @@ export function parseCrawlerIndex(html: string, territory?: "VI") {
             ...(/Open/.test(types) ? ["O"] : []),
             ...(/Closed/.test(types) ? ["C"] : []),
             ...(/Wheelchair/.test(types) ? ["X"] : []),
+            ...(/\bSpanish\b/i.test(types) ? ["S"] : []),
+            ...(/\bEnglish\b/i.test(types) ? ["EN"] : []),
+            ...(/\bWomen\b/i.test(types) ? ["W"] : []),
+            ...(/\bMen\b/i.test(types) ? ["M"] : []),
             ...(/Temporarily Closed/.test(types) ? ["TC"] : []),
           ],
         },
       ];
     });
+  if (
+    weeklyHtml &&
+    (!rows.length ||
+      rows.filter((row) => weekly.has(meetingPath(row.url) || "")).length <
+        rows.length * 0.95)
+  ) {
+    throw Error(
+      "Publisher weekly schedule no longer matches its meeting index",
+    );
+  }
+  return rows;
 }
 const browardMeetingTypes = new Set(["O", "C", "M", "W"]);
 export function parseBrowardMeetings(html: string) {

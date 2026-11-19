@@ -169,17 +169,28 @@ async function capture(job: Job) {
     }
     const result = await read(feed, {
       hosts: approved,
-      etag: job.etag,
-      modified: job.last_modified,
+      etag: source.attendancePage ? undefined : job.etag,
+      modified: source.attendancePage ? undefined : job.last_modified,
     });
     if (!result.text) return { notModified: true };
     metadata = { etag: result.etag, modified: result.modified };
+    const weeklySchedule = source.attendancePage
+      ? (
+          await read(source.attendancePage, { hosts: approved })
+        ).text?.toString()
+      : undefined;
+    if (source.attendancePage && !weeklySchedule)
+      throw Error("Publisher weekly schedule is unavailable");
     const text = result.text.toString(),
       raw =
         job.adapter === "publisher-csv"
           ? parsePublisherMeetings(text, source.state)
           : job.adapter === "crawler-index"
-            ? parseCrawlerIndex(text, source.state === "VI" ? "VI" : undefined)
+            ? parseCrawlerIndex(
+                text,
+                source.state === "VI" ? "VI" : undefined,
+                weeklySchedule,
+              )
             : job.adapter === "broward-table"
               ? parseBrowardMeetings(text)
               : job.adapter === "venue-meetings"
