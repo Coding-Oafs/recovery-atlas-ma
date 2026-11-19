@@ -22,6 +22,70 @@ async function ready(page: import("@playwright/test").Page) {
     .toBe(true);
 }
 
+test("view preference persists and duplicate category shortcuts are removed", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await ready(page);
+  const mode = page.getByLabel("View mode", { exact: true });
+  await expect(mode).toHaveValue("standard");
+  const standard = await page
+    .locator("body")
+    .evaluate((body) => getComputedStyle(body).backgroundColor);
+  await mode.selectOption("dark");
+  await expect(page.locator("html")).toHaveAttribute("data-view-mode", "dark");
+  await expect(page.locator("body")).not.toHaveCSS(
+    "background-color",
+    standard,
+  );
+  await page.reload();
+  await expect(mode).toHaveValue("dark");
+  await expect(page.locator("html")).toHaveAttribute("data-view-mode", "dark");
+  await mode.selectOption("standard");
+  await expect(page.locator("body")).toHaveCSS("background-color", standard);
+  await expect(
+    page.getByRole("button", { name: "All resources", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Support for daily life", exact: true }),
+  ).toBeVisible();
+  for (const name of [
+    "Find a meeting",
+    "Explore treatment",
+    "Find a therapist",
+  ])
+    await expect(
+      page.locator(".guided-paths").getByRole("button", { name }),
+    ).toHaveCount(0);
+});
+
+test("local AA search shows the matching official intergroup link", async ({
+  page,
+}) => {
+  for (const [state, city, name, url] of [
+    ["IL", "Chicago", "Chicago Area AA", "https://www.chicagoaa.org/meetings/"],
+    [
+      "TX",
+      "Dallas",
+      "Dallas AA Intergroup",
+      "https://www.aadallas.org/find-a-meeting/",
+    ],
+    [
+      "FL",
+      "Miami",
+      "Miami-Dade AA Intergroup",
+      "https://aamiamidade.org/meetings",
+    ],
+  ]) {
+    await page.goto("/?" + new URLSearchParams({ state, place: city }));
+    await ready(page);
+    await expect(page.getByRole("link", { name, exact: true })).toHaveAttribute(
+      "href",
+      url,
+    );
+  }
+});
+
 test("pages, refresh, Back/Forward and details preserve the current search", async ({
   page,
 }) => {

@@ -5,6 +5,7 @@ import { LanguageProvider } from "@/components/language-provider";
 import { OfflineSetup } from "@/components/offline-tools";
 import { ShortlistProvider } from "@/components/shortlist-tools";
 import { SavedProvider } from "@/components/saved-provider";
+import { viewModeKey } from "@/lib/view-mode";
 export const metadata: Metadata = {
   metadataBase: new URL(publicSiteUrl),
   alternates: { canonical: "/" },
@@ -32,14 +33,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try { if (localStorage.getItem(${JSON.stringify(viewModeKey)}) === "dark") document.documentElement.dataset.viewMode = "dark" } catch {}`,
+          }}
+        />
         <link rel="stylesheet" href="/fonts/fonts.css" />
       </head>
       <body>
         <LanguageProvider>
           <OfflineSetup />
-          <SavedProvider><ShortlistProvider>{children}</ShortlistProvider></SavedProvider>
+          <SavedProvider>
+            <ShortlistProvider>{children}</ShortlistProvider>
+          </SavedProvider>
         </LanguageProvider>
       </body>
     </html>

@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { translate } from "@/lib/i18n";
+import { ViewModeSelect } from "./view-mode";
 const Context = createContext({ language: "en", t: (s: string) => s });
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = useState("en");
@@ -32,6 +33,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
             <option value="es">Español (beta)</option>
           </select>
         </label>
+        <ViewModeSelect language={language} />
         {language === "es" ? (
           <span lang="es">
             La interfaz en español es una versión preliminar. Los datos

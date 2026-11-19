@@ -605,33 +605,7 @@ export default function Directory({
           </div>
         </section>
         <section className="search-section" aria-label={t("Search resources")}>
-          <div
-            className="guided-paths"
-            aria-label={t("Choose a starting point")}
-          >
-            {[
-              ["Find a meeting", "meetings"],
-              ["Explore treatment", "treatment"],
-              ["Find a therapist", "counseling"],
-            ].map(([label, category]) => (
-              <button
-                key={category}
-                className="secondary"
-                onClick={() => {
-                  setFilters((f) => ({
-                    ...defaultFilters,
-                    center: f.center,
-                    radius: f.radius,
-                    state: f.state,
-                    timeZone: f.timeZone,
-                    category,
-                  }));
-                  setLimit(20);
-                }}
-              >
-                {t(label)}
-              </button>
-            ))}
+          <div className="guided-paths">
             <Link
               className="secondary"
               href={

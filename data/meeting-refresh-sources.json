@@ -865,5 +865,31 @@
     "fellowship": "AA",
     "adapter": "venue-meetings",
     "layout": "lambda-miami"
+  },
+  {
+    "id": "aa-intergroup-miami",
+    "state": "FL",
+    "page": "https://aamiamidade.org/meetings",
+    "feed": "https://aamiamidade.org/locations",
+    "fellowship": "AA",
+    "adapter": "crawler-index",
+    "attendancePage": "https://aamiamidade.org/meetings?tsml-day=any"
+  },
+  {
+    "id": "aa-intergroup-dallas",
+    "state": "TX",
+    "page": "https://www.aadallas.org/meetings/",
+    "feed": "https://www.aadallas.org/locations/",
+    "fellowship": "AA",
+    "adapter": "crawler-index",
+    "attendancePage": "https://www.aadallas.org/meetings/?tsml-day=any"
+  },
+  {
+    "id": "aa-intergroup-jacksonville",
+    "state": "FL",
+    "page": "https://neflaa.org/",
+    "feed": "https://neflaa.org/wp-admin/admin-ajax.php?action=meetings",
+    "fellowship": "AA",
+    "adapter": "meeting-guide"
   }
 ]
