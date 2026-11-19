@@ -20,10 +20,12 @@ export function useViewMode() {
 export function ViewModeSelect({ language }: { language: string }) {
   const view = useViewMode();
   const spanish = language === "es";
+  const label = spanish ? "Modo de vista" : "View mode";
   return (
     <label>
-      {spanish ? "Modo de vista" : "View mode"}{" "}
+      {label}{" "}
       <select
+        aria-label={label}
         value={view}
         onChange={(event) => {
           const mode = event.target.value === "dark" ? "dark" : "standard";
