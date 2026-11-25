@@ -178,7 +178,7 @@ export function useDirectoryNavigation(
     };
   }, [store]);
   const recordPage = useCallback(
-    (offset: number, asOf: string) => {
+    (offset: number, asOf: string, settled = true) => {
       const v = current.current.view;
       const s: DirectorySnapshot = {
         ...v,
@@ -202,6 +202,12 @@ export function useDirectoryNavigation(
           return;
         }
         const target = pending.current;
+        if (!settled) {
+          // Save filters immediately, but restore scroll only after the final
+          // cards arrive. Backup cards can have different heights.
+          store(target);
+          return;
+        }
         pending.current = null;
         store(target);
         cancelAnimationFrame(frame.current);

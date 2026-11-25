@@ -1,6 +1,9 @@
 import { test, expect } from "@playwright/test";
 import seed from "../../data/resources.json";
 
+// Keep the app's offline worker from bypassing mocked API failures in WebKit.
+test.use({ serviceWorkers: "block" });
+
 test.beforeEach(async ({ page }) => {
   // Browser tests are isolated from accounts, map vendors and production data.
   await page.route("**/api/auth/**", (route) => route.fulfill({ json: null }));

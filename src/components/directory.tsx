@@ -381,7 +381,8 @@ export default function Directory({
     document.getElementById("results-title")?.focus({ preventScroll: true });
   }, [results, searching, searchError]);
   useEffect(() => {
-    if (navigation.ready && asOf) navigation.recordPage(requestedOffset, asOf);
+    if (navigation.ready && asOf)
+      navigation.recordPage(requestedOffset, asOf, !searching);
   }, [
     navigation.ready,
     navigation.recordPage,
