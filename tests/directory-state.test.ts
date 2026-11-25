@@ -92,6 +92,16 @@ test("listing links contain only the resource ID and reject malformed IDs", () =
   assert.equal(resourceIdFromUrl("https://example.com/"), null);
 });
 
+test("transient invalid input does not crash directory history comparison", () => {
+  assert.doesNotThrow(() =>
+    directorySearchKey({
+      filters: { ...defaultFilters, query: "x".repeat(201) } as never,
+      offset: 0,
+      asOf: new Date().toISOString(),
+    }),
+  );
+});
+
 test("quick actions distinguish joining instructions, telephone and physical directions", () => {
   const online = resources.find(
     (r) =>

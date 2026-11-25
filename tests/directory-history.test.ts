@@ -135,6 +135,22 @@ test("history restores a page and ordering instant, then tracks Back/Forward wit
     assert.ok(
       !w.sessionStorage.getItem(directoryStorageKey)?.includes('"resources"'),
     );
+    // Safari and Chromium can reject frequent history updates. A search must
+    // still render and keep a recovery snapshot when that browser limit is hit.
+    w.history.replaceState = () => {
+      throw new Error("History update throttled");
+    };
+    w.history.pushState = () => {
+      throw new Error("History update throttled");
+    };
+    await act(async () => {
+      setFilters({ ...defaultFilters, query: "Row 020" });
+    });
+    assert.equal(page.resources[0].id, "row-20");
+    assert.equal(
+      JSON.parse(w.sessionStorage.getItem(directoryStorageKey)!).filters.query,
+      "Row 020",
+    );
   } finally {
     await act(async () => {
       root.unmount();

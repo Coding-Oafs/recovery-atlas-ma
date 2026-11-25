@@ -27,7 +27,12 @@ export function directorySearchKey(
   s: Pick<DirectorySnapshot, "filters" | "offset" | "asOf">,
 ) {
   // Object property order is irrelevant when restoring validated storage.
-  return JSON.stringify([filtersSchema.parse(s.filters), s.offset, s.asOf]);
+  const parsed = filtersSchema.safeParse(s.filters);
+  return JSON.stringify([
+    parsed.success ? parsed.data : s.filters,
+    s.offset,
+    s.asOf,
+  ]);
 }
 export function resourceLink(id: string) {
   return "/?resource=" + encodeURIComponent(id);

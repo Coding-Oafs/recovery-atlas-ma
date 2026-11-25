@@ -120,6 +120,7 @@ test("paging preserves results, ignores irrelevant saves, blocks repeated clicks
     });
     await waitForRequest();
     await respond(4, 503);
+    await respond(5, 503);
     assert.equal(current.offset, 60);
     assert.equal(current.total, 85);
     assert.equal(current.resources[0].id, "resource-60");
@@ -129,7 +130,7 @@ test("paging preserves results, ignores irrelevant saves, blocks repeated clicks
       current.retry();
     });
     await waitForRequest();
-    await respond(5);
+    await respond(6);
     assert.equal(current.offset, 40);
     assert.equal(current.error, "");
     await act(async () => {
@@ -140,12 +141,12 @@ test("paging preserves results, ignores irrelevant saves, blocks repeated clicks
     await render();
     await waitForRequest();
     assert.equal(
-      pending[7].body.offset,
+      pending[8].body.offset,
       0,
       "filter changes reset offset in the same request",
     );
+    await respond(8);
     await respond(7);
-    await respond(6);
     assert.equal(
       current.offset,
       0,
@@ -154,13 +155,13 @@ test("paging preserves results, ignores irrelevant saves, blocks repeated clicks
     filters = { ...defaultFilters, savedOnly: true };
     await render();
     await waitForRequest();
-    await respond(8);
+    await respond(9);
     saved = [...saved];
     await render();
     await waitForRequest();
     assert.equal(
       pending.length,
-      9,
+      10,
       "identical bookmark refreshes do not reset a saved search",
     );
     saved = [...saved, "resource-61"];
@@ -168,10 +169,10 @@ test("paging preserves results, ignores irrelevant saves, blocks repeated clicks
     await waitForRequest();
     assert.equal(
       pending.length,
-      10,
+      11,
       "Saved-only membership changes do start a new search",
     );
-    await respond(9);
+    await respond(10);
     mode = "snapshot";
     filters = { ...defaultFilters };
     await render();
@@ -184,22 +185,22 @@ test("paging preserves results, ignores irrelevant saves, blocks repeated clicks
     await waitForRequest();
     assert.equal(
       pending.length,
-      10,
+      11,
       "snapshot pagination never makes a database request",
     );
     mode = "database";
     options = { restore: { offset: 40, asOf: anchor, token: 1 } };
     await render();
     await waitForRequest();
-    assert.equal(pending[10].body.offset, 40);
-    assert.equal(pending[10].body.asOf, anchor);
-    await respond(10);
+    assert.equal(pending[11].body.offset, 40);
+    assert.equal(pending[11].body.asOf, anchor);
+    await respond(11);
     assert.equal(current.offset, 40);
     options = { restore: { offset: 20, asOf: anchor, token: 2 } };
     await render();
     await waitForRequest();
-    assert.equal(pending[11].body.offset, 20);
-    await respond(11);
+    assert.equal(pending[12].body.offset, 20);
+    await respond(12);
     assert.equal(current.resources[0].id, "resource-20");
   } finally {
     await act(async () => {

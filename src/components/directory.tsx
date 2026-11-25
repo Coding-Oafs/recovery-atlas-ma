@@ -335,6 +335,7 @@ export default function Directory({
     mapped,
     online_or_unmapped,
     offset,
+    requestedOffset,
     asOf,
     searching,
     error: searchError,
@@ -380,14 +381,13 @@ export default function Directory({
     document.getElementById("results-title")?.focus({ preventScroll: true });
   }, [results, searching, searchError]);
   useEffect(() => {
-    if (navigation.ready && !searching && !searchError && asOf)
-      navigation.recordPage(offset, asOf);
+    if (navigation.ready && asOf) navigation.recordPage(requestedOffset, asOf);
   }, [
     navigation.ready,
     navigation.recordPage,
     searching,
     searchError,
-    offset,
+    requestedOffset,
     asOf,
     filters,
     location,
@@ -630,6 +630,7 @@ export default function Directory({
               <input
                 disabled={!navigation.ready}
                 value={filters.query}
+                maxLength={200}
                 onChange={(e) => update("query", e.target.value)}
                 placeholder={t("Meeting, service, or keyword…")}
               />
@@ -644,6 +645,7 @@ export default function Directory({
                 <input
                   disabled={!navigation.ready}
                   value={location}
+                  maxLength={200}
                   onChange={(e) => setLocation(e.target.value)}
                   placeholder={t("City, state, ZIP or street address")}
                 />
@@ -1316,7 +1318,8 @@ export default function Directory({
               </p>
             </div>
             {(filters.category === "meetings" ||
-              filters.fellowship === "AA" || localAa) && (
+              filters.fellowship === "AA" ||
+              localAa) && (
               <p className="notice">
                 <T>
                   Local AA lists may be incomplete. An empty search does not
@@ -1324,7 +1327,11 @@ export default function Directory({
                 </T>{" "}
                 {localAa && (
                   <>
-                    <a href={localAa.url} target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={localAa.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       {localAa.name}
                     </a>
                     {" · "}

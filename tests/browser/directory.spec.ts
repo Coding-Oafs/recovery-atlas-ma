@@ -174,6 +174,46 @@ test("filters survive refresh without putting search terms in the URL", async ({
   await expect(page.getByLabel("Result priority")).toHaveValue("all");
 });
 
+test("filters survive a failed search and refresh before results arrive", async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.route("**/api/search", (route) =>
+    route.fulfill({
+      status: 503,
+      json: { error: "Temporary search failure" },
+    }),
+  );
+  await page.goto("/");
+  await ready(page);
+  await page.getByRole("textbox", { name: "Search keywords" }).fill("Boston");
+  await page.getByRole("button", { name: /More filters/ }).click();
+  await page.getByLabel("State", { exact: true }).selectOption("MA");
+  await expect
+    .poll(() =>
+      page.evaluate(() => history.state?.atlasDirectory?.filters.query),
+    )
+    .toBe("Boston");
+  await expect(
+    page.getByText("Temporary search failure", { exact: false }),
+  ).toBeVisible();
+  await page.reload();
+  await expect(
+    page.getByRole("textbox", { name: "Search keywords" }),
+  ).toHaveValue("Boston");
+  await expect(page.getByLabel("State", { exact: true })).toHaveValue("MA");
+  await page
+    .getByRole("textbox", { name: "Search keywords" })
+    .fill("Cambridge");
+  // Reload during debounce: preservation cannot depend on a successful response.
+  await page.reload();
+  await expect(
+    page.getByRole("textbox", { name: "Search keywords" }),
+  ).toHaveValue("Cambridge");
+  expect(errors).toEqual([]);
+});
+
 test("direct listing links open the right resource and expose usable actions", async ({
   page,
 }) => {
