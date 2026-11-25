@@ -65,14 +65,16 @@ export function useDirectoryNavigation(
     };
     let initial = readDirectorySnapshot(history.state?.atlasDirectory);
     try {
+      const stored = readDirectorySnapshot(
+        JSON.parse(sessionStorage.getItem(directoryStorageKey) ?? "null"),
+      );
       if (
-        !initial ||
-        sessionStorage.getItem(directoryStorageKey + ":recover")
+        stored &&
+        (!initial ||
+          sessionStorage.getItem(directoryStorageKey + ":recover") ||
+          directorySearchKey(stored) === directorySearchKey(initial))
       ) {
-        initial =
-          readDirectorySnapshot(
-            JSON.parse(sessionStorage.getItem(directoryStorageKey) ?? "null"),
-          ) ?? initial;
+        initial = stored;
       }
     } catch {}
     const publicLink = new URL(window.location.href),
@@ -165,10 +167,12 @@ export function useDirectoryNavigation(
     addEventListener("popstate", pop);
     addEventListener("scroll", scroll, { capture: true, passive: true });
     addEventListener("pagehide", flush);
+    addEventListener("atlas:directory-flush", flush);
     return () => {
       removeEventListener("popstate", pop);
       removeEventListener("scroll", scroll, true);
       removeEventListener("pagehide", flush);
+      removeEventListener("atlas:directory-flush", flush);
       clearTimeout(scrollTimer);
       cancelAnimationFrame(frame.current);
     };

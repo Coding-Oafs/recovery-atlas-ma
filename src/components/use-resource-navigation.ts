@@ -68,6 +68,8 @@ export function useResourceNavigation(resources: Resource[]) {
     }
   }, [selected]);
   function open(resource: Resource | MapResource) {
+    // Finish a pending scroll save before copying this search's history entry.
+    window.dispatchEvent(new Event("atlas:directory-flush"));
     if (resourceIdFromUrl(window.location.href) !== resource.id) {
       history.pushState(
         { ...history.state, atlasResourceEntry: true },
