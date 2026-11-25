@@ -3,6 +3,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { Filters, Resource } from "@/lib/types";
 import { filterResources } from "@/lib/search";
 import type { RestoredPage } from "@/lib/directory-navigation";
+import { directoryRequest } from "@/lib/directory-request";
+import { resourceSchema } from "@/lib/types";
+import { z } from "zod";
 
 type Page = {
   resources: Resource[];
@@ -10,6 +13,12 @@ type Page = {
   mapped: number;
   online_or_unmapped: number;
 };
+const pageSchema = z.object({
+  resources: z.array(resourceSchema).max(500),
+  total: z.number().int().nonnegative(),
+  mapped: z.number().int().nonnegative(),
+  online_or_unmapped: z.number().int().nonnegative(),
+});
 
 export function useDirectoryResults(
   resources: Resource[],
@@ -75,18 +84,20 @@ export function useDirectoryResults(
     const timer = setTimeout(async () => {
       try {
         const input = JSON.parse(session.criteria);
-        const response = await fetch("/api/search", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ...input,
-            offset: session.offset,
-            asOf: session.asOf,
-          }),
-          signal: abort.signal,
-        });
-        const data = await response.json();
-        if (!response.ok) throw Error(data.error || "Search unavailable");
+        const data = await directoryRequest(
+          "/api/search",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              ...input,
+              offset: session.offset,
+              asOf: session.asOf,
+            }),
+            signal: abort.signal,
+          },
+          (value) => pageSchema.parse(value),
+        );
         if (abort.signal.aborted) return;
         setLoaded({ criteria: session.criteria, offset: session.offset, data });
         setError("");
@@ -136,6 +147,7 @@ export function useDirectoryResults(
   return {
     ...data,
     offset,
+    requestedOffset: session.offset,
     asOf: session.asOf,
     searching,
     error: settled === requestKey ? error : "",

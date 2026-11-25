@@ -34,13 +34,23 @@ export function useDirectoryNavigation(
   const restoring = useRef(false);
   const store = useCallback((s: DirectorySnapshot, push = false) => {
     last.current = s;
-    // Preserve Next.js' own history fields. No search terms enter the URL.
-    const state = { ...history.state, atlasDirectory: s };
-    if (push) history.pushState(state, "", window.location.href);
-    else history.replaceState(state, "", window.location.href);
     try {
       sessionStorage.setItem(directoryStorageKey, JSON.stringify(s));
     } catch {}
+    // Browsers can reject frequent history updates or unavailable storage.
+    // Keep the search usable, and save its recovery copy before touching history.
+    try {
+      const state = { ...history.state, atlasDirectory: s };
+      if (push) history.pushState(state, "", window.location.href);
+      else history.replaceState(state, "", window.location.href);
+      try {
+        sessionStorage.removeItem(directoryStorageKey + ":recover");
+      } catch {}
+    } catch {
+      try {
+        sessionStorage.setItem(directoryStorageKey + ":recover", "1");
+      } catch {}
+    }
   }, []);
   useEffect(() => {
     const restore = (s: DirectorySnapshot) => {
@@ -54,13 +64,19 @@ export function useDirectoryNavigation(
       });
     };
     let initial = readDirectorySnapshot(history.state?.atlasDirectory);
-    if (!initial) {
-      try {
-        initial = readDirectorySnapshot(
-          JSON.parse(sessionStorage.getItem(directoryStorageKey) ?? "null"),
-        );
-      } catch {}
-    }
+    try {
+      const stored = readDirectorySnapshot(
+        JSON.parse(sessionStorage.getItem(directoryStorageKey) ?? "null"),
+      );
+      if (
+        stored &&
+        (!initial ||
+          sessionStorage.getItem(directoryStorageKey + ":recover") ||
+          directorySearchKey(stored) === directorySearchKey(initial))
+      ) {
+        initial = stored;
+      }
+    } catch {}
     const publicLink = new URL(window.location.href),
       county = publicLink.searchParams.get("county"),
       state = publicLink.searchParams.get("state") || "";
@@ -131,7 +147,8 @@ export function useDirectoryNavigation(
         });
       } else restore(s);
     };
-    const scroll = () => {
+    let scrollTimer: ReturnType<typeof setTimeout> | undefined;
+    const saveScroll = () => {
       if (!last.current || pending.current || restoring.current) return;
       store({
         ...last.current,
@@ -139,16 +156,29 @@ export function useDirectoryNavigation(
         windowY: window.scrollY,
       });
     };
+    const scroll = () => {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(saveScroll, 200);
+    };
+    const flush = () => {
+      clearTimeout(scrollTimer);
+      saveScroll();
+    };
     addEventListener("popstate", pop);
     addEventListener("scroll", scroll, { capture: true, passive: true });
+    addEventListener("pagehide", flush);
+    addEventListener("atlas:directory-flush", flush);
     return () => {
       removeEventListener("popstate", pop);
       removeEventListener("scroll", scroll, true);
+      removeEventListener("pagehide", flush);
+      removeEventListener("atlas:directory-flush", flush);
+      clearTimeout(scrollTimer);
       cancelAnimationFrame(frame.current);
     };
   }, [store]);
   const recordPage = useCallback(
-    (offset: number, asOf: string) => {
+    (offset: number, asOf: string, settled = true) => {
       const v = current.current.view;
       const s: DirectorySnapshot = {
         ...v,
@@ -172,6 +202,12 @@ export function useDirectoryNavigation(
           return;
         }
         const target = pending.current;
+        if (!settled) {
+          // Save filters immediately, but restore scroll only after the final
+          // cards arrive. Backup cards can have different heights.
+          store(target);
+          return;
+        }
         pending.current = null;
         store(target);
         cancelAnimationFrame(frame.current);

@@ -20,8 +20,11 @@ export const getResources = unstable_cache(
         mode: "snapshot",
       };
     try {
-      const rows =
-        await db()`SELECT data FROM resources WHERE published = true ORDER BY CASE WHEN resource_source LIKE 'NPPES%' THEN 1 ELSE 0 END, resource_name, id LIMIT 50`;
+      const rows = await db().query(
+        "SELECT data FROM resources WHERE published = true ORDER BY CASE WHEN resource_source LIKE 'NPPES%' THEN 1 ELSE 0 END, resource_name, id LIMIT 50",
+        [],
+        { fetchOptions: { signal: AbortSignal.timeout(8000) } },
+      );
       return {
         resources: rows.map((r) => resourceSchema.parse(r.data)),
         mode: "database",

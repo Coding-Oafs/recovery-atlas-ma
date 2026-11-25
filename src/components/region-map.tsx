@@ -10,6 +10,7 @@ import { regionBounds } from "@/lib/region";
 import { resourceMapTarget } from "@/lib/map-selection";
 import { useLanguage } from "./language-provider";
 import { useViewMode } from "./view-mode";
+import { directoryRequest } from "@/lib/directory-request";
 const standardMapStyle =
   process.env.NEXT_PUBLIC_MAP_STYLE ||
   "https://tiles.openfreemap.org/styles/positron";
@@ -381,20 +382,31 @@ export default function RegionMap({
       setBusy(true);
       setError("");
       try {
-        const response = await fetch("/api/map", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            filters,
-            saved,
-            bounds: viewport.bounds,
-            zoom: viewport.zoom,
-          }),
-          signal: abort.signal,
-        });
-        const data = await response.json();
-        if (!response.ok) throw Error(data.error);
-        const pins = data.pins as MapPoint[];
+        const data = await directoryRequest(
+          "/api/map",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              filters,
+              saved,
+              bounds: viewport.bounds,
+              zoom: viewport.zoom,
+            }),
+            signal: abort.signal,
+          },
+          (value) => {
+            const data = value as { pins: MapPoint[]; represented: number };
+            if (
+              !Array.isArray(data?.pins) ||
+              !Number.isFinite(data.represented)
+            )
+              throw Error("Invalid map results");
+            return data;
+          },
+        );
+        if (abort.signal.aborted) return;
+        const pins = data.pins;
         (
           map.current?.getSource("resources") as GeoJSONSource | undefined
         )?.setData({
@@ -413,11 +425,10 @@ export default function RegionMap({
         setRepresented(Number(data.represented));
       } catch (e) {
         if (!abort.signal.aborted) {
-          (
-            map.current?.getSource("resources") as GeoJSONSource | undefined
-          )?.setData({ type: "FeatureCollection", features: [] });
-          setRepresented(0);
-          setError(e instanceof Error ? e.message : "Map results unavailable");
+          setError(
+            (e instanceof Error ? e.message : "Map results unavailable") +
+              " Previous map results remain visible; they may not match the current filters.",
+          );
         }
       } finally {
         if (!abort.signal.aborted) setBusy(false);

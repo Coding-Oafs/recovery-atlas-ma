@@ -95,6 +95,12 @@ export function filterResources(
   now = new Date(),
 ) {
   const words = f.query.toLowerCase().trim().split(/\s+/).filter(Boolean);
+  const meetingTimes = new Map<Resource, number>();
+  const meetingTime = (r: Resource) => {
+    if (!meetingTimes.has(r))
+      meetingTimes.set(r, nextMeeting(r, now, f)?.getTime() ?? Infinity);
+    return meetingTimes.get(r)!;
+  };
   return resources
     .filter((r) => {
       if (
@@ -148,7 +154,8 @@ export function filterResources(
         (!r.meeting || !r.meeting.days.includes(Number(f.day)))
       )
         return false;
-      if (hasMeetingTimeFilter(f) && !nextMeeting(r, now, f)) return false;
+      if (hasMeetingTimeFilter(f) && !Number.isFinite(meetingTime(r)))
+        return false;
       const online =
         r.kind === "meeting" &&
         r.formats.includes("online") &&
@@ -195,8 +202,7 @@ export function filterResources(
         hasMeetingTimeFilter(f)
       ) {
         return (
-          (nextMeeting(a, now, f)?.getTime() ?? Infinity) -
-            (nextMeeting(b, now, f)?.getTime() ?? Infinity) ||
+          meetingTime(a) - meetingTime(b) ||
           a.name.localeCompare(b.name) ||
           a.id.localeCompare(b.id)
         );

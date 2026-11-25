@@ -1,5 +1,11 @@
 "use client";
-export default function ErrorPage({ reset }: { reset: () => void }) {
+export default function ErrorPage({
+  retry,
+  reset,
+}: {
+  retry?: () => void;
+  reset?: () => void;
+}) {
   return (
     <main className="standalone">
       <h1>Let’s try that again.</h1>
@@ -7,7 +13,10 @@ export default function ErrorPage({ reset }: { reset: () => void }) {
         The directory couldn’t load. You can still reach the Massachusetts
         Substance Use Helpline at <a href="tel:8003275050">800-327-5050</a>.
       </p>
-      <button className="primary" onClick={reset}>
+      <button
+        className="primary"
+        onClick={() => (retry ?? reset ?? (() => window.location.reload()))()}
+      >
         Retry the directory
       </button>
     </main>

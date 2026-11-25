@@ -15,6 +15,7 @@ async function queryDatabaseDirectory(
     asOf?: string;
   } = {},
 ) {
+  const queryOptions = { fetchOptions: { signal: AbortSignal.timeout(12000) } };
   const values: unknown[] = [];
   const param = (v: unknown) => {
     values.push(v);
@@ -217,6 +218,7 @@ async function queryDatabaseDirectory(
           WHERE p.lng BETWEEN $1 AND $3 AND p.lat BETWEEN $2 AND $4
         )${grouped}, EXISTS(SELECT 1 FROM snapshot) AS cached FROM points p`,
         [...options.map.bounds, size],
+        queryOptions,
       );
       if (cached.cached)
         return { pins: cached.pins, represented: Number(cached.represented) };
@@ -227,7 +229,7 @@ async function queryDatabaseDirectory(
         1 AS weight,ST_SnapToGrid(ST_Transform(location::geometry,3857),${cell}::float8) AS cell
       FROM filtered WHERE location IS NOT NULL
     )${grouped} FROM points p`;
-    const [row] = await db().query(query, values);
+    const [row] = await db().query(query, values, queryOptions);
     return { pins: row.pins, represented: Number(row.represented) };
   }
   const countRows =
@@ -237,7 +239,7 @@ async function queryDatabaseDirectory(
       ? `SELECT (data->>'total')::bigint AS total,(data->>'total')::bigint-(data->>'mapped')::bigint AS online_or_unmapped,(data->>'mapped')::bigint AS mapped FROM atlas_directory_stats WHERE id='coverage' UNION ALL SELECT fallback.* FROM (${countRows}) fallback WHERE NOT EXISTS(SELECT 1 FROM atlas_directory_stats WHERE id='coverage')`
       : countRows;
   const query = `${base},page AS(SELECT data,row_number() OVER(ORDER BY ${order},id) AS position FROM filtered ORDER BY ${order},id LIMIT ${param(limit)} OFFSET ${param(options.selection?.offset ?? options.offset ?? 0)}),counts AS(${counts}) SELECT counts.*,COALESCE((SELECT jsonb_agg(data ORDER BY position) FROM page),'[]') AS resources FROM counts`;
-  const rows = await db().query(query, values);
+  const rows = await db().query(query, values, queryOptions);
   return {
     ...rows[0],
     total: Number(rows[0].total),
