@@ -8,11 +8,12 @@ export async function directoryRequest<T>(
 ): Promise<T> {
   const retries = options.retries ?? 1;
   for (let attempt = 0; ; attempt++) {
-    const timeout = new AbortController();
-    const signal = init.signal
-      ? AbortSignal.any([init.signal, timeout.signal])
-      : timeout.signal;
-    const timer = setTimeout(() => timeout.abort(), options.timeoutMs ?? 15000);
+    const controller = new AbortController();
+    const cancel = () => controller.abort();
+    if (init.signal?.aborted) cancel();
+    else init.signal?.addEventListener("abort", cancel, { once: true });
+    const signal = controller.signal;
+    const timer = setTimeout(cancel, options.timeoutMs ?? 15000);
     let retryable = false;
     let onAbort: (() => void) | undefined;
     try {
@@ -52,6 +53,7 @@ export async function directoryRequest<T>(
       if (signal.aborted || !retryable || attempt >= retries) throw error;
     } finally {
       clearTimeout(timer);
+      init.signal?.removeEventListener("abort", cancel);
       if (onAbort) signal.removeEventListener("abort", onAbort);
     }
     // Keep retries bounded and stop immediately when the search changes.

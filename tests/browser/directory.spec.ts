@@ -20,6 +20,9 @@ async function ready(page: import("@playwright/test").Page) {
   await expect
     .poll(() => page.evaluate(() => Boolean(history.state?.atlasDirectory)))
     .toBe(true);
+  // Filter recovery is recorded before a response, so a history entry alone
+  // no longer means that cards have finished updating.
+  await expect(page.locator("#results")).toHaveAttribute("aria-busy", "false");
 }
 
 test("view preference persists and duplicate category shortcuts are removed", async ({
@@ -195,9 +198,9 @@ test("filters survive a failed search and refresh before results arrive", async 
       page.evaluate(() => history.state?.atlasDirectory?.filters.query),
     )
     .toBe("Boston");
-  await expect(
-    page.getByText("Temporary search failure", { exact: false }),
-  ).toBeVisible();
+  await expect(page.locator("#results").getByRole("alert")).toContainText(
+    "Temporary search failure",
+  );
   await page.reload();
   await expect(
     page.getByRole("textbox", { name: "Search keywords" }),
